@@ -1,0 +1,57 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Provider;
+use App\Models\ProviderContact;
+use Illuminate\Http\Request;
+
+class ProviderContactController extends Controller
+{
+    public function index(Provider $provider, Request $request)
+    {
+        $contacts = $provider->contacts()->paginate(10);
+
+        return view('providers.contacts.index', compact('provider', 'contacts'));
+    }
+
+    public function create(Provider $provider)
+    {
+        $contact = new ProviderContact();
+
+        return view('providers.contacts.form', compact('provider', 'contact'));
+    }
+
+    public function store(Provider $provider, Request $request)
+    {
+        $provider->contacts()->create($request->all());
+
+        return redirect()->route('providers.contacts.index', $provider->id);
+    }
+
+    public function edit(Provider $provider, ProviderContact $contact)
+    {
+        return view('providers.contacts.form', compact('provider', 'contact'));
+    }
+
+    public function update(Provider $provider, ProviderContact $contact, Request $request)
+    {
+        $contact->update($request->all());
+
+        return redirect()->route('providers.contacts.index', $provider->id);
+    }
+
+    public function destroy(Provider $provider, ProviderContact $contact)
+    {
+        $contact->delete();
+
+        return redirect()->route('providers.contacts.index', $provider->id);
+    }
+
+    public function show(Provider $provider, ProviderContact $contact)
+    {
+        $showMode = true;
+
+        return view('providers.contacts.form', compact('provider', 'contact', 'showMode'));
+    }
+}
