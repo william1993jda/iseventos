@@ -59,12 +59,7 @@
                         {!! Form::text('phone', null, ['class' => 'form-control w-full', 'id' => 'phone']) !!}
                     </div>
                 </div>
-                @if (!isset($showMode))
-                    <div class="text-right mt-5">
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="submit" class="btn btn-primary w-24">Salvar</button>
-                    </div>
-                @endif
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$agency" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

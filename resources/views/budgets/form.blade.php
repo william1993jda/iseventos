@@ -85,7 +85,8 @@
                     customer_contact_id = {{ $budget->customer_contact_id }};
                 @endif
 
-                fetch("{{ route('budgets.getCustomerContacts') }}", {
+                // fetch("{{ route('budgets.getCustomerContacts') }}", {
+                fetch("{{ url('budgets/customer-contacts') }}", {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json',
