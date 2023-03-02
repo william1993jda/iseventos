@@ -45,7 +45,9 @@ class BudgetController extends Controller
         $agencies = Agency::pluck('fantasy_name', 'id')->prepend('Selecione', '');
         $customers = Customer::pluck('fantasy_name', 'id')->prepend('Selecione', '');
 
-        return view('budgets.form', compact('budget', 'places', 'agencies', 'customers'));
+        $customerContactsRoute = route('budgets.getCustomerContacts');
+
+        return view('budgets.form', compact('budget', 'places', 'agencies', 'customers', 'customerContactsRoute'));
     }
 
     public function store(BudgetRequest $request)
