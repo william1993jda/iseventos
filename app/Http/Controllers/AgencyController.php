@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\agency;
+use App\Models\Agency;
 use Illuminate\Http\Request;
 
 class AgencyController extends Controller

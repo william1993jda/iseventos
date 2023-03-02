@@ -53,9 +53,6 @@
                 </div>
                 <div class="sm:grid grid-cols-1 gap-2 mt-3">
                     <x-forms.textarea name="commercial_conditions" label="Condições Comerciais" />
-                    <div>
-                        {{ $customerContactsRoute }}
-                    </div>
                 </div>
                 @if (!isset($showMode))
                     <div class="text-right mt-5">
@@ -88,7 +85,7 @@
                     customer_contact_id = {{ $budget->customer_contact_id }};
                 @endif
 
-                fetch("{{ $customerContactsRoute }}", {
+                fetch("{{ route('budgets.getCustomerContacts') }}", {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json',
