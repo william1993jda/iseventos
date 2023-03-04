@@ -27,56 +27,20 @@
             <!-- BEGIN: Form Layout -->
             <div class="intro-y box p-5">
                 <div class="sm:grid grid-cols-1 gap-2">
-                    <div>
-                        <label for="name" class="form-label">Banco</label>
-                        {!! Form::text('name', null, ['class' => 'form-control w-full', 'required' => 'required', 'id' => 'name']) !!}
-                    </div>
+                    <x-forms.text name="name" label="Banco" />
                 </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
-                    <div>
-                        <label for="number" class="form-label">Número do Banco</label>
-                        {!! Form::text('number', null, ['class' => 'form-control w-full', 'id' => 'number']) !!}
-                    </div>
-                    <div>
-                        <label for="agency" class="form-label">Agência</label>
-                        {!! Form::text('agency', null, ['class' => 'form-control w-full', 'required' => 'required', 'id' => 'agency']) !!}
-                    </div>
-                    <div>
-                        <label for="account" class="form-label">Número da Conta</label>
-                        {!! Form::text('account', null, ['class' => 'form-control w-full', 'required' => 'required', 'id' => 'account']) !!}
-                    </div>
+                    <x-forms.text name="number" label="Número do Banco" />
+                    <x-forms.text name="agency" label="Agência" />
+                    <x-forms.text name="account" label="Número da Conta" />
                 </div>
                 <div class="sm:grid grid-cols-4 gap-2 mt-3">
-                    <div>
-                        <label for="type" class="form-label">Tipo</label>
-                        {!! Form::select('type', $types, null, ['class' => 'tom-select w-full', 'required' => 'required']) !!}
-                    </div>
-                    <div>
-                        <label for="holder" class="form-label">Nome do titular da conta</label>
-                        {!! Form::text('holder', null, ['class' => 'form-control w-full', 'required' => 'required', 'id' => 'holder']) !!}
-                    </div>
-                    <div>
-                        <label for="document_number" class="form-label">CPF ou CNPJ do titular</label>
-                        {!! Form::text('document_number', null, [
-                            'class' => 'form-control w-full',
-                            'required' => 'required',
-                            'id' => 'document_number',
-                        ]) !!}
-                    </div>
-                    <div>
-                        <label for="observation" class="form-label">Observação</label>
-                        {!! Form::text('observation', null, [
-                            'class' => 'form-control w-full',
-                            'id' => 'observation',
-                        ]) !!}
-                    </div>
+                    <x-forms.select name="type" label="Tipo" :options="$types" />
+                    <x-forms.text name="holder" label="Nome do titular da conta" />
+                    <x-forms.text name="document_number" label="CPF ou CNPJ do titular" mask="'99.999-999'" />
+                    <x-forms.text name="observation" label="Observação" />
                 </div>
-                @if (!isset($showMode))
-                    <div class="text-right mt-5">
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="submit" class="btn btn-primary w-24">Salvar</button>
-                    </div>
-                @endif
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$bank" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

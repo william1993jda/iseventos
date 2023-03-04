@@ -4,6 +4,8 @@
     </h2>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+            <a href="{{ route('providers.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
+            <div class="hidden md:block mx-auto text-slate-500"></div>
             <a href="{{ route('providers.addresses.create', $provider->id) }}"
                 class="btn btn-primary shadow-md mr-2">Novo</a>
         </div>

@@ -4,8 +4,7 @@
     </h2>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <a href="{{ route('customers.create') }}" class="btn btn-primary shadow-md mr-2">Novo</a>
-            <div class="hidden md:block mx-auto text-slate-500"></div>
+
             <form action="{{ route('customers.index') }}" method="GET" class="flex">
                 <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
                     <div class="w-56 relative text-slate-500">
@@ -17,6 +16,9 @@
                 <button type="submit" class="btn btn-primary shadow-md ml-2">Buscar</button>
                 <a href="{{ route('customers.index') }}" class="btn btn-secondary shadow-md ml-2">Limpar</a>
             </form>
+            <div class="hidden md:block mx-auto text-slate-500"></div>
+            <a href="{{ route('customers.create') }}" class="btn btn-primary shadow-md mr-2">Novo</a>
+
         </div>
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
