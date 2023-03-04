@@ -8,12 +8,13 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('budgets.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
+            <button class="btn btn-primary shadow-md mr-2" wire:click="editObservation">Observações</button>
             <button class="btn btn-primary shadow-md mr-2" wire:click="addStatus">Status</button>
             <a href="{{ route('budgets.print', $budget->id) }}" target="_blank"
                 class="btn btn-primary shadow-md mr-2">Imprimir</a>
         </div>
         <div class="intro-y col-span-12 box px-5 pt-5">
-            <div class="flex flex-col lg:flex-row border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
+            <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
                 <div
                     class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 dark:border-darkmode-400 border-t lg:border-t-0 pt-5 lg:pt-0">
                     <div class="font-medium text-center lg:text-left lg:mt-3">DETALHES</div>
@@ -26,6 +27,10 @@
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Local do Evento:</span>&nbsp;{{ $budget->place->name }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                            <span class="font-semibold">Endereço do
+                                Local:</span>&nbsp;{{ $budget->place->getfullAddress() }}
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Status:</span>&nbsp;{{ $budget->status->name }}
@@ -61,25 +66,34 @@
                             <span class="font-semibold">Nome:</span>&nbsp;{{ $budget->customer->fantasy_name }}
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
-                            <span class="font-semibold">Contato:</span>&nbsp;
+                            <span class="font-semibold">Contato - Nome:</span>&nbsp;
                             @if (!empty($budget->customerContact))
                                 {{ $budget->customerContact->name }}
                             @endif
-                            @if (!empty($budget->customerContact))
-                                @if (!empty($budget->customerContact->phone))
-                                    - {{ $budget->customerContact->phone }}
-                                @endif
-                                @if (!empty($budget->customerContact->email))
-                                    - {{ $budget->customerContact->email }}
-                                @endif
-                            @endif
                         </div>
-                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
-                            <span
-                                class="font-semibold">Agência:</span>&nbsp;{{ $budget->agency ? $budget->agency->fantasy_name : '' }}
-                        </div>
+                        @if (!empty($budget->customerContact) && !empty($budget->customerContact->phone))
+                            <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                                <span class="font-semibold">Contato - Telefone:</span>&nbsp;
+                                {{ $budget->customerContact->phone }}
+                            </div>
+                        @endif
+                        @if (!empty($budget->customerContact) && !empty($budget->customerContact->email))
+                            <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                                <span class="font-semibold">Contato - E-mail:</span>&nbsp;
+                                {{ $budget->customerContact->email }}
+                            </div>
+                        @endif
+                        @if (!empty($budget->agency))
+                            <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                                <span class="font-semibold">Agência:</span>&nbsp;{{ $budget->agency->fantasy_name }}
+                            </div>
+                        @endif
                     </div>
                 </div>
+            </div>
+            <div class="intro-x col-span-12">
+                <div class="font-medium text-center lg:text-left lg:mt-3">OBSERVAÇÕES</div>
+                <div class="my-3">{!! nl2br($budget->observation) !!}</div>
             </div>
         </div>
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2" wire:ignore>
@@ -169,8 +183,8 @@
                                                 <td class="whitespace-nowrap">{{ $labor['labor']['name'] }}</td>
                                                 <td class="whitespace-nowrap" colspan="{{ count($room['days']) }}">
                                                     <div class="flex items-center justify-end">
-                                                        <x-forms.number name="days" min="1" :value="$labor['days']"
-                                                            class="form-control"
+                                                        <x-forms.number name="days" min="1"
+                                                            :value="$labor['days']" class="form-control"
                                                             wire:change="onChangeLaborDays({{ $labor['id'] }}, $event.target.value)" />
                                                         &nbsp;&nbsp;diárias
                                                     </div>
@@ -203,35 +217,78 @@
                     </div>
                 @endforeach
                 <div class="intro-y col-span-12 box px-5 py-5 my-3">
-                    <div class="text-lg font-medium text-right">
-                        TOTAL: {{ number_format($total, 2, ',', '.') }}
+                    <div class="text-l font-medium text-right">
+                        SUBTOTAL: R$ {{ number_format($total, 2, ',', '.') }}
                     </div>
-                    @if (!empty($budget['discount']))
+                    @if (!empty($budget['fee']))
                         <div>
-                            @if ($budget['discount_type'] == 'percent')
+                            @if ($budget['fee_type'] == 'percent')
                                 @php
-                                    $percentage = $budget['discount'];
-                                    
-                                    $totalPercentage = ($percentage / 100) * $total;
+                                    $feePercentage = $budget['fee'];
+                                    $totalFeePercentage = ($feePercentage / 100) * $total;
+                                    $total = $total + $totalFeePercentage;
                                 @endphp
-                                <div class="text-lg font-medium text-right">
-                                    TOTAL COM DESCONTO DE: {{ number_format($total - $totalPercentage, 2, ',', '.') }}
+                                <div class="text-l font-medium text-right">
+                                    <span class="text-green-500">TAXA ({{ $budget['fee'] }}%): R$
+                                        {{ number_format($totalFeePercentage, 2, ',', '.') }}</span>
                                 </div>
                             @else
-                                <div class="text-lg font-medium text-right">
-                                    TOTAL COM DESCONTO DE:
-                                    {{ number_format($total - $budget['discount'], 2, ',', '.') }}
+                                @php
+                                    $total = $total + $budget['fee'];
+                                @endphp
+                                <div class="text-l font-medium text-right">
+                                    <span class="text-green-500">TAXA (R$
+                                        {{ number_format($budget['fee'], 2, ',', '.') }}): R$
+                                        {{ number_format($budget['fee'], 2, ',', '.') }}</span>
                                 </div>
                             @endif
                         </div>
                     @endif
+                    @if (!empty($budget['discount']))
+                        <div>
+                            @if ($budget['discount_type'] == 'percent')
+                                @php
+                                    $discountPercentage = $budget['discount'];
+                                    $totalDiscountPercentage = ($discountPercentage / 100) * $total;
+                                    $total = $total - $totalDiscountPercentage;
+                                @endphp
+                                <div class="text-l font-medium text-right">
+                                    <span class="text-red-500">DESCONTO ({{ $budget['discount'] }}%): R$
+                                        {{ number_format($totalDiscountPercentage, 2, ',', '.') }}</span>
+                                </div>
+                            @else
+                                @php
+                                    $total = $total - $budget['discount'];
+                                @endphp
+                                <div class="text-l font-medium text-right">
+                                    <span class="text-red-500">DESCONTO (R$
+                                        {{ number_format($budget['discount'], 2, ',', '.') }}): R$
+                                        {{ number_format($budget['discount'], 2, ',', '.') }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+                    <hr class="my-2">
+                    <div class="text-lg font-medium text-right">
+                        <span>TOTAL: R$ {{ number_format($total, 2, ',', '.') }}</span>
+                    </div>
                     <div class="flex justify-end mt-3">
+                        @if (empty($budget['fee']))
+                            <button type="button" class="btn btn-primary shadow-md" wire:click="addFee">
+                                Aplicar taxa
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-primary shadow-md" wire:click="removeFee">
+                                Remover taxa
+                            </button>
+                        @endif
                         @if (empty($budget['discount']))
-                            <button type="button" class="btn btn-primary shadow-md" wire:click="addDiscount">
+                            <button type="button" class="btn btn-primary shadow-md ml-2" wire:click="addDiscount">
                                 Aplicar desconto
                             </button>
                         @else
-                            <button type="button" class="btn btn-primary shadow-md" wire:click="removeDiscount">
+                            <button type="button" class="btn btn-primary shadow-md ml-2"
+                                wire:click="removeDiscount">
                                 Remover desconto
                             </button>
                         @endif
@@ -241,162 +298,28 @@
         @endif
     </div>
 
-    <!-- BEGIN: Modal Content -->
-    <div id="modal-budget-product" class="modal" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <!-- BEGIN: Modal Header -->
-                <div class="modal-header">
-                    <h2 class="font-medium text-base mr-auto">Adicionar Equipamento</h2>
-                </div> <!-- END: Modal Header -->
-                <!-- BEGIN: Modal Body -->
-                <div class="modal-body">
-                    <div class="hidden" id="alert-product-error">
-                        <div class="alert alert-danger show flex items-center mb-2" role="alert">
-                            <i data-lucide="alert-octagon" class="w-6 h-6 mr-2"></i> Preencha todos os campos abaixo
-                        </div>
-                    </div>
-
-                    <div class="sm:grid grid-cols-2 gap-2">
-                        <x-forms.select name="category_id" label="Categoria" :options="$categories"
-                            wire:model="dataProduct.category_id"
-                            wire:change="onSelectCategory($event.target.value)" />
-                        <x-forms.select name="product_id" label="Equipamento" :options="[]"
-                            wire:model="dataProduct.product_id" wire:change="onSelectProduct($event.target.value)" />
-                    </div>
-                    <div class="sm:grid grid-cols-3 gap-2 mt-3">
-                        <x-forms.select name="place_room_id" label="Sala" :options="$placeRooms"
-                            wire:model="dataProduct.place_room_id" />
-                        <x-forms.text name="price" label="Preço" wire:model="dataProduct.price" />
-                        <x-forms.number name="quantity" label="Quantidade" wire:model="dataProduct.quantity" />
-                    </div>
-                </div> <!-- END: Modal Body -->
-                <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer">
-                    <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 mr-1">Cancelar</button>
-                    <button type="button" class="btn btn-primary w-20" wire:click="saveProduct">Salvar</button>
-                </div> <!-- END: Modal Footer -->
-            </div>
-        </div>
-    </div> <!-- END: Modal Content -->
-
-    <!-- BEGIN: Modal Content -->
-    <div id="modal-budget-labor" class="modal" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <!-- BEGIN: Modal Header -->
-                <div class="modal-header">
-                    <h2 class="font-medium text-base mr-auto">Adicionar Mão de obra</h2>
-                </div> <!-- END: Modal Header -->
-                <!-- BEGIN: Modal Body -->
-                <div class="modal-body">
-                    <div class="hidden" id="alert-labor-error">
-                        <div class="alert alert-danger show flex items-center mb-2" role="alert">
-                            <i data-lucide="alert-octagon" class="w-6 h-6 mr-2"></i> Preencha todos os campos abaixo
-                        </div>
-                    </div>
-
-                    <div class="sm:grid grid-cols-2 gap-2">
-                        <x-forms.select name="category_id" label="Categoria" :options="$categories"
-                            wire:model="dataLabor.category_id"
-                            wire:change="onSelectCategoryLabor($event.target.value)" />
-                        <x-forms.select name="labor_id" label="Mão de obra" :options="[]"
-                            wire:model="dataLabor.labor_id" wire:change="onSelectLabor($event.target.value)" />
-                    </div>
-                    <div class="sm:grid grid-cols-4 gap-2 mt-3">
-                        <x-forms.select name="place_room_id" label="Sala" :options="$placeRooms"
-                            wire:model="dataLabor.place_room_id" />
-                        <x-forms.text name="labor_price" label="Preço" wire:model="dataLabor.price" />
-                        <x-forms.number name="days" label="Diárias" wire:model="dataLabor.days" />
-                        <x-forms.number name="quantity" label="Quantidade" wire:model="dataLabor.quantity" />
-                    </div>
-                </div> <!-- END: Modal Body -->
-                <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer">
-                    <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 mr-1">Cancelar</button>
-                    <button type="button" class="btn btn-primary w-20" wire:click="saveLabor">Salvar</button>
-                </div> <!-- END: Modal Footer -->
-            </div>
-        </div>
-    </div> <!-- END: Modal Content -->
-
-    <!-- BEGIN: Modal Content -->
-    <div id="modal-budget-discount" class="modal" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <!-- BEGIN: Modal Header -->
-                <div class="modal-header">
-                    <h2 class="font-medium text-base mr-auto">Aplicar desconto</h2>
-                </div> <!-- END: Modal Header -->
-                <!-- BEGIN: Modal Body -->
-                <div class="modal-body">
-                    <div class="hidden" id="alert-discount-error">
-                        <div class="alert alert-danger show flex items-center mb-2" role="alert">
-                            <i data-lucide="alert-octagon" class="w-6 h-6 mr-2"></i> Preencha todos os campos abaixo
-                        </div>
-                    </div>
-
-                    <div class="sm:grid grid-cols-2 gap-2">
-                        <x-forms.select name="discount_type" label="Tipo de Desconto" :options="$discountTypes"
-                            wire:model="dataDiscount.discount_type" />
-                        <x-forms.text name="discount" label="Desconto" wire:model="dataDiscount.discount" />
-                    </div>
-                </div> <!-- END: Modal Body -->
-                <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer">
-                    <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 mr-1">Cancelar</button>
-                    <button type="button" class="btn btn-primary w-20" wire:click="saveDiscount">Salvar</button>
-                </div> <!-- END: Modal Footer -->
-            </div>
-        </div>
-    </div> <!-- END: Modal Content -->
-
-    <!-- BEGIN: Modal Content -->
-    <div id="modal-budget-status" class="modal" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <!-- BEGIN: Modal Header -->
-                <div class="modal-header">
-                    <h2 class="font-medium text-base mr-auto">Alterar status</h2>
-                </div> <!-- END: Modal Header -->
-                <!-- BEGIN: Modal Body -->
-                <div class="modal-body">
-                    <div class="hidden" id="alert-status-error">
-                        <div class="alert alert-danger show flex items-center mb-2" role="alert">
-                            <i data-lucide="alert-octagon" class="w-6 h-6 mr-2"></i> Preencha todos os campos abaixo
-                        </div>
-                    </div>
-
-                    <div class="sm:grid grid-cols-1 gap-2">
-                        <x-forms.select name="status_id" label="Status" :options="$status"
-                            wire:model="dataStatus.status_id" />
-                    </div>
-                </div> <!-- END: Modal Body -->
-                <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer">
-                    <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 mr-1">Cancelar</button>
-                    <button type="button" class="btn btn-primary w-20" wire:click="saveStatus">Salvar</button>
-                </div> <!-- END: Modal Footer -->
-            </div>
-        </div>
-    </div> <!-- END: Modal Content -->
+    @include('budgets.partials.modal-product')
+    @include('budgets.partials.modal-labor')
+    @include('budgets.partials.modal-fee')
+    @include('budgets.partials.modal-discount')
+    @include('budgets.partials.modal-status')
+    @include('budgets.partials.modal-observation')
 
     @push('custom-scripts')
         <script type="text/javascript">
             var modalBudgetProduct = null;
             var modalBudgetLabor = null;
+            var modalBudgetFee = null;
             var modalBudgetDiscount = null;
             var modalBudgetStatus = null;
+            var modalBudgetObservation = null;
             var selectProductId = null;
             var selectLaborId = null;
             var inputPrice = null;
             var inputLaborPrice = null;
             var alertProductError = null;
             var alertLaborError = null;
+            var alertFeeError = null;
             var alertDiscountError = null;
             var alertStatusError = null;
 
@@ -407,16 +330,21 @@
                 inputLaborPrice = document.getElementById('labor_price');
                 alertProductError = document.getElementById('alert-product-error');
                 alertLaborError = document.getElementById('alert-labor-error');
+                alertFeeError = document.getElementById('alert-fee-error');
                 alertDiscountError = document.getElementById('alert-discount-error');
                 alertStatusError = document.getElementById('alert-status-error');
                 modalBudgetProduct = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-budget-product"));
                 modalBudgetLabor = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-budget-labor"));
+                modalBudgetFee = tailwind.Modal.getInstance(document.querySelector(
+                    "#modal-budget-fee"));
                 modalBudgetDiscount = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-budget-discount"));
                 modalBudgetStatus = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-budget-status"));
+                modalBudgetObservation = tailwind.Modal.getInstance(document.querySelector(
+                    "#modal-budget-observation"));
             });
 
             window.livewire.on('addProduct', () => {
@@ -427,12 +355,20 @@
                 modalBudgetLabor.show();
             });
 
+            window.livewire.on('addFee', () => {
+                modalBudgetFee.show();
+            });
+
             window.livewire.on('addDiscount', () => {
                 modalBudgetDiscount.show();
             });
 
             window.livewire.on('addStatus', () => {
                 modalBudgetStatus.show();
+            });
+
+            window.livewire.on('editObservation', () => {
+                modalBudgetObservation.toggle();
             });
 
             window.livewire.on('updateProductList', (data) => {

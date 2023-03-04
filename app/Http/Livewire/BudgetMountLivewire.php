@@ -21,19 +21,22 @@ class BudgetMountLivewire extends Component
     public $rooms = [];
     public $discountTypes = [];
     public $status = [];
+    public $dataBudget = [];
     public $dataProduct = [];
     public $dataLabor = [];
+    public $dataFee = [];
     public $dataDiscount = [];
+    public $feeDiscountTypes = [];
     public $dataStatus = [];
 
     public function mount($budget)
     {
         $this->categories = Category::pluck('name', 'id')->prepend('Selecione', '');
         $this->placeRooms = $budget->place->rooms->pluck('name', 'id')->prepend('Selecione', '');
-        $this->discountTypes = [
+        $this->feeDiscountTypes = [
             '' => 'Selecione',
             'percent' => 'Porcentagem',
-            'value' => 'Valor',
+            'money' => 'Valor',
         ];
         $this->status = Status::pluck('name', 'id')->prepend('Selecione', '');
 
@@ -137,6 +140,11 @@ class BudgetMountLivewire extends Component
         $this->emit('addLabor');
     }
 
+    public function addFee()
+    {
+        $this->emit('addFee');
+    }
+
     public function addDiscount()
     {
         $this->emit('addDiscount');
@@ -145,6 +153,12 @@ class BudgetMountLivewire extends Component
     public function addStatus()
     {
         $this->emit('addStatus');
+    }
+
+    public function editObservation()
+    {
+        $this->dataBudget['observation'] = $this->budget->observation;
+        $this->emit('editObservation');
     }
 
     public function onSelectCategory(Category $category)
@@ -173,6 +187,13 @@ class BudgetMountLivewire extends Component
         $this->dataLabor['price'] = $labor->getPriceFormated();
 
         $this->emit('updateLaborPrice', $labor->getPriceFormated());
+    }
+
+    public function saveObservation()
+    {
+        $this->budget->update($this->dataBudget);
+
+        return $this->emit('editObservation');
     }
 
     public function saveProduct()
@@ -300,6 +321,44 @@ class BudgetMountLivewire extends Component
         return $this->emit('saved');
     }
 
+    public function saveFee()
+    {
+        // $this->validate([
+        //     'dataFee.fee_type' => 'required',
+        //     'dataFee.fee' => 'required',
+        // ], [], [
+        //     'dataFee.fee_type' => 'tipo de taxa',
+        //     'dataFee.fee' => 'taxa',
+        // ]);
+
+        if (empty($this->dataFee['fee_type'])) {
+            return $this->emit('feeError', true);
+        }
+
+        if (empty($this->dataFee['fee'])) {
+            return $this->emit('feeError', true);
+        }
+
+        $this->emit('feeError', false);
+
+        if ($this->dataFee['fee_type'] == 'percent') {
+            $this->budget->update([
+                'fee_type' => $this->dataFee['fee_type'],
+                'fee' => intval($this->dataFee['fee']),
+            ]);
+        } else {
+            $fee = str_replace('.', '', $this->dataFee['fee']);
+            $fee = str_replace(',', '.', $fee);
+
+            $this->budget->update([
+                'fee_type' => $this->dataFee['fee_type'],
+                'fee' => $fee,
+            ]);
+        }
+
+        return $this->emit('saved');
+    }
+
     public function saveDiscount()
     {
         // $this->validate([
@@ -320,17 +379,11 @@ class BudgetMountLivewire extends Component
 
         $this->emit('discountError', false);
 
-        $total = 0;
-
         if ($this->dataDiscount['discount_type'] == 'percent') {
             $this->budget->update([
                 'discount_type' => $this->dataDiscount['discount_type'],
                 'discount' => intval($this->dataDiscount['discount']),
             ]);
-
-            $diff = $total * (intval($this->dataDiscount['discount']) / 100);
-            $this->dataDiscount['total'] = $total - floatval($diff);
-            $this->dataDiscount['discount_text'] = $this->dataDiscount['discount'] . '%';
         } else {
             $discount = str_replace('.', '', $this->dataDiscount['discount']);
             $discount = str_replace(',', '.', $discount);
@@ -360,6 +413,16 @@ class BudgetMountLivewire extends Component
 
         $this->budget->update([
             'status_id' => $this->dataStatus['status_id']
+        ]);
+
+        return $this->emit('saved');
+    }
+
+    public function removeFee()
+    {
+        $this->budget->update([
+            'fee_type' => null,
+            'fee' => null,
         ]);
 
         return $this->emit('saved');

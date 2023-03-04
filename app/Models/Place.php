@@ -54,6 +54,11 @@ class Place extends Model
         'active',
     ];
 
+    public function getfullAddress()
+    {
+        return "{$this->street}, {$this->number} {$this->complement} - {$this->district} - {$this->city} - {$this->state} - {$this->zipcode}";
+    }
+
     public function documents()
     {
         return $this->hasMany(PlaceDocument::class);

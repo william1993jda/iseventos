@@ -1,6 +1,8 @@
-@props(['name', 'label', 'class' => 'form-control w-full'])
+@props(['name', 'label' => null, 'class' => 'form-control w-full'])
 <div @error($name) class="has-error" @enderror>
-    <label for="{{ $name }}" class="form-label">{{ $label }}</label>
+    @if (!empty($label))
+        <label for="{{ $name }}" class="form-label">{{ $label }}</label>
+    @endif
     {!! Form::textarea($name, null, [
         'class' => $class,
         'id' => $name,

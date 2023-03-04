@@ -27,6 +27,8 @@ class Budget extends Model
         'observation',
         'discount',
         'discount_type',
+        'fee',
+        'fee_type',
         'commercial_conditions',
     ];
 
