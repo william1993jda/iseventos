@@ -19,4 +19,13 @@ class OsCategory extends Model
     {
         return $this->hasMany(OsProduct::class);
     }
+
+    public function getActive()
+    {
+        if (!empty($this->attributes['id'])) {
+            return $this->attributes['active'] ? true : false;
+        }
+
+        return $this->attributes['active'] = true;
+    }
 }
