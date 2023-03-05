@@ -1,25 +1,25 @@
 <x-app-layout>
     <div class="intro-y flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
-            {{ $employee->user->name }} - Endereço
+            {{ $customer->name }} - Endereço
         </h2>
     </div>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <a href="{{ route('employees.addresses.index', $employee->id) }}"
+            <a href="{{ route('customers.addresses.index', $customer->id) }}"
                 class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
         </div>
         <div class="intro-y col-span-12">
             @if (empty($address->id))
                 {!! Form::open([
-                    'route' => ['employees.addresses.store', $employee->id],
+                    'route' => ['customers.addresses.store', $customer->id],
                     'method' => 'post',
                     'class' => 'needs-validation',
                 ]) !!}
             @else
                 {!! Form::model($address, [
-                    'route' => ['employees.addresses.update', [$employee->id, $address->id]],
+                    'route' => ['customers.addresses.update', [$customer->id, $address->id]],
                     'method' => 'put',
                     'class' => 'needs-validation',
                 ]) !!}
@@ -28,56 +28,21 @@
             <div class="intro-y box p-5">
                 <div class="sm:grid grid-cols-1 gap-2">
                     <div>
-                        <label for="name" class="form-label">Nome</label>
-                        {!! Form::text('name', null, ['class' => 'form-control w-full', 'required' => 'required', 'id' => 'name']) !!}
+                        <x-forms.text name="name" label="Nome" />
                     </div>
                 </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
-                    <div>
-                        <label for="street" class="form-label">Logradouro</label>
-                        {!! Form::text('street', null, ['class' => 'form-control w-full', 'required' => 'required', 'id' => 'street']) !!}
-                    </div>
-                    <div>
-                        <label for="number" class="form-label">Número</label>
-                        {!! Form::text('number', null, ['class' => 'form-control w-full', 'id' => 'number']) !!}
-                    </div>
-                    <div>
-                        <label for="complement" class="form-label">Complemento</label>
-                        {!! Form::text('complement', null, ['class' => 'form-control w-full', 'id' => 'complement']) !!}
-                    </div>
+                    <x-forms.text name="street" label="Logradouro" />
+                    <x-forms.text name="number" label="Número" />
+                    <x-forms.text name="complement" label="Complemento" />
                 </div>
                 <div class="sm:grid grid-cols-4 gap-2 mt-3">
-                    <div>
-                        <label for="district" class="form-label">Bairro</label>
-                        {!! Form::text('district', null, [
-                            'class' => 'form-control w-full',
-                            'required' => 'required',
-                            'id' => 'district',
-                        ]) !!}
-                    </div>
-                    <div>
-                        <label for="city" class="form-label">Cidade</label>
-                        {!! Form::text('city', null, ['class' => 'form-control w-full', 'required' => 'required', 'id' => 'city']) !!}
-                    </div>
-                    <div>
-                        <label for="complement" class="form-label">Estado</label>
-                        {!! Form::select('state', $states, null, ['class' => 'tom-select w-full', 'required']) !!}
-                    </div>
-                    <div>
-                        <label for="zipcode" class="form-label">CEP</label>
-                        {!! Form::text('zipcode', null, [
-                            'class' => 'form-control w-full',
-                            'required' => 'required',
-                            'id' => 'zipcode',
-                        ]) !!}
-                    </div>
+                    <x-forms.text name="district" label="Bairro" />
+                    <x-forms.text name="city" label="Cidade" />
+                    <x-forms.select name="state" label="Estado" :options="$states" />
+                    <x-forms.text name="zipcode" label="CEP" mask="'99.999-999'" />
                 </div>
-                @if (!isset($showMode))
-                    <div class="text-right mt-5">
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="submit" class="btn btn-primary w-24">Salvar</button>
-                    </div>
-                @endif
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$address" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

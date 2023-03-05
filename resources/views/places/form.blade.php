@@ -42,14 +42,9 @@
                     <x-forms.text name="district" label="Bairro" />
                     <x-forms.text name="city" label="Cidade" />
                     <x-forms.select name="state" label="Estado" :options="$states" />
-                    <x-forms.text name="zipcode" label="CEP" />
+                    <x-forms.text name="zipcode" label="CEP" mask="'99.999-999'" />
                 </div>
-                @if (!isset($showMode))
-                    <div class="text-right mt-5">
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="submit" class="btn btn-primary w-24">Salvar</button>
-                    </div>
-                @endif
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$place" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

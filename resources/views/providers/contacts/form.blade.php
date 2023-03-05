@@ -27,31 +27,14 @@
             <!-- BEGIN: Form Layout -->
             <div class="intro-y box p-5">
                 <div class="sm:grid grid-cols-3 gap-2">
-                    <div>
-                        <label for="name" class="form-label">Nome</label>
-                        {!! Form::text('name', null, ['class' => 'form-control w-full', 'required' => 'required', 'id' => 'name']) !!}
-                    </div>
-                    <div>
-                        <label for="email" class="form-label">E-mail</label>
-                        {!! Form::email('email', null, ['class' => 'form-control w-full', 'id' => 'email']) !!}
-                    </div>
-                    <div>
-                        <label for="phone" class="form-label">Telefone</label>
-                        {!! Form::text('phone', null, ['class' => 'form-control w-full', 'id' => 'phone']) !!}
-                    </div>
+                    <x-forms.text name="name" label="Nome" />
+                    <x-forms.email name="email" label="E-mail" />
+                    <x-forms.text name="phone" label="Telefone" mask="'(99) 99999-9999'" />
                 </div>
                 <div class="sm:grid grid-cols-1 gap-2 mt-3">
-                    <div>
-                        <label for="observation" class="form-label">Observação</label>
-                        {!! Form::textarea('observation', null, ['class' => 'form-control w-full', 'id' => 'observation']) !!}
-                    </div>
+                    <x-forms.textarea name="observation" label="Observação" />
                 </div>
-                @if (!isset($showMode))
-                    <div class="text-right mt-5">
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="submit" class="btn btn-primary w-24">Salvar</button>
-                    </div>
-                @endif
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$contact" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

@@ -26,45 +26,15 @@
             <!-- BEGIN: Form Layout -->
             <div class="intro-y box p-5">
                 <div class="sm:grid grid-cols-2 gap-2">
-                    <div @error('category_id') class="has-error" @enderror>
-                        <label for="category_id" class="form-label">Categoria</label>
-                        {!! Form::select('category_id', $categories, null, ['class' => 'tom-select w-full', 'id' => 'category_id']) !!}
-                        @error('category_id')
-                            <div class="pristine-error text-danger mt-2">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div @error('name') class="has-error" @enderror>
-                        <label for="name" class="form-label">Nome</label>
-                        {!! Form::text('name', null, [
-                            'class' => 'form-control w-full',
-                            'id' => 'name',
-                        ]) !!}
-                        @error('name')
-                            <div class="pristine-error text-danger mt-2">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    <x-forms.select name="category_id" label="Categoria" :options="$categories" />
+                    <x-forms.text name="name" label="Nome" />
                 </div>
                 <div class="sm:grid grid-cols-2 gap-2 mt-3">
-                    <div @error('price') class="has-error" @enderror>
-                        <label for="price" class="form-label">Preço</label>
-                        {!! Form::text('price', null, ['class' => 'form-control w-full money', 'id' => 'price']) !!}
-                        @error('price')
-                            <div class="pristine-error text-danger mt-2">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div>
-                        <label for="type" class="form-label">Ativo</label>
-                        <div class="form-switch mt-2">
-                            {!! Form::checkbox('active', 1, $labor->getActive(), ['class' => 'form-check-input']) !!}
-                        </div>
-                    </div>
+
+                    <x-forms.text name="price" label="Preço" mask="'R$ 9999999,99'" />
+                    <x-forms.checkbox name="active" label="Ativo" :options="$labor->getActive()" />
                 </div>
-                @if (!isset($showMode))
-                    <div class="text-right mt-5">
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="submit" class="btn btn-primary w-24">Salvar</button>
-                    </div>
-                @endif
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$labor" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->
