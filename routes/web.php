@@ -22,6 +22,7 @@ use App\Http\Controllers\ProviderAddressController;
 use App\Http\Controllers\ProviderBankController;
 use App\Http\Controllers\ProviderContactController;
 use App\Http\Controllers\ProviderController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StoryboardController;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('roles', RoleController::class)->names('roles');
+    Route::get('roles/permissions/{role}', [RoleController::class, 'permissions'])->name('roles.permissions');
+    Route::post('roles/permissions/{role}/store', [RoleController::class, 'permissionsStore'])->name('roles.permissions.store');
 
     Route::resource('users', UserController::class)->names('users');
 

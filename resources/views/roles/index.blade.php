@@ -1,10 +1,10 @@
 <x-app-layout>
     <h2 class="intro-y text-lg font-medium mt-10">
-        Funcionários
+        Perfis de Usuário
     </h2>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <form action="{{ route('employees.index') }}" method="GET" class="flex">
+            <form action="{{ route('roles.index') }}" method="GET" class="flex">
                 <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
                     <div class="w-56 relative text-slate-500">
                         <input type="text" name="query" class="form-control w-56 box pr-10" placeholder="Buscar..."
@@ -13,10 +13,10 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary shadow-md ml-2">Buscar</button>
-                <a href="{{ route('employees.index') }}" class="btn btn-secondary shadow-md ml-2">Limpar</a>
+                <a href="{{ route('roles.index') }}" class="btn btn-secondary shadow-md ml-2">Limpar</a>
             </form>
             <div class="hidden md:block mx-auto text-slate-500"></div>
-            <x-forms.buttons.create route="employees.create" />
+            {{-- <a href="{{ route('roles.create') }}" class="btn btn-primary shadow-md mr-2">Novo</a> --}}
         </div>
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
@@ -24,22 +24,20 @@
                 <thead>
                     <tr>
                         <th class="whitespace-nowrap">NOME</th>
-                        <th class="text-center whitespace-nowrap">E-MAIL</th>
                         <th class="text-center whitespace-nowrap">AÇÕES</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($employees as $employee)
+                    @foreach ($roles as $role)
                         <tr class="intro-x">
                             <td>
-                                <a href="{{ route('employees.show', $employee->id) }}"
-                                    class="font-medium whitespace-nowrap">{{ $employee->name }}</a>
+                                <a href="javascript:;" class="font-medium whitespace-nowrap">{{ $role->name }}</a>
                             </td>
-                            <td class="text-center">{{ $employee->email }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit :route="route('employees.edit', $employee->id)" />
-                                    <x-forms.buttons.delete :route="route('employees.destroy', $employee->id)" />
+                                    <x-forms.buttons.icon :route="route('roles.permissions', $role->id)" icon="list-checks" label="Permissões" />
+                                    {{-- <x-forms.buttons.edit :route="route('roles.edit', $role->id)" />
+                                    <x-forms.buttons.delete :route="route('roles.destroy', $role->id)" /> --}}
                                 </div>
                             </td>
                         </tr>
@@ -49,7 +47,7 @@
         </div>
         <!-- END: Data List -->
 
-        {{ $employees->links('layouts.paginator') }}
+        {{ $roles->links('layouts.paginator') }}
 
     </div>
 </x-app-layout>
