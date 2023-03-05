@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -33,21 +34,21 @@ class CustomerController extends Controller
         return view('customers.form', compact('customer'));
     }
 
-    public function store(Request $request)
+    public function store(CustomerRequest $request)
     {
-        Customer::create($request->all());
+        Customer::create($request->validated());
 
         return redirect()->route('customers.index');
     }
 
-    public function edit(Customer $customer)
+    public function edit(Customer $customer, $showMode = false)
     {
-        return view('customers.form', compact('customer'));
+        return view('customers.form', compact('customer', 'showMode'));
     }
 
-    public function update(Customer $customer, Request $request)
+    public function update(Customer $customer, CustomerRequest $request)
     {
-        $customer->update($request->all());
+        $customer->update($request->validated());
 
         return redirect()->route('customers.index');
     }
@@ -63,8 +64,6 @@ class CustomerController extends Controller
 
     public function show(Customer $customer)
     {
-        $showMode = true;
-
-        return view('customers.form', compact('customer', 'showMode'));
+        return $this->edit($customer, true);
     }
 }

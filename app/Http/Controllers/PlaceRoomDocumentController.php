@@ -2,71 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PlaceDocumentRequest;
+use App\Http\Requests\PlaceRoomDocumentRequest;
 use App\Models\Place;
-use App\Models\PlaceDocument;
+use App\Models\PlaceRoomDocument;
+use App\Models\PlaceRoom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class PlaceDocumentController extends Controller
+class PlaceRoomDocumentController extends Controller
 {
-    public function index(Place $place)
+    public function index(Place $place, PlaceRoom $room)
     {
-        $documents = $place->documents()->paginate(10);
+        $documents = $room->documents()->paginate(10);
 
-        return view('places.documents.index', compact('place', 'documents'));
+        return view('places.rooms.documents.index', compact('room', 'documents'));
     }
 
-    public function create(Place $place)
+    public function create(Place $place, PlaceRoom $room)
     {
-        $document = new PlaceDocument();
+        $document = new PlaceRoomDocument();
 
-        return view('places.documents.form', compact('place', 'document'));
+        return view('places.rooms.documents.form', compact('room', 'document'));
     }
 
-    public function store(Place $place, PlaceDocumentRequest $request)
+    public function store(Place $place, PlaceRoom $room, PlaceRoomDocumentRequest $request)
     {
         if ($request->has('file')) {
             $file = $request->file('file');
             $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
 
-            $url = 'places/documents/' . $filename;
+            $url = 'places/rooms/documents/' . $filename;
 
             Storage::disk("s3")->put($url, file_get_contents($file));
 
-            $place->documents()->create([
+            $room->documents()->create([
                 'name' => $request->get('name'),
                 'url' => $url,
             ]);
         }
 
-        return redirect()->route('places.documents.index', $place->id);
+        return redirect()->route('places.rooms.documents.index', [$place->id, $room->id]);
     }
 
-    public function edit(Place $place, PlaceDocument $document)
+    public function edit(PlaceRoom $placeRoom, PlaceRoomDocument $document, $showMode = false)
     {
-        return view('places.documents.form', compact('place', 'document'));
+        return view('places.rooms.documents.form', compact('placeRoom', 'document', 'showMode'));
     }
 
-    public function update(Place $place, PlaceDocument $document, PlaceDocumentRequest $request)
+    public function update(PlaceRoom $placeRoom, PlaceRoomDocument $document, PlaceRoomDocumentRequest $request)
     {
         $document->update($request->all());
 
-        return redirect()->route('places.documents.index', $place->id);
+        return redirect()->route('places.rooms.documents.index', $placeRoom->id);
     }
 
-    public function destroy(Place $place, PlaceDocument $document)
+    public function destroy(PlaceRoom $placeRoom, PlaceRoomDocument $document)
     {
         $document->delete();
 
-        return redirect()->route('places.documents.index', $place->id);
+        return redirect()->route('places.rooms.documents.index', $placeRoom->id);
     }
 
-    public function show(Place $place, PlaceDocument $document)
+    public function show(PlaceRoom $placeRoom, PlaceRoomDocument $document)
     {
-        $showMode = true;
-
-        return view('places.documentes.form', compact('place', 'document', 'showMode'));
+        return $this->edit($placeRoom, $document, true);
     }
 }

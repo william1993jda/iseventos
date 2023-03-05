@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerAddressRequest;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use Illuminate\Http\Request;
@@ -23,23 +24,23 @@ class CustomerAddressController extends Controller
         return view('customers.addresses.form', compact('customer', 'address', 'states'));
     }
 
-    public function store(Customer $customer, Request $request)
+    public function store(Customer $customer, CustomerAddressRequest $request)
     {
-        $customer->addresses()->create($request->all());
+        $customer->addresses()->create($request->validated());
 
         return redirect()->route('customers.addresses.index', $customer->id);
     }
 
-    public function edit(Customer $customer, CustomerAddress $address)
+    public function edit(Customer $customer, CustomerAddress $address, $showMode = false)
     {
         $states = CustomerAddress::STATES;
 
-        return view('customers.addresses.form', compact('customer', 'address', 'states'));
+        return view('customers.addresses.form', compact('customer', 'address', 'states', 'showMode'));
     }
 
-    public function update(Customer $customer, CustomerAddress $address, Request $request)
+    public function update(Customer $customer, CustomerAddress $address, CustomerAddressRequest $request)
     {
-        $address->update($request->all());
+        $address->update($request->validated());
 
         return redirect()->route('customers.addresses.index', $customer->id);
     }
@@ -53,8 +54,6 @@ class CustomerAddressController extends Controller
 
     public function show(Customer $customer, CustomerAddress $address)
     {
-        $showMode = true;
-
-        return view('customers.addresses.form', compact('customer', 'address', 'showMode'));
+        return $this->edit($customer, $address, true);
     }
 }

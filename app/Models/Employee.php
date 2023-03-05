@@ -100,4 +100,9 @@ class Employee extends Model
     {
         return $this->hasMany(EmployeeDependent::class);
     }
+
+    public function documents()
+    {
+        return $this->hasMany(EmployeeDocument::class);
+    }
 }

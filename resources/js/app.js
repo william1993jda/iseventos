@@ -52,9 +52,11 @@ import "./dark-mode-switcher";
 import mask from "@alpinejs/mask";
 import Alpine from "alpinejs";
 import TomSelect from "tom-select";
+import Toastify from "toastify-js";
 
 window.Alpine = Alpine;
 window.TomSelect = TomSelect;
+window.Toastify = Toastify;
 
 Alpine.plugin(mask);
 Alpine.start();

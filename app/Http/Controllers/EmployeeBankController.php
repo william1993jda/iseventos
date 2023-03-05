@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EmployeeBankRequest;
 use App\Models\Employee;
 use App\Models\EmployeeBank;
 use Illuminate\Http\Request;
@@ -23,23 +24,23 @@ class EmployeeBankController extends Controller
         return view('employees.banks.form', compact('employee', 'bank', 'types'));
     }
 
-    public function store(Employee $employee, Request $request)
+    public function store(Employee $employee, EmployeeBankRequest $request)
     {
-        $employee->banks()->create($request->all());
+        $employee->banks()->create($request->validated());
 
         return redirect()->route('employees.banks.index', $employee->id);
     }
 
-    public function edit(Employee $employee, EmployeeBank $bank)
+    public function edit(Employee $employee, EmployeeBank $bank, $showMode = false)
     {
         $types = EmployeeBank::TYPES;
 
-        return view('employees.banks.form', compact('employee', 'bank', 'types'));
+        return view('employees.banks.form', compact('employee', 'bank', 'types', 'showMode'));
     }
 
-    public function update(Employee $employee, EmployeeBank $bank, Request $request)
+    public function update(Employee $employee, EmployeeBank $bank, EmployeeBankRequest $request)
     {
-        $bank->update($request->all());
+        $bank->update($request->validated());
 
         return redirect()->route('employees.banks.index', $employee->id);
     }
@@ -53,10 +54,6 @@ class EmployeeBankController extends Controller
 
     public function show(Employee $employee, EmployeeBank $bank)
     {
-        $showMode = true;
-        $types = EmployeeBank::TYPES;
-
-
-        return view('employees.banks.form', compact('employee', 'bank', 'showMode', 'types'));
+        return $this->edit($employee, $bank, true);
     }
 }

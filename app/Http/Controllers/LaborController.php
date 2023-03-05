@@ -43,11 +43,11 @@ class LaborController extends Controller
         return redirect()->route('labors.index');
     }
 
-    public function edit(Labor $labor)
+    public function edit(Labor $labor, $showMode = false)
     {
         $categories = Category::pluck('name', 'id')->prepend('Selecione', '');
 
-        return view('labors.form', compact('labor', 'categories'));
+        return view('labors.form', compact('labor', 'categories', 'showMode'));
     }
 
     public function update(Labor $labor, LaborRequest $request)
@@ -72,9 +72,6 @@ class LaborController extends Controller
 
     public function show(Labor $labor)
     {
-        $showMode = true;
-        $categories = Category::pluck('name', 'id')->prepend('Selecione', '');
-
-        return view('labors.form', compact('labor', 'categories', 'showMode'));
+        return $this->edit($labor, true);
     }
 }

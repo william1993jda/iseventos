@@ -17,4 +17,21 @@ class EmployeeDependent extends Model
         'identification',
         'social_security',
     ];
+
+    public function setBirthdayAttribute($value)
+    {
+        $this->attributes['birthday'] = date('Y-m-d', strtotime(str_replace('/', '-', $value)));
+    }
+
+    public function getBirthdayAttribute($value)
+    {
+        if ($value) {
+            return date('d/m/Y', strtotime($value));
+        }
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

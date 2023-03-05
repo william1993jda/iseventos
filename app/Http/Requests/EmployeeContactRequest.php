@@ -25,6 +25,7 @@ class EmployeeContactRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255',
             'phone' => 'nullable|string|max:255',
+            'observation' => 'nullable|string|max:255',
         ];
     }
 
@@ -34,6 +35,7 @@ class EmployeeContactRequest extends FormRequest
             'name' => 'nome',
             'email' => 'e-mail',
             'phone' => 'telefone',
+            'observation' => 'observação',
         ];
     }
 }

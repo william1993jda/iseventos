@@ -52,13 +52,13 @@ class EmployeeController extends Controller
         return redirect()->route('employees.index');
     }
 
-    public function edit(Employee $employee)
+    public function edit(Employee $employee, $showMode = false)
     {
         $user = User::find($employee->user_id);
         $employee->name = $user->name;
         $employee->email = $user->email;
 
-        return view('employees.form', compact('employee'));
+        return view('employees.form', compact('employee', 'showMode'));
     }
 
     public function update(Employee $employee, EmployeeRequest $request)
@@ -87,11 +87,6 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee)
     {
-        $user = User::find($employee->user_id);
-        $employee->name = $user->name;
-        $employee->email = $user->email;
-        $showMode = true;
-
-        return view('employees.form', compact('employee', 'showMode'));
+        return $this->edit($employee, true);
     }
 }

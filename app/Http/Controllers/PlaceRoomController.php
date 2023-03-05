@@ -33,9 +33,9 @@ class PlaceRoomController extends Controller
         return redirect()->route('places.rooms.index', $place->id);
     }
 
-    public function edit(Place $place, PlaceRoom $room)
+    public function edit(Place $place, PlaceRoom $room, $showMode = false)
     {
-        return view('places.rooms.form', compact('place', 'room'));
+        return view('places.rooms.form', compact('place', 'room', 'showMode'));
     }
 
     public function update(Place $place, PlaceRoom $room, PlaceRoomRequest $request)
@@ -58,8 +58,6 @@ class PlaceRoomController extends Controller
 
     public function show(Place $place, PlaceRoom $room)
     {
-        $showMode = true;
-
-        return view('places.rooms.form', compact('place', 'room', 'showMode'));
+        return $this->edit($place, $room, true);
     }
 }

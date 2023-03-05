@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AgencyRequest;
 use App\Models\Agency;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class AgencyController extends Controller
         $query = $request->get('query');
 
         if ($params) {
-            $agencies = Agency::where('name', 'like', '%' . $params['query'] . '%')
+            $agencies = Agency::where('fantasy_name', 'like', '%' . $params['query'] . '%')
                 ->orWhere('email', 'like', '%' . $params['query'] . '%')
                 ->paginate(10);
 
@@ -32,21 +33,21 @@ class AgencyController extends Controller
         return view('agencies.form', compact('agency'));
     }
 
-    public function store(Request $request)
+    public function store(AgencyRequest $request)
     {
-        Agency::create($request->all());
+        Agency::create($request->validated());
 
         return redirect()->route('agencies.index');
     }
 
-    public function edit(Agency $agency)
+    public function edit(Agency $agency, $showMode = false)
     {
-        return view('agencies.form', compact('agency'));
+        return view('agencies.form', compact('agency', 'showMode'));
     }
 
-    public function update(Agency $agency, Request $request)
+    public function update(Agency $agency, AgencyRequest $request)
     {
-        $agency->update($request->all());
+        $agency->update($request->validated());
 
         return redirect()->route('agencies.index');
     }
@@ -62,8 +63,6 @@ class AgencyController extends Controller
 
     public function show(Agency $agency)
     {
-        $showMode = true;
-
-        return view('agencies.form', compact('agency', 'showMode'));
+        return $this->edit($agency, true);
     }
 }

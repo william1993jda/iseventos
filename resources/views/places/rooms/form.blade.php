@@ -8,6 +8,9 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('places.rooms.index', $place->id) }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
+            @if (!empty($room->id))
+                <x-forms.buttons.primary route="places.rooms.documents.index" :id="[$place->id, $room->id]" label="Documentos" />
+            @endif
         </div>
         <div class="intro-y col-span-12">
             @if (empty($room->id))
@@ -29,12 +32,7 @@
                     <x-forms.text name="name" label="Nome" />
                     <x-forms.checkbox name="active" label="Ativo" :checked="$room->active" />
                 </div>
-                @if (!isset($showMode))
-                    <div class="text-right mt-5">
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="submit" class="btn btn-primary w-24">Salvar</button>
-                    </div>
-                @endif
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$room" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

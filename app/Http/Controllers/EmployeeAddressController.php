@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EmployeeAddressRequest;
 use App\Models\Employee;
 use App\Models\EmployeeAddress;
 use Illuminate\Http\Request;
@@ -23,23 +24,23 @@ class EmployeeAddressController extends Controller
         return view('employees.addresses.form', compact('employee', 'address', 'states'));
     }
 
-    public function store(Employee $employee, Request $request)
+    public function store(Employee $employee, EmployeeAddressRequest $request)
     {
-        $employee->addresses()->create($request->all());
+        $employee->addresses()->create($request->validated());
 
         return redirect()->route('employees.addresses.index', $employee->id);
     }
 
-    public function edit(Employee $employee, EmployeeAddress $address)
+    public function edit(Employee $employee, EmployeeAddress $address, $showMode = false)
     {
         $states = EmployeeAddress::STATES;
 
-        return view('employees.addresses.form', compact('employee', 'address', 'states'));
+        return view('employees.addresses.form', compact('employee', 'address', 'states', 'showMode'));
     }
 
-    public function update(Employee $employee, EmployeeAddress $address, Request $request)
+    public function update(Employee $employee, EmployeeAddress $address, EmployeeAddressRequest $request)
     {
-        $address->update($request->all());
+        $address->update($request->validated());
 
         return redirect()->route('employees.addresses.index', $employee->id);
     }
@@ -53,9 +54,6 @@ class EmployeeAddressController extends Controller
 
     public function show(Employee $employee, EmployeeAddress $address)
     {
-        $showMode = true;
-        $states = EmployeeAddress::STATES;
-
-        return view('employees.addresses.form', compact('employee', 'address', 'showMode', 'states'));
+        return $this->edit($employee, $address, true);
     }
 }

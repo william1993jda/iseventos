@@ -44,9 +44,9 @@ class PlaceDocumentController extends Controller
         return redirect()->route('places.documents.index', $place->id);
     }
 
-    public function edit(Place $place, PlaceDocument $document)
+    public function edit(Place $place, PlaceDocument $document, $showMode = false)
     {
-        return view('places.documents.form', compact('place', 'document'));
+        return view('places.documents.form', compact('place', 'document', 'showMode'));
     }
 
     public function update(Place $place, PlaceDocument $document, PlaceDocumentRequest $request)
@@ -65,8 +65,6 @@ class PlaceDocumentController extends Controller
 
     public function show(Place $place, PlaceDocument $document)
     {
-        $showMode = true;
-
-        return view('places.documentes.form', compact('place', 'document', 'showMode'));
+        return $this->edit($place, $document, true);
     }
 }

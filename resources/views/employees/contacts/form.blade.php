@@ -29,17 +29,12 @@
                 <div class="sm:grid grid-cols-3 gap-2">
                     <x-forms.text name="name" label="Nome" />
                     <x-forms.email name="email" label="E-mail" />
-                    <x-forms.text name="phone" label="Telefone" />
+                    <x-forms.text name="phone" label="Telefone" mask="'(99) 99999-9999'" />
                 </div>
                 <div class="sm:grid grid-cols-1 gap-2 mt-3">
                     <x-forms.textarea name="observation" label="Observação" />
                 </div>
-                @if (!isset($showMode))
-                    <div class="text-right mt-5">
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="submit" class="btn btn-primary w-24">Salvar</button>
-                    </div>
-                @endif
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$contact" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

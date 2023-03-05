@@ -9,10 +9,8 @@
             <a href="{{ route('customers.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
             @if (!empty($customer->id))
-                <a href="{{ route('customers.contacts.index', $customer->id) }}"
-                    class="btn btn-primary shadow-md mr-2">Contatos</a>
-                <a href="{{ route('customers.addresses.index', $customer->id) }}"
-                    class="btn btn-primary shadow-md mr-2">Endereços</a>
+                <x-forms.buttons.primary route="customers.contacts.index" :id="$customer->id" label="Contatos" />
+                <x-forms.buttons.primary route="customers.addresses.index" :id="$customer->id" label="Endereços" />
             @endif
         </div>
         <div class="intro-y col-span-12">

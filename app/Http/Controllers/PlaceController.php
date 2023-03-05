@@ -41,11 +41,11 @@ class PlaceController extends Controller
         return redirect()->route('places.index');
     }
 
-    public function edit(Place $place)
+    public function edit(Place $place, $showMode = false)
     {
         $states = Place::STATES;
 
-        return view('places.form', compact('place', 'states'));
+        return view('places.form', compact('place', 'states', 'showMode'));
     }
 
     public function update(Place $place, PlaceRequest $request)
@@ -57,8 +57,12 @@ class PlaceController extends Controller
 
     public function destroy(Place $place)
     {
-        // $place->addresses()->delete();
-        // $place->contacts()->delete();
+        $place->rooms()->get()->each(function ($room) {
+            $room->documents()->delete();
+        });
+
+        $place->rooms()->delete();
+        $place->documents()->delete();
         $place->delete();
 
         return redirect()->route('places.index');
@@ -66,9 +70,6 @@ class PlaceController extends Controller
 
     public function show(Place $place)
     {
-        $showMode = true;
-        $states = Place::STATES;
-
-        return view('places.form', compact('place', 'showMode', 'states'));
+        return $this->edit($place, true);
     }
 }

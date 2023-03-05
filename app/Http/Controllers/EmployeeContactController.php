@@ -30,9 +30,9 @@ class EmployeeContactController extends Controller
         return redirect()->route('employees.contacts.index', $employee->id);
     }
 
-    public function edit(Employee $employee, EmployeeContact $contact)
+    public function edit(Employee $employee, EmployeeContact $contact, $showMode = false)
     {
-        return view('employees.contacts.form', compact('employee', 'contact'));
+        return view('employees.contacts.form', compact('employee', 'contact', 'showMode'));
     }
 
     public function update(Employee $employee, EmployeeContact $contact, EmployeeContactRequest $request)
@@ -51,8 +51,6 @@ class EmployeeContactController extends Controller
 
     public function show(Employee $employee, EmployeeContact $contact)
     {
-        $showMode = true;
-
-        return view('employees.contacts.form', compact('employee', 'contact', 'showMode'));
+        return $this->edit($employee, $contact, true);
     }
 }

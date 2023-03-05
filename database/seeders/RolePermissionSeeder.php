@@ -54,9 +54,64 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'employees.contacts.edit']);
         Permission::firstOrCreate(['name' => 'employees.contacts.destroy']);
 
+        Permission::firstOrCreate(['name' => 'employees.addresses.index']);
+        Permission::firstOrCreate(['name' => 'employees.addresses.create']);
+        Permission::firstOrCreate(['name' => 'employees.addresses.edit']);
+        Permission::firstOrCreate(['name' => 'employees.addresses.destroy']);
+
+        Permission::firstOrCreate(['name' => 'employees.banks.index']);
+        Permission::firstOrCreate(['name' => 'employees.banks.create']);
+        Permission::firstOrCreate(['name' => 'employees.banks.edit']);
+        Permission::firstOrCreate(['name' => 'employees.banks.destroy']);
+
+        Permission::firstOrCreate(['name' => 'employees.dependents.index']);
+        Permission::firstOrCreate(['name' => 'employees.dependents.create']);
+        Permission::firstOrCreate(['name' => 'employees.dependents.edit']);
+        Permission::firstOrCreate(['name' => 'employees.dependents.destroy']);
+
+        Permission::firstOrCreate(['name' => 'employees.documents.index']);
+        Permission::firstOrCreate(['name' => 'employees.documents.create']);
+        Permission::firstOrCreate(['name' => 'employees.documents.edit']);
+        Permission::firstOrCreate(['name' => 'employees.documents.destroy']);
+
+        Permission::firstOrCreate(['name' => 'customers.index']);
+        Permission::firstOrCreate(['name' => 'customers.create']);
+        Permission::firstOrCreate(['name' => 'customers.edit']);
+        Permission::firstOrCreate(['name' => 'customers.destroy']);
+
+        Permission::firstOrCreate(['name' => 'customers.contacts.index']);
+        Permission::firstOrCreate(['name' => 'customers.contacts.create']);
+        Permission::firstOrCreate(['name' => 'customers.contacts.edit']);
+        Permission::firstOrCreate(['name' => 'customers.contacts.destroy']);
+
+        Permission::firstOrCreate(['name' => 'customers.addresses.index']);
+        Permission::firstOrCreate(['name' => 'customers.addresses.create']);
+        Permission::firstOrCreate(['name' => 'customers.addresses.edit']);
+        Permission::firstOrCreate(['name' => 'customers.addresses.destroy']);
+
         Permission::firstOrCreate(['name' => 'labors.index']);
         Permission::firstOrCreate(['name' => 'labors.create']);
         Permission::firstOrCreate(['name' => 'labors.edit']);
         Permission::firstOrCreate(['name' => 'labors.destroy']);
+
+        Permission::firstOrCreate(['name' => 'places.index']);
+        Permission::firstOrCreate(['name' => 'places.create']);
+        Permission::firstOrCreate(['name' => 'places.edit']);
+        Permission::firstOrCreate(['name' => 'places.destroy']);
+
+        Permission::firstOrCreate(['name' => 'places.documents.index']);
+        Permission::firstOrCreate(['name' => 'places.documents.create']);
+        Permission::firstOrCreate(['name' => 'places.documents.edit']);
+        Permission::firstOrCreate(['name' => 'places.documents.destroy']);
+
+        Permission::firstOrCreate(['name' => 'places.rooms.index']);
+        Permission::firstOrCreate(['name' => 'places.rooms.create']);
+        Permission::firstOrCreate(['name' => 'places.rooms.edit']);
+        Permission::firstOrCreate(['name' => 'places.rooms.destroy']);
+
+        Permission::firstOrCreate(['name' => 'places.rooms.documents.index']);
+        Permission::firstOrCreate(['name' => 'places.rooms.documents.create']);
+        Permission::firstOrCreate(['name' => 'places.rooms.documents.edit']);
+        Permission::firstOrCreate(['name' => 'places.rooms.documents.destroy']);
     }
 }

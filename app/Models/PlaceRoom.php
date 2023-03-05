@@ -15,4 +15,14 @@ class PlaceRoom extends Model
         'name',
         'active',
     ];
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(PlaceRoomDocument::class);
+    }
 }

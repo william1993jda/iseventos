@@ -18,4 +18,9 @@ class CustomerContact extends Model
         'phone',
         'observation',
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AgencyAddressRequest;
 use App\Models\Agency;
 use App\Models\AgencyAddress;
 use Illuminate\Http\Request;
@@ -23,23 +24,23 @@ class AgencyAddressController extends Controller
         return view('agencies.addresses.form', compact('agency', 'address', 'states'));
     }
 
-    public function store(Agency $agency, Request $request)
+    public function store(Agency $agency, AgencyAddressRequest $request)
     {
-        $agency->addresses()->create($request->all());
+        $agency->addresses()->create($request->validated());
 
         return redirect()->route('agencies.addresses.index', $agency->id);
     }
 
-    public function edit(Agency $agency, AgencyAddress $address)
+    public function edit(Agency $agency, AgencyAddress $address, $showMode = false)
     {
         $states = AgencyAddress::STATES;
 
-        return view('agencies.addresses.form', compact('agency', 'address', 'states'));
+        return view('agencies.addresses.form', compact('agency', 'address', 'states', 'showMode'));
     }
 
-    public function update(Agency $agency, AgencyAddress $address, Request $request)
+    public function update(Agency $agency, AgencyAddress $address, AgencyAddressRequest $request)
     {
-        $address->update($request->all());
+        $address->update($request->validated());
 
         return redirect()->route('agencies.addresses.index', $agency->id);
     }
@@ -53,8 +54,6 @@ class AgencyAddressController extends Controller
 
     public function show(Agency $agency, AgencyAddress $address)
     {
-        $showMode = true;
-
-        return view('agencies.addresses.form', compact('agency', 'address', 'showMode'));
+        return $this->edit($agency, $address, true);
     }
 }

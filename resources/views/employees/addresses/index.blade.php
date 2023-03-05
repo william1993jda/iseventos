@@ -4,8 +4,9 @@
     </h2>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <a href="{{ route('employees.addresses.create', $employee->id) }}"
-                class="btn btn-primary shadow-md mr-2">Novo</a>
+            <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
+            <div class="hidden md:block mx-auto text-slate-500"></div>
+            <x-forms.buttons.create route="employees.addresses.create" :id="$employee->id" />
         </div>
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
@@ -29,10 +30,8 @@
                             <td class="text-center">{{ $address->state }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit
-                                        route="employees.addresses.edit', [$employee->id, $address->id])" />
-                                    <x-forms.buttons.destroy
-                                        route="employees.addresses.destroy', [$employee->id, $address->id])" />
+                                    <x-forms.buttons.edit route="employees.addresses.edit" :id="[$employee->id, $address->id]" />
+                                    <x-forms.buttons.destroy route="employees.addresses.destroy" :id="[$employee->id, $address->id]" />
                                 </div>
                             </td>
                         </tr>

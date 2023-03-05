@@ -12,11 +12,13 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeAddressController;
 use App\Http\Controllers\EmployeeContactController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployeeDocumentController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\LaborController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\PlaceDocumentController;
 use App\Http\Controllers\PlaceRoomController;
+use App\Http\Controllers\PlaceRoomDocumentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProviderAddressController;
 use App\Http\Controllers\ProviderBankController;
@@ -66,6 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('employees.addresses', EmployeeAddressController::class)->names('employees.addresses');
     Route::resource('employees.banks', EmployeeBankController::class)->names('employees.banks');
     Route::resource('employees.dependents', EmployeeDependentController::class)->names('employees.dependents');
+    Route::resource('employees.documents', EmployeeDocumentController::class)->names('employees.documents');
 
     Route::resource('customers', CustomerController::class)->names('customers');
     Route::resource('customers.contacts', CustomerContactController::class)->names('customers.contacts');
@@ -81,8 +84,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('providers.banks', ProviderBankController::class)->names('providers.banks');
 
     Route::resource('places', PlaceController::class)->names('places');
-    Route::resource('places.rooms', PlaceRoomController::class)->names('places.rooms');
     Route::resource('places.documents', PlaceDocumentController::class)->names('places.documents');
+    Route::resource('places.rooms', PlaceRoomController::class)->names('places.rooms');
+    Route::resource('places.rooms.documents', PlaceRoomDocumentController::class)->names('places.rooms.documents');
 
     Route::resource('labors', LaborController::class)->names('labors');
 

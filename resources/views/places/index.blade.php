@@ -16,7 +16,7 @@
                 <a href="{{ route('places.index') }}" class="btn btn-secondary shadow-md ml-2">Limpar</a>
             </form>
             <div class="hidden md:block mx-auto text-slate-500"></div>
-            <a href="{{ route('places.create') }}" class="btn btn-primary shadow-md mr-2">Novo</a>
+            <x-forms.buttons.create route="places.create" />
         </div>
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">

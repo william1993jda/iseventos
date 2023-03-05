@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AgencyContactRequest;
 use App\Models\Agency;
 use App\Models\AgencyContact;
 use Illuminate\Http\Request;
@@ -22,21 +23,21 @@ class AgencyContactController extends Controller
         return view('agencies.contacts.form', compact('agency', 'contact'));
     }
 
-    public function store(Agency $agency, Request $request)
+    public function store(Agency $agency, AgencyContactRequest $request)
     {
-        $agency->contacts()->create($request->all());
+        $agency->contacts()->create($request->validated());
 
         return redirect()->route('agencies.contacts.index', $agency->id);
     }
 
-    public function edit(Agency $agency, AgencyContact $contact)
+    public function edit(Agency $agency, AgencyContact $contact, $showMode = false)
     {
         return view('agencies.contacts.form', compact('agency', 'contact'));
     }
 
-    public function update(Agency $agency, AgencyContact $contact, Request $request)
+    public function update(Agency $agency, AgencyContact $contact, AgencyContactRequest $request)
     {
-        $contact->update($request->all());
+        $contact->update($request->validated());
 
         return redirect()->route('agencies.contacts.index', $agency->id);
     }
@@ -50,8 +51,6 @@ class AgencyContactController extends Controller
 
     public function show(Agency $agency, AgencyContact $contact)
     {
-        $showMode = true;
-
-        return view('agencies.contacts.form', compact('agency', 'contact', 'showMode'));
+        return $this->edit($agency, $contact, true);
     }
 }

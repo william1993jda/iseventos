@@ -6,8 +6,7 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
-            <a href="{{ route('employees.contacts.create', $employee->id) }}"
-                class="btn btn-primary shadow-md mr-2">Novo</a>
+            <x-forms.buttons.create route="employees.contacts.create" :id="$employee->id" />
         </div>
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">

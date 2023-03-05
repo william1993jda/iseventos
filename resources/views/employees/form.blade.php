@@ -10,14 +10,10 @@
             <div class="hidden md:block mx-auto text-slate-500"></div>
             @if (!empty($employee->id))
                 <x-forms.buttons.primary route="employees.contacts.index" :id="$employee->id" label="Contatos" />
-                <a href="{{ route('employees.contacts.index', $employee->id) }}"
-                    class="btn btn-primary shadow-md mr-2">Contatos</a>
-                <a href="{{ route('employees.addresses.index', $employee->id) }}"
-                    class="btn btn-primary shadow-md mr-2">Endereços</a>
-                <a href="{{ route('employees.banks.index', $employee->id) }}"
-                    class="btn btn-primary shadow-md mr-2">Banco</a>
-                <a href="{{ route('employees.dependents.index', $employee->id) }}"
-                    class="btn btn-primary shadow-md mr-2">Dependentes</a>
+                <x-forms.buttons.primary route="employees.addresses.index" :id="$employee->id" label="Endereços" />
+                <x-forms.buttons.primary route="employees.banks.index" :id="$employee->id" label="Banco" />
+                <x-forms.buttons.primary route="employees.dependents.index" :id="$employee->id" label="Dependentes" />
+                <x-forms.buttons.primary route="employees.documents.index" :id="$employee->id" label="Documentos" />
             @endif
         </div>
         <div class="intro-y col-span-12">

@@ -27,4 +27,9 @@ class EmployeeBank extends Model
         'document_number',
         'observation',
     ];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

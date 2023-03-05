@@ -63,6 +63,14 @@
     </div>
     <!-- END: Delete Confirmation Modal -->
 
+    <!-- BEGIN: Notification Content -->
+    <div id="error-notification" class="toastify-content hidden flex"> <i class="text-danger" data-lucide="slash"></i>
+        <div class="ml-4 mr-4">
+            <div class="font-medium" id="error-notification-title"></div>
+            <div class="text-slate-500 mt-1" id="error-notification-message"></div>
+        </div>
+    </div> <!-- END: Notification Content -->
+
     @stack('custom-scripts')
 </body>
 

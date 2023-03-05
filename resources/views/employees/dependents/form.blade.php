@@ -26,40 +26,16 @@
             @endif
             <!-- BEGIN: Form Layout -->
             <div class="intro-y box p-5">
-                <div class="sm:grid grid-cols-1 gap-2">
-                    <div>
-                        <label for="name" class="form-label">Nome</label>
-                        {!! Form::text('name', null, ['class' => 'form-control w-full', 'required' => 'required', 'id' => 'name']) !!}
-                    </div>
+                <div class="sm:grid grid-cols-2 gap-2">
+                    <x-forms.text name="name" label="Nome" />
+                    <x-forms.text name="birthday" label="Data de Nascimento" class="datepicker form-control w-full"
+                        data-single-mode="true" />
                 </div>
                 <div class="sm:grid grid-cols-2 gap-2 mt-3">
-                    <div>
-                        <label for="birthday" class="form-label">Data de Nascimento</label>
-                        {!! Form::date('birthday', null, ['class' => 'form-control w-full', 'id' => 'birthday']) !!}
-                    </div>
-                    <div>
-                        <label for="identification" class="form-label">Parentesco</label>
-                        {!! Form::text('identification', null, [
-                            'class' => 'form-control w-full',
-                            'required' => 'required',
-                            'id' => 'identification',
-                        ]) !!}
-                    </div>
-                    <div>
-                        <label for="social_security" class="form-label">CPF</label>
-                        {!! Form::text('social_security', null, [
-                            'class' => 'form-control w-full',
-                            'required' => 'required',
-                            'id' => 'social_security',
-                        ]) !!}
-                    </div>
+                    <x-forms.text name="social_security" label="CPF" mask="'999.999.999-99'" />
+                    <x-forms.text name="identification" label="Parentesco" />
                 </div>
-                @if (!isset($showMode))
-                    <div class="text-right mt-5">
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="submit" class="btn btn-primary w-24">Salvar</button>
-                    </div>
-                @endif
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$dependent" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

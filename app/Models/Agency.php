@@ -14,13 +14,6 @@ class Agency extends Model
         'corporate_name',
         'fantasy_name',
         'ein',
-        'street',
-        'number',
-        'complement',
-        'district',
-        'city',
-        'state',
-        'zipcode',
         'email',
         'phone',
     ];
