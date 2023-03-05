@@ -24,7 +24,7 @@ class RolePermissionSeeder extends Seeder
 
         if (!empty($user)) {
 
-            $permissionRolesList = Permission::firstOrCreate(['name' => 'roles.list']);
+            $permissionRolesList = Permission::firstOrCreate(['name' => 'roles.index']);
             $permissionRolesCreate = Permission::firstOrCreate(['name' => 'roles.create']);
             $permissionRolesEdit = Permission::firstOrCreate(['name' => 'roles.edit']);
             $permissionRolesDestroy = Permission::firstOrCreate(['name' => 'roles.destroy']);
@@ -39,22 +39,22 @@ class RolePermissionSeeder extends Seeder
             $user->syncRoles(['admin']);
         }
 
-        Permission::firstOrCreate(['name' => 'users.list']);
+        Permission::firstOrCreate(['name' => 'users.index']);
         Permission::firstOrCreate(['name' => 'users.create']);
         Permission::firstOrCreate(['name' => 'users.edit']);
         Permission::firstOrCreate(['name' => 'users.destroy']);
 
-        Permission::firstOrCreate(['name' => 'employees.list']);
+        Permission::firstOrCreate(['name' => 'employees.index']);
         Permission::firstOrCreate(['name' => 'employees.create']);
         Permission::firstOrCreate(['name' => 'employees.edit']);
         Permission::firstOrCreate(['name' => 'employees.destroy']);
 
-        Permission::firstOrCreate(['name' => 'employees.contacts.list']);
+        Permission::firstOrCreate(['name' => 'employees.contacts.index']);
         Permission::firstOrCreate(['name' => 'employees.contacts.create']);
         Permission::firstOrCreate(['name' => 'employees.contacts.edit']);
         Permission::firstOrCreate(['name' => 'employees.contacts.destroy']);
 
-        Permission::firstOrCreate(['name' => 'labors.list']);
+        Permission::firstOrCreate(['name' => 'labors.index']);
         Permission::firstOrCreate(['name' => 'labors.create']);
         Permission::firstOrCreate(['name' => 'labors.edit']);
         Permission::firstOrCreate(['name' => 'labors.destroy']);
