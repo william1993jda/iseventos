@@ -12,7 +12,6 @@ class Product extends Model
 
     protected $fillable = [
         'category_id',
-        'provider_id',
         'name',
         'customization',
         'price',
@@ -40,5 +39,22 @@ class Product extends Model
     public function provider()
     {
         return $this->belongsTo(Provider::class, 'provider_id');
+    }
+    public function getActive()
+    {
+        if (!empty($this->attributes['id'])) {
+            return $this->attributes['active'] ? true : false;
+        }
+
+        return $this->attributes['active'] = true;
+    }
+
+    public function getCustomization()
+    {
+        if (!empty($this->attributes['id'])) {
+            return $this->attributes['customization'] ? true : false;
+        }
+
+        return $this->attributes['customization'] = true;
     }
 }

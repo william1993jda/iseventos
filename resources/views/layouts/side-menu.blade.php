@@ -80,37 +80,37 @@
             </a>
         </li>
         <li>
-            <a href="#" class="side-menu">
+            <a href="{{ route('statuses.index') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="layout-list"></i> </div>
                 <div class="side-menu__title"> Status - Comercial </div>
             </a>
         </li>
         <li>
-            <a href="#" class="side-menu">
+            <a href="{{ route('os-statuses.index') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="layout-list"></i> </div>
                 <div class="side-menu__title"> Status - Estoque </div>
             </a>
         </li>
         <li>
-            <a href="#" class="side-menu">
+            <a href="{{ route('categories.index') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="tag"></i> </div>
                 <div class="side-menu__title"> Categorias - Comercial </div>
             </a>
         </li>
         <li>
-            <a href="#" class="side-menu">
+            <a href="{{ route('os-categories.index') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="tag"></i> </div>
                 <div class="side-menu__title"> Categorias - Estoque </div>
             </a>
         </li>
         <li>
-            <a href="#" class="side-menu">
+            <a href="{{ route('products.index') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="box"></i> </div>
                 <div class="side-menu__title"> Equipamentos - Comercial </div>
             </a>
         </li>
         <li>
-            <a href="#" class="side-menu">
+            <a href="{{ route('os-products.index') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="package"></i> </div>
                 <div class="side-menu__title"> Equipamentos - Estoque </div>
             </a>

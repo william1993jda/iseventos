@@ -13,8 +13,14 @@ use App\Http\Controllers\EmployeeAddressController;
 use App\Http\Controllers\EmployeeContactController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ImportController;
-use App\Http\Controllers\LaborController;
 use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\LaborController;
+use App\Http\Controllers\StatusController;
+use App\Http\Controllers\OsStatusController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OsCategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OsProductController;
 use App\Http\Controllers\PlaceDocumentController;
 use App\Http\Controllers\PlaceRoomController;
 use App\Http\Controllers\ProfileController;
@@ -85,6 +91,18 @@ Route::middleware('auth')->group(function () {
     Route::resource('places.documents', PlaceDocumentController::class)->names('places.documents');
 
     Route::resource('labors', LaborController::class)->names('labors');
+
+    Route::resource('statuses', StatusController::class)->names('statuses');
+
+    Route::resource('os-statuses', OsStatusController::class)->names('os-statuses');
+
+    Route::resource('categories', CategoryController::class)->names('categories');
+
+    Route::resource('os-categories', OsCategoryController::class)->names('os-categories');
+
+    Route::resource('products', ProductController::class)->names('products');
+
+    Route::resource('os-products', OsProductController::class)->names('os-products');
 
     Route::post('budgets/customer-contacts', [BudgetController::class, 'getCustomerContacts'])->name('budgets.getCustomerContacts');
     Route::get('budgets/mount/{budget}', [BudgetController::class, 'mount'])->name('budgets.mount');

@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\OsStatusRequest;
+use App\Models\OsStatus;
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class OsStatusController extends Controller
+{
+    public function index(Request $request)
+    {
+        $params = $request->all();
+        $query = $request->get('query');
+
+        if ($params) {
+            $osStatuses = OsStatus::where('name', 'like', '%' . $params['query'] . '%')
+                ->orWhere('email', 'like', '%' . $params['query'] . '%')
+                ->paginate(10);
+
+            return view('os-statuses.index', compact('osStatuses', 'query'));
+        }
+
+        $osStatuses = OsStatus::paginate(10);
+
+        return view('os-statuses.index', compact('osStatuses', 'query'));
+    }
+
+    public function create()
+    {
+        $osStatus = new OsStatus();
+
+
+        return view('os-statuses.form', compact('osStatus'));
+    }
+
+    public function store(OsStatusRequest $request)
+    {
+        OsStatus::create($request->validated());
+
+        return redirect()->route('os-statuses.index');
+    }
+
+    public function edit(OsStatus $OsStatus)
+    {
+
+        return view('os-statuses.form', compact('osStatus'));
+    }
+
+    public function update(OsStatus $osStatus, OsStatusRequest $request)
+    {
+        $params = $request->validated();
+
+        if (!$request->has('active')) {
+            $params['active'] = 0;
+        }
+
+        $osStatus->update($params);
+
+        return redirect()->route('os-statuses.index');
+    }
+
+    public function destroy(OsStatus $osStatus)
+    {
+        $osStatus->delete();
+
+        return redirect()->route('os-statuses.index');
+    }
+
+    public function show(OsStatus $osStatus)
+    {
+        $showMode = true;
+
+        return view('os-statuses.form', compact('osStatus', 'showMode'));
+    }
+}
