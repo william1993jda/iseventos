@@ -30,8 +30,9 @@
                             <td class="text-center">{{ $bank->account }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit :route="route('providers.banks.edit', [$provider->id, $bank->id])" />
-                                    <x-forms.buttons.delete :route="route('providers.banks.destroy', [$provider->id, $bank->id])" />
+                                    <x-forms.buttons.edit route="providers.banks.edit', [$provider->id, $bank->id])" />
+                                    <x-forms.buttons.destroy
+                                        route="providers.banks.destroy', [$provider->id, $bank->id])" />
                                 </div>
                             </td>
                         </tr>

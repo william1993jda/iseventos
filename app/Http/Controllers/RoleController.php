@@ -25,7 +25,7 @@ class RoleController extends Controller
         return view('roles.index', compact('roles', 'query'));
     }
 
-    public function permissions(Role $role)
+    public function create(Role $role)
     {
         $permissions = Permission::all();
 
@@ -63,10 +63,10 @@ class RoleController extends Controller
 
         // dd($permissions);
 
-        return view('roles.permissions', compact('role', 'permissions'));
+        return view('roles.form', compact('role', 'permissions'));
     }
 
-    public function permissionsStore(Role $role, Request $request)
+    public function store(Role $role, Request $request)
     {
         $params = $request->all();
 
@@ -76,54 +76,4 @@ class RoleController extends Controller
             return redirect()->route('roles.index');
         }
     }
-
-    // public function create()
-    // {
-    //     $user = new User();
-
-    //     return view('roles.form')->with('user', $user);
-    // }
-
-    // public function store(Request $request)
-    // {
-    //     $params = $request->all();
-
-    //     if ($params) {
-    //         $user = new User();
-    //         $user->name = $params['name'];
-    //         $user->email = $params['email'];
-    //         $user->password = Hash::make($params['password']);
-    //         $user->save();
-
-    //         return redirect()->route('roles.index');
-    //     }
-    // }
-
-    // public function edit($id)
-    // {
-    //     $user = User::find($id);
-
-    //     return view('roles.form', compact('user'));
-    // }
-
-    // public function update($id, Request $request)
-    // {
-    //     $params = $request->all();
-
-    //     if ($params) {
-    //         $user = User::find($id);
-    //         $user->fill($params);
-    //         $user->save();
-
-    //         return redirect()->route('roles.index');
-    //     }
-    // }
-
-    // public function destroy($id)
-    // {
-    //     $user = User::find($id);
-    //     $user->delete();
-
-    //     return redirect()->route('roles.index');
-    // }
 }

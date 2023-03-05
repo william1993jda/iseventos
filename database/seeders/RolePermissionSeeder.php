@@ -15,7 +15,7 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::firstOrCreate(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
         Role::firstOrCreate(['name' => 'financeiro_human_resources']);
         Role::firstOrCreate(['name' => 'commercial_administrative']);
         Role::firstOrCreate(['name' => 'stock']);
@@ -23,6 +23,19 @@ class RolePermissionSeeder extends Seeder
         $user = User::find(1);
 
         if (!empty($user)) {
+
+            $permissionRolesList = Permission::firstOrCreate(['name' => 'roles.list']);
+            $permissionRolesCreate = Permission::firstOrCreate(['name' => 'roles.create']);
+            $permissionRolesEdit = Permission::firstOrCreate(['name' => 'roles.edit']);
+            $permissionRolesDestroy = Permission::firstOrCreate(['name' => 'roles.destroy']);
+
+            $adminRole->syncPermissions([
+                $permissionRolesList,
+                $permissionRolesCreate,
+                $permissionRolesEdit,
+                $permissionRolesDestroy
+            ]);
+
             $user->syncRoles(['admin']);
         }
 
@@ -40,5 +53,10 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'employees.contacts.create']);
         Permission::firstOrCreate(['name' => 'employees.contacts.edit']);
         Permission::firstOrCreate(['name' => 'employees.contacts.destroy']);
+
+        Permission::firstOrCreate(['name' => 'labors.list']);
+        Permission::firstOrCreate(['name' => 'labors.create']);
+        Permission::firstOrCreate(['name' => 'labors.edit']);
+        Permission::firstOrCreate(['name' => 'labors.destroy']);
     }
 }

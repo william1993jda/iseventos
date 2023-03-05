@@ -31,8 +31,10 @@
                             <td class="text-center">{{ $dependent->social_security }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit :route="route('employees.dependents.edit', [$employee->id, $dependent->id])" />
-                                    <x-forms.buttons.delete :route="route('employees.dependents.destroy', [$employee->id, $dependent->id])" />
+                                    <x-forms.buttons.edit
+                                        route="employees.dependents.edit', [$employee->id, $dependent->id])" />
+                                    <x-forms.buttons.destroy
+                                        route="employees.dependents.destroy', [$employee->id, $dependent->id])" />
                                 </div>
                             </td>
                         </tr>

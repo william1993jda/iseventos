@@ -55,9 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('roles', RoleController::class)->names('roles');
-    Route::get('roles/permissions/{role}', [RoleController::class, 'permissions'])->name('roles.permissions');
-    Route::post('roles/permissions/{role}/store', [RoleController::class, 'permissionsStore'])->name('roles.permissions.store');
+    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('roles/create/{role}', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('roles/store/{role}', [RoleController::class, 'store'])->name('roles.store');
 
     Route::resource('users', UserController::class)->names('users');
 

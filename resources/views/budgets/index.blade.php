@@ -44,9 +44,10 @@
                             <td class="text-center">{{ $budget->status->name }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.icon :route="route('budgets.mount', $budget->id)" icon="clipboard-check" label="Montar" />
-                                    <x-forms.buttons.edit :route="route('budgets.edit', $budget->id)" />
-                                    <x-forms.buttons.delete :route="route('budgets.destroy', $budget->id)" />
+                                    <x-forms.buttons.icon route="budgets.mount', $budget->id)" icon="clipboard-check"
+                                        label="Montar" />
+                                    <x-forms.buttons.edit route="budgets.edit" :id="$budget->id" />
+                                    <x-forms.buttons.destroy route="budgets.destroy" :id="$budget->id" />
                                 </div>
                             </td>
                         </tr>

@@ -37,8 +37,8 @@
                             <td class="text-center">{{ $user->email }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit :route="route('users.edit', $user->id)" />
-                                    <x-forms.buttons.delete :route="route('users.destroy', $user->id)" />
+                                    <x-forms.buttons.edit route="users.edit" :id="$user->id" />
+                                    <x-forms.buttons.destroy route="users.destroy" :id="$user->id" />
                                 </div>
                             </td>
                         </tr>

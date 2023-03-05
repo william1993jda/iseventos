@@ -16,7 +16,7 @@
                 <a href="{{ route('labors.index') }}" class="btn btn-secondary shadow-md ml-2">Limpar</a>
             </form>
             <div class="hidden md:block mx-auto text-slate-500"></div>
-            <a href="{{ route('labors.create') }}" class="btn btn-primary shadow-md mr-2">Novo</a>
+            <x-forms.buttons.create route="labors.create" />
         </div>
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
@@ -36,8 +36,8 @@
                             </td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit :route="route('labors.edit', $labor->id)" />
-                                    <x-forms.buttons.delete :route="route('labors.destroy', $labor->id)" />
+                                    <x-forms.buttons.edit route="labors.edit" :id="$labor->id" />
+                                    <x-forms.buttons.destroy route="labors.destroy" :id="$labor->id" />
                                 </div>
                             </td>
                         </tr>

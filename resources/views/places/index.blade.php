@@ -40,8 +40,8 @@
                             <td class="text-center">{{ $place->state }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit :route="route('places.edit', $place->id)" />
-                                    <x-forms.buttons.delete :route="route('places.destroy', $place->id)" />
+                                    <x-forms.buttons.edit route="places.edit" :id="$place->id" />
+                                    <x-forms.buttons.destroy route="places.destroy" :id="$place->id" />
                                 </div>
                             </td>
                         </tr>

@@ -31,8 +31,8 @@
                             <td class="text-center">{{ $contact->phone }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit :route="route('employees.contacts.edit', [$employee->id, $contact->id])" />
-                                    <x-forms.buttons.delete :route="route('employees.contacts.destroy', [$employee->id, $contact->id])" />
+                                    <x-forms.buttons.edit route="employees.contacts.edit" :id="[$employee->id, $contact->id]" />
+                                    <x-forms.buttons.destroy route="employees.contacts.destroy" :id="[$employee->id, $contact->id]" />
                                 </div>
                             </td>
                         </tr>

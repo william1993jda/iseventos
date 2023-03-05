@@ -36,8 +36,8 @@
                             </td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit :route="route('agencies.edit', $agency->id)" />
-                                    <x-forms.buttons.delete :route="route('agencies.destroy', $agency->id)" />
+                                    <x-forms.buttons.edit route="agencies.edit" :id="$agency->id" />
+                                    <x-forms.buttons.destroy route="agencies.destroy" :id="$agency->id" />
                                 </div>
                             </td>
                         </tr>

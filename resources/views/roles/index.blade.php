@@ -35,9 +35,10 @@
                             </td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.icon :route="route('roles.permissions', $role->id)" icon="list-checks" label="Permissões" />
-                                    {{-- <x-forms.buttons.edit :route="route('roles.edit', $role->id)" />
-                                    <x-forms.buttons.delete :route="route('roles.destroy', $role->id)" /> --}}
+                                    <x-forms.buttons.icon route="roles.create" :id="$role->id" icon="list-checks"
+                                        label="Permissões" />
+                                    {{-- <x-forms.buttons.edit route="roles.edit" :id="$role->id" />
+                                    <x-forms.buttons.destroy route="roles.destroy" :id="$role->id" /> --}}
                                 </div>
                             </td>
                         </tr>

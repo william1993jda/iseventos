@@ -38,8 +38,8 @@
                             <td class="text-center">{{ $employee->email }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit :route="route('employees.edit', $employee->id)" />
-                                    <x-forms.buttons.delete :route="route('employees.destroy', $employee->id)" />
+                                    <x-forms.buttons.edit route="employees.edit" :id="$employee->id" />
+                                    <x-forms.buttons.destroy route="employees.destroy" :id="$employee->id" />
                                 </div>
                             </td>
                         </tr>

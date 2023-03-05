@@ -166,7 +166,7 @@
                                                 <td class="whitespace-nowrap" wire:ignore>
                                                     <button
                                                         class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                        data-action="{{ route('budgets.room.product.destroy', $product['id']) }}"
+                                                        data-action="{{ route('budgets.room.product.destroy" :id="$product['id']) }}"
                                                         data-tw-toggle="modal"
                                                         data-tw-target="#delete-confirmation-modal" type="button">
                                                         <i data-lucide="trash-2" class="w-5 h-5"></i>
@@ -202,7 +202,7 @@
                                                 <td class="whitespace-nowrap" wire:ignore>
                                                     <button
                                                         class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                        data-action="{{ route('budgets.room.labor.destroy', $labor['id']) }}"
+                                                        data-action="{{ route('budgets.room.labor.destroy" :id="$labor['id']) }}"
                                                         data-tw-toggle="modal"
                                                         data-tw-target="#delete-confirmation-modal" type="button">
                                                         <i data-lucide="trash-2" class="w-5 h-5"></i>
