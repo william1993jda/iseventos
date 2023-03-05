@@ -58,5 +58,10 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'labors.create']);
         Permission::firstOrCreate(['name' => 'labors.edit']);
         Permission::firstOrCreate(['name' => 'labors.destroy']);
+
+        Permission::firstOrCreate(['name' => 'statuses.list']);
+        Permission::firstOrCreate(['name' => 'statuses.create']);
+        Permission::firstOrCreate(['name' => 'statuses.edit']);
+        Permission::firstOrCreate(['name' => 'statuses.destroy']);
     }
 }
