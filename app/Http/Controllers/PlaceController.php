@@ -14,8 +14,8 @@ class PlaceController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $places = Place::where('name', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $places = Place::where('name', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('places.index', compact('places', 'query'));

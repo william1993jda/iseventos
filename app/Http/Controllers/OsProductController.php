@@ -14,8 +14,8 @@ class OsProductController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $osProducts = OsProduct::where('name', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $osProducts = OsProduct::where('name', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('os-products.index', compact('osProducts', 'query'));

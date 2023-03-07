@@ -15,9 +15,9 @@ class EmployeeController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $employees = User::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $employees = User::where('name', 'like', '%' . $query . '%')
+                ->orWhere('email', 'like', '%' . $query . '%')
                 ->whereNull('employees.deleted_at')
                 ->join('employees', 'users.id', '=', 'employees.user_id')
                 ->paginate(10);

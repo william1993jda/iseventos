@@ -21,9 +21,9 @@ class OsProductImport implements ToModel, WithHeadingRow
                 $price = preg_replace('/\D/', '', $row['valor']);
 
                 if (!empty($price)) {
-                    $price = substr($price, 0, -2) . '.' . substr($price, -2);
+                    $price = substr($price, 0, -2) . ',' . substr($price, -2);
                 } else {
-                    $price = '0.00';
+                    $price = '0,00';
                 }
             }
 

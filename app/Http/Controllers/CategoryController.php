@@ -14,8 +14,8 @@ class CategoryController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $categories = Category::where('name', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $categories = Category::where('name', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('categories.index', compact('categories', 'query'));

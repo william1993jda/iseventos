@@ -15,9 +15,8 @@ class LaborController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $labors = Labor::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $labors = Labor::where('name', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('labors.index', compact('labors', 'query'));

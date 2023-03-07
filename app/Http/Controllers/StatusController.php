@@ -14,8 +14,8 @@ class StatusController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $statuses = Status::where('name', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $statuses = Status::where('name', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('statuses.index', compact('statuses', 'query'));

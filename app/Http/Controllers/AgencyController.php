@@ -13,9 +13,9 @@ class AgencyController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $agencies = Agency::where('fantasy_name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $agencies = Agency::where('fantasy_name', 'like', '%' . $query . '%')
+                ->orWhere('email', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('agencies.index', compact('agencies', 'query'));

@@ -7,6 +7,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -20,7 +21,15 @@ class RolePermissionSeeder extends Seeder
         Role::firstOrCreate(['name' => 'commercial_administrative']);
         Role::firstOrCreate(['name' => 'stock']);
 
-        $user = User::find(1);
+        $user = User::where('email', 'rgazeredo@gmail.com')->first();
+
+        if (empty($user)) {
+            $user = User::firstOrCreate([
+                'name' => 'Admin',
+                'email' => 'rgazeredo@gmail.com',
+                'password' => Hash::make('12345678'),
+            ]);
+        }
 
         if (!empty($user)) {
 

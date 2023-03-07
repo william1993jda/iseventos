@@ -14,8 +14,8 @@ class OsCategoryController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $osCategories = OsCategory::where('name', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $osCategories = OsCategory::where('name', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('os-categories.index', compact('osCategories', 'query'));

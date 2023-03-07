@@ -14,8 +14,8 @@ class OsStatusController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $osStatuses = OsStatus::where('name', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $osStatuses = OsStatus::where('name', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('os-statuses.index', compact('osStatuses', 'query'));

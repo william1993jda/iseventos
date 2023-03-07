@@ -14,9 +14,9 @@ class CustomerController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $customers = Customer::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $customers = Customer::where('name', 'like', '%' . $query . '%')
+                ->orWhere('email', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('customers.index', compact('customers', 'query'));

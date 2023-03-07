@@ -15,9 +15,8 @@ class ProductController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $products = Product::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $products = Product::where('name', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('products.index', compact('products', 'query'));

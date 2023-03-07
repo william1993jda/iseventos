@@ -235,7 +235,7 @@
                 <th style="text-align:left; width: 100%;">
                     EQUIPAMENTOS
                 </th>
-                @foreach (explode(',', $room['days']) as $roomDate)
+                @foreach ($room['days'] as $roomDate)
                     <th style="text-align:center; width: 60px;">
                         {{ substr($roomDate, 0, 5) }}
                     </th>
@@ -255,7 +255,7 @@
             @foreach ($room['categories'] as $category)
                 <tr>
                     <td><strong>{{ $category['name'] }}</strong></td>
-                    <td colspan="{{ count(explode(',', $room['days'])) + 3 }}">&nbsp;</td>
+                    <td colspan="{{ count($room['days']) + 3 }}">&nbsp;</td>
                 </tr>
                 @foreach ($category['products'] as $product)
                     @php
@@ -264,7 +264,7 @@
                     @endphp
                     <tr>
                         <td style="text-align:left;">{{ $product['product']['name'] }}</td>
-                        @foreach (explode(',', $room['days']) as $roomDate)
+                        @foreach ($room['days'] as $roomDate)
                             <td style="text-align:center;">
                                 @if (in_array($roomDate, explode(',', $product['days'])))
                                     x
@@ -289,7 +289,7 @@
                     @endphp
                     <tr>
                         <td>{{ $labor['labor']['name'] }}</td>
-                        <td style="text-align:right;" colspan="{{ count(explode(',', $room['days'])) }}">
+                        <td style="text-align:right;" colspan="{{ count($room['days']) }}">
                             {{ $labor['days'] }}&nbsp;&nbsp;diárias
                         </td>
                         <td style="text-align:right;">

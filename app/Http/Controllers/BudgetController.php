@@ -17,6 +17,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class BudgetController extends Controller
 {
@@ -25,8 +26,8 @@ class BudgetController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $budgets = Budget::where('name', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $budgets = Budget::where('name', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('budgets.index', compact('budgets', 'query'));
@@ -139,10 +140,10 @@ class BudgetController extends Controller
         $data['place'] = $budget->place->name;
         $data['city'] = $budget->city;
 
-        $budgetDays = explode(',', $budget->budget_days);
+        $budgetDays = explode('-', $budget->budget_days);
 
-        $data['start_date'] = $budgetDays[0];
-        $data['end_date'] = $budgetDays[count($budgetDays) - 1];
+        $data['start_date'] = trim($budgetDays[0]);
+        $data['end_date'] = trim($budgetDays[1]);
         $data['mount_date'] = $budget->mount_date ? $budget->mount_date->format('d/m/Y') : null;
         $data['unmount_date'] = $budget->unmount_date ? $budget->unmount_date->format('d/m/Y') : null;
         $data['public'] = $budget->public;
@@ -197,10 +198,27 @@ class BudgetController extends Controller
                 array_push($arCategories, $obCategory);
             }
 
+            $budgetDays = explode('-', $budget->budget_days);
+            $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
+            $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
+
+            $diifDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
+
+            $days = [];
+
+            array_push($days, Carbon::parse($startDay)->format('d/m'));
+
+            for ($i = 0; $i < $diifDays; $i++) {
+                $date = Carbon::parse($startDay)->addDays($i + 1);
+                array_push($days, $date->format('d/m'));
+            }
+
+            array_push($days, Carbon::parse($endDay)->format('d/m'));
+
             $arRoom[] = [
                 'place_room_name' => $placeRoom->name,
                 'place_room_id' => $placeRoom->id,
-                'days' => $budget->budget_days,
+                'days' => $days,
                 'categories' => $arCategories,
             ];
         }

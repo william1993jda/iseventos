@@ -14,9 +14,9 @@ class ProviderController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $providers = Provider::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $providers = Provider::where('name', 'like', '%' . $query . '%')
+                ->orWhere('email', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('providers.index', compact('providers', 'query'));

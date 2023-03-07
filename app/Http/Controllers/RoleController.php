@@ -13,8 +13,8 @@ class RoleController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $roles = Role::where('name', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $roles = Role::where('name', 'like', '%' . $query . '%')
                 ->paginate(10);
 
             return view('roles.index', compact('users', 'query'));

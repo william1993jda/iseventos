@@ -15,8 +15,8 @@ class ProviderOsProductController extends Controller
         $params = $request->all();
         $query = $request->get('query');
 
-        if ($params) {
-            $osProducts = OsProduct::where('name', 'like', '%' . $params['query'] . '%')
+        if ($query) {
+            $osProducts = OsProduct::where('name', 'like', '%' . $query . '%')
                 ->where('provider_id', $provider->id)
                 ->paginate(10);
 
