@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="intro-y flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
-            Equipamentos - Estoque
+            {{ $provider->fantasy_name }} - Equipamentos
         </h2>
     </div>
     <div class="grid grid-cols-12 gap-6 mt-5">
@@ -28,7 +28,7 @@
                 <div class="sm:grid grid-cols-3 gap-2">
                     <x-forms.select name="os_category_id" label="Categoria" :options="$osCategories" />
                     <x-forms.text name="name" label="Nome" />
-                    <x-forms.text name="price" label="Preço" mask="$money($input, ',')" />
+                    <x-forms.text name="price" label="Preço" mask="$money($input)" />
                 </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
                     <x-forms.text name="brand" label="Marca" />

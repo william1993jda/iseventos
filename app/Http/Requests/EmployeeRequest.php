@@ -31,6 +31,7 @@ class EmployeeRequest extends FormRequest
                 'max:255',
                 new UniqueEmailEmployeeRule
             ],
+            'role' => 'required|string',
             'birthday' => 'required|string',
             'admission_date' => 'nullable|string',
             'phone' => 'nullable|string|max:255',

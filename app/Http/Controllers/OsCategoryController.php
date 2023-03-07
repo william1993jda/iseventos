@@ -16,7 +16,6 @@ class OsCategoryController extends Controller
 
         if ($params) {
             $osCategories = OsCategory::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
                 ->paginate(10);
 
             return view('os-categories.index', compact('osCategories', 'query'));
@@ -42,10 +41,9 @@ class OsCategoryController extends Controller
         return redirect()->route('os-categories.index');
     }
 
-    public function edit(OsCategory $osCategory)
+    public function edit(OsCategory $osCategory, $showMode = false)
     {
-
-        return view('os-categories.form', compact('osCategory'));
+        return view('os-categories.form', compact('osCategory', 'showMode'));
     }
 
     public function update(OsCategory $osCategory, OsCategoryRequest $request)
@@ -70,8 +68,6 @@ class OsCategoryController extends Controller
 
     public function show(OsCategory $osCategory)
     {
-        $showMode = true;
-
-        return view('os-categories.form', compact('osCategory', 'showMode'));
+        return $this->edit($osCategory, true);
     }
 }

@@ -27,7 +27,6 @@ class BudgetController extends Controller
 
         if ($params) {
             $budgets = Budget::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
                 ->paginate(10);
 
             return view('budgets.index', compact('budgets', 'query'));

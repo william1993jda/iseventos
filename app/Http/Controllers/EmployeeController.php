@@ -6,6 +6,7 @@ use App\Http\Requests\EmployeeRequest;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
 {
@@ -17,13 +18,14 @@ class EmployeeController extends Controller
         if ($params) {
             $employees = User::where('name', 'like', '%' . $params['query'] . '%')
                 ->orWhere('email', 'like', '%' . $params['query'] . '%')
+                ->whereNull('employees.deleted_at')
                 ->join('employees', 'users.id', '=', 'employees.user_id')
                 ->paginate(10);
 
             return view('employees.index', compact('employees', 'query'));
         }
 
-        $employees = User::join('employees', 'users.id', '=', 'employees.user_id')->paginate(10);
+        $employees = User::join('employees', 'users.id', '=', 'employees.user_id')->whereNull('employees.deleted_at')->paginate(10);
 
         return view('employees.index', compact('employees', 'query'));
     }
@@ -31,8 +33,9 @@ class EmployeeController extends Controller
     public function create()
     {
         $employee = new Employee();
+        $roles = Employee::ROLES;
 
-        return view('employees.form', compact('employee'));
+        return view('employees.form', compact('employee', 'roles'));
     }
 
     public function store(EmployeeRequest $request)
@@ -42,7 +45,7 @@ class EmployeeController extends Controller
         $user = User::create([
             'name' => $params['name'],
             'email' => $params['email'],
-            'password' => '12345678',
+            'password' => Hash::make('12345678'),
         ]);
 
         $params['user_id'] = $user->id;
@@ -57,8 +60,11 @@ class EmployeeController extends Controller
         $user = User::find($employee->user_id);
         $employee->name = $user->name;
         $employee->email = $user->email;
+        $roles = Employee::ROLES;
 
-        return view('employees.form', compact('employee', 'showMode'));
+        // dd($user);
+
+        return view('employees.form', compact('employee', 'roles', 'showMode'));
     }
 
     public function update(Employee $employee, EmployeeRequest $request)
@@ -73,14 +79,14 @@ class EmployeeController extends Controller
         $user->email = $params['email'];
         $user->save();
 
+        $user->syncRoles($params['role']);
+
         return redirect()->route('employees.index');
     }
 
     public function destroy(Employee $employee)
     {
-        $user = $employee->user;
         $employee->delete();
-        $user->delete();
 
         return redirect()->route('employees.index');
     }

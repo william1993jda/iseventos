@@ -11,6 +11,13 @@ class Employee extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const ROLES = [
+        '' => 'Selecione...',
+        'financeiro_human_resources' => 'Financeiro e Recursos Humanos',
+        'commercial_administrative' => 'Comercial e Administrativo',
+        'stock' => 'Estoque',
+    ];
+
     protected $fillable = [
         'user_id',
         'admission_date',

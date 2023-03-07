@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProviderAddressRequest;
 use App\Models\Provider;
 use App\Models\ProviderAddress;
 use Illuminate\Http\Request;
@@ -23,23 +24,23 @@ class ProviderAddressController extends Controller
         return view('providers.addresses.form', compact('provider', 'address', 'states'));
     }
 
-    public function store(Provider $provider, Request $request)
+    public function store(Provider $provider, ProviderAddressRequest $request)
     {
-        $provider->addresses()->create($request->all());
+        $provider->addresses()->create($request->validated());
 
         return redirect()->route('providers.addresses.index', $provider->id);
     }
 
-    public function edit(Provider $provider, ProviderAddress $address)
+    public function edit(Provider $provider, ProviderAddress $address, $showMode = false)
     {
         $states = ProviderAddress::STATES;
 
-        return view('providers.addresses.form', compact('provider', 'address', 'states'));
+        return view('providers.addresses.form', compact('provider', 'address', 'states', 'showMode'));
     }
 
-    public function update(Provider $provider, ProviderAddress $address, Request $request)
+    public function update(Provider $provider, ProviderAddress $address, ProviderAddressRequest $request)
     {
-        $address->update($request->all());
+        $address->update($request->validated());
 
         return redirect()->route('providers.addresses.index', $provider->id);
     }
@@ -53,8 +54,6 @@ class ProviderAddressController extends Controller
 
     public function show(Provider $provider, ProviderAddress $address)
     {
-        $showMode = true;
-
-        return view('providers.addresses.form', compact('provider', 'address', 'showMode'));
+        return $this->edit($provider, $address, true);
     }
 }

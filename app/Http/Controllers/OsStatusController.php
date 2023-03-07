@@ -16,7 +16,6 @@ class OsStatusController extends Controller
 
         if ($params) {
             $osStatuses = OsStatus::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
                 ->paginate(10);
 
             return view('os-statuses.index', compact('osStatuses', 'query'));
@@ -31,7 +30,6 @@ class OsStatusController extends Controller
     {
         $osStatus = new OsStatus();
 
-
         return view('os-statuses.form', compact('osStatus'));
     }
 
@@ -42,10 +40,9 @@ class OsStatusController extends Controller
         return redirect()->route('os-statuses.index');
     }
 
-    public function edit(OsStatus $OsStatus)
+    public function edit(OsStatus $OsStatus, $showMode = false)
     {
-
-        return view('os-statuses.form', compact('osStatus'));
+        return view('os-statuses.form', compact('osStatus', 'showMode'));
     }
 
     public function update(OsStatus $osStatus, OsStatusRequest $request)
@@ -70,8 +67,6 @@ class OsStatusController extends Controller
 
     public function show(OsStatus $osStatus)
     {
-        $showMode = true;
-
-        return view('os-statuses.form', compact('osStatus', 'showMode'));
+        return $this->edit($osStatus, true);
     }
 }

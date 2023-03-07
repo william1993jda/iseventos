@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProviderRequest;
 use App\Models\Provider;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -33,21 +34,21 @@ class ProviderController extends Controller
         return view('providers.form', compact('provider'));
     }
 
-    public function store(Request $request)
+    public function store(ProviderRequest $request)
     {
-        Provider::create($request->all());
+        Provider::create($request->validated());
 
         return redirect()->route('providers.index');
     }
 
-    public function edit(Provider $provider)
+    public function edit(Provider $provider, $showMode = false)
     {
-        return view('providers.form', compact('provider'));
+        return view('providers.form', compact('provider', 'showMode'));
     }
 
-    public function update(Provider $provider, Request $request)
+    public function update(Provider $provider, ProviderRequest $request)
     {
-        $provider->update($request->all());
+        $provider->update($request->validated());
 
         return redirect()->route('providers.index');
     }
@@ -64,8 +65,6 @@ class ProviderController extends Controller
 
     public function show(Provider $provider)
     {
-        $showMode = true;
-
-        return view('providers.form', compact('provider', 'showMode'));
+        return $this->edit($provider, true);
     }
 }

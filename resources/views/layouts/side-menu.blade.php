@@ -115,12 +115,12 @@
                 <div class="side-menu__title"> Equipamentos - Estoque </div>
             </a>
         </li>
-        <li>
+        {{-- <li>
             <a href="#" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="package-plus"></i> </div>
                 <div class="side-menu__title"> Kits </div>
             </a>
-        </li>
+        </li> --}}
         <li>
             <a href="{{ route('budgets.index') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="clipboard-check"></i> </div>
@@ -133,12 +133,12 @@
                 <div class="side-menu__title"> Ordem de serviço </div>
             </a>
         </li>
-        <li>
+        {{-- <li>
             <a href="#" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="clipboard"></i> </div>
                 <div class="side-menu__title"> Briefing </div>
             </a>
-        </li>
+        </li> --}}
         {{-- <li class="side-nav__devider my-6"></li>
         <li>
             <a href="side-menu-light-inbox.html" class="side-menu">

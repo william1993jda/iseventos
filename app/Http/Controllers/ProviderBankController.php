@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProviderBankRequest;
 use App\Models\Provider;
 use App\Models\ProviderBank;
 use Illuminate\Http\Request;
@@ -23,23 +24,23 @@ class ProviderBankController extends Controller
         return view('providers.banks.form', compact('provider', 'bank', 'types'));
     }
 
-    public function store(Provider $provider, Request $request)
+    public function store(Provider $provider, ProviderBankRequest $request)
     {
-        $provider->banks()->create($request->all());
+        $provider->banks()->create($request->validated());
 
         return redirect()->route('providers.banks.index', $provider->id);
     }
 
-    public function edit(Provider $provider, ProviderBank $bank)
+    public function edit(Provider $provider, ProviderBank $bank, $showMode = false)
     {
         $types = ProviderBank::TYPES;
 
-        return view('providers.banks.form', compact('provider', 'bank', 'types'));
+        return view('providers.banks.form', compact('provider', 'bank', 'types', 'showMode'));
     }
 
-    public function update(Provider $provider, ProviderBank $bank, Request $request)
+    public function update(Provider $provider, ProviderBank $bank, ProviderBankRequest $request)
     {
-        $bank->update($request->all());
+        $bank->update($request->validated());
 
         return redirect()->route('providers.banks.index', $provider->id);
     }
@@ -53,9 +54,6 @@ class ProviderBankController extends Controller
 
     public function show(Provider $provider, ProviderBank $bank)
     {
-        $showMode = true;
-        $types = ProviderBank::TYPES;
-
-        return view('providers.banks.form', compact('provider', 'bank', 'showMode', 'types'));
+        return $this->edit($provider, $bank, true);
     }
 }

@@ -16,7 +16,6 @@ class CategoryController extends Controller
 
         if ($params) {
             $categories = Category::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
                 ->paginate(10);
 
             return view('categories.index', compact('categories', 'query'));
@@ -42,10 +41,10 @@ class CategoryController extends Controller
         return redirect()->route('categories.index');
     }
 
-    public function edit(Category $category)
+    public function edit(Category $category, $showMode = false)
     {
 
-        return view('categories.form', compact('category'));
+        return view('categories.form', compact('category', 'showMode'));
     }
 
     public function update(Category $category, CategoryRequest $request)
@@ -70,8 +69,6 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        $showMode = true;
-
-        return view('categories.form', compact('category', 'showMode'));
+        return $this->edit($category, true);
     }
 }

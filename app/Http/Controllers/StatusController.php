@@ -16,7 +16,6 @@ class StatusController extends Controller
 
         if ($params) {
             $statuses = Status::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
                 ->paginate(10);
 
             return view('statuses.index', compact('statuses', 'query'));
@@ -42,10 +41,9 @@ class StatusController extends Controller
         return redirect()->route('statuses.index');
     }
 
-    public function edit(Status $status)
+    public function edit(Status $status, $showMode = false)
     {
-
-        return view('statuses.form', compact('status'));
+        return view('statuses.form', compact('status', 'showMode'));
     }
 
     public function update(Status $status, StatusRequest $request)
@@ -70,8 +68,6 @@ class StatusController extends Controller
 
     public function show(Status $status)
     {
-        $showMode = true;
-
-        return view('statuses.form', compact('status', 'showMode'));
+        return $this->edit($status, true);
     }
 }

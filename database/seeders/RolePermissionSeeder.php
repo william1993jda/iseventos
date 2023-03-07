@@ -89,6 +89,31 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'customers.addresses.edit']);
         Permission::firstOrCreate(['name' => 'customers.addresses.destroy']);
 
+        Permission::firstOrCreate(['name' => 'providers.index']);
+        Permission::firstOrCreate(['name' => 'providers.create']);
+        Permission::firstOrCreate(['name' => 'providers.edit']);
+        Permission::firstOrCreate(['name' => 'providers.destroy']);
+
+        Permission::firstOrCreate(['name' => 'providers.contacts.index']);
+        Permission::firstOrCreate(['name' => 'providers.contacts.create']);
+        Permission::firstOrCreate(['name' => 'providers.contacts.edit']);
+        Permission::firstOrCreate(['name' => 'providers.contacts.destroy']);
+
+        Permission::firstOrCreate(['name' => 'providers.addresses.index']);
+        Permission::firstOrCreate(['name' => 'providers.addresses.create']);
+        Permission::firstOrCreate(['name' => 'providers.addresses.edit']);
+        Permission::firstOrCreate(['name' => 'providers.addresses.destroy']);
+
+        Permission::firstOrCreate(['name' => 'providers.banks.index']);
+        Permission::firstOrCreate(['name' => 'providers.banks.create']);
+        Permission::firstOrCreate(['name' => 'providers.banks.edit']);
+        Permission::firstOrCreate(['name' => 'providers.banks.destroy']);
+
+        Permission::firstOrCreate(['name' => 'providers.os-products.index']);
+        Permission::firstOrCreate(['name' => 'providers.os-products.create']);
+        Permission::firstOrCreate(['name' => 'providers.os-products.edit']);
+        Permission::firstOrCreate(['name' => 'providers.os-products.destroy']);
+
         Permission::firstOrCreate(['name' => 'labors.index']);
         Permission::firstOrCreate(['name' => 'labors.create']);
         Permission::firstOrCreate(['name' => 'labors.edit']);
@@ -143,5 +168,11 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'os-products.create']);
         Permission::firstOrCreate(['name' => 'os-products.edit']);
         Permission::firstOrCreate(['name' => 'os-products.destroy']);
+
+        Permission::firstOrCreate(['name' => 'budgets.list']);
+        Permission::firstOrCreate(['name' => 'budgets.create']);
+        Permission::firstOrCreate(['name' => 'budgets.edit']);
+        Permission::firstOrCreate(['name' => 'budgets.destroy']);
+        Permission::firstOrCreate(['name' => 'budgets.mount']);
     }
 }

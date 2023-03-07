@@ -32,9 +32,10 @@
             @endif
             <!-- BEGIN: Form Layout -->
             <div class="intro-y box p-5">
-                <div class="sm:grid grid-cols-2 gap-2">
+                <div class="sm:grid grid-cols-3 gap-2">
                     <x-forms.text name="name" label="Nome" />
                     <x-forms.email name="email" label="E-mail" />
+                    <x-forms.select name="role" label="Perfil de acesso" :options="$roles" />
                 </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
                     <x-forms.text name="birthday" label="Data de Nascimento" mask="'99/99/9999'" />

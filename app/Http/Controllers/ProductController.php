@@ -43,11 +43,11 @@ class ProductController extends Controller
         return redirect()->route('products.index');
     }
 
-    public function edit(Product $product)
+    public function edit(Product $product, $showMode = false)
     {
         $categories = Category::pluck('name', 'id')->prepend('Selecione', '');
 
-        return view('products.form', compact('product', 'categories'));
+        return view('products.form', compact('product', 'categories', 'showMode'));
     }
 
     public function update(Product $product, ProductRequest $request)
@@ -72,9 +72,6 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        $showMode = true;
-        $categories = Category::pluck('name', 'id')->prepend('Selecione', '');
-
-        return view('products.form', compact('product', 'categories', 'showMode'));
+        return $this->edit($product, true);
     }
 }

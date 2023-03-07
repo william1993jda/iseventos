@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OsProductRequest;
-use App\Models\Category;
-use App\Models\Provider;
+use App\Models\OsCategory;
 use App\Models\OsProduct;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class OsProductController extends Controller
@@ -18,7 +16,6 @@ class OsProductController extends Controller
 
         if ($params) {
             $osProducts = OsProduct::where('name', 'like', '%' . $params['query'] . '%')
-                ->orWhere('email', 'like', '%' . $params['query'] . '%')
                 ->paginate(10);
 
             return view('os-products.index', compact('osProducts', 'query'));
@@ -32,10 +29,9 @@ class OsProductController extends Controller
     public function create()
     {
         $osProduct = new OSProduct();
-        $categories = Category::pluck('name', 'id')->prepend('Selecione', '');
+        $osCategories = OsCategory::pluck('name', 'id')->prepend('Selecione', '');
 
-
-        return view('os-products.form', compact('osProduct', 'categories'));
+        return view('os-products.form', compact('osProduct', 'osCategories'));
     }
 
     public function store(OsProductRequest $request)
@@ -45,12 +41,11 @@ class OsProductController extends Controller
         return redirect()->route('os-products.index');
     }
 
-    public function edit(OsProduct $osProduct)
+    public function edit(OsProduct $osProduct, $showMode = false)
     {
-        $categories = Category::pluck('name', 'id')->prepend('Selecione', '');
+        $osCategories = OsCategory::pluck('name', 'id')->prepend('Selecione', '');
 
-
-        return view('os-products.form', compact('osProduct', 'categories'));
+        return view('os-products.form', compact('osProduct', 'osCategories', 'showMode'));
     }
 
     public function update(OsProduct $osProduct, OsProductRequest $request)
@@ -75,10 +70,6 @@ class OsProductController extends Controller
 
     public function show(OsProduct $osProduct)
     {
-        $showMode = true;
-        $categories = Category::pluck('name', 'id')->prepend('Selecione', '');
-
-
-        return view('os-products.form', compact('osProduct', 'categories', 'showMode'));
+        return $this->edit($osProduct, true);
     }
 }

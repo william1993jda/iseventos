@@ -30,6 +30,7 @@ use App\Http\Controllers\ProviderAddressController;
 use App\Http\Controllers\ProviderBankController;
 use App\Http\Controllers\ProviderContactController;
 use App\Http\Controllers\ProviderController;
+use App\Http\Controllers\ProviderOsProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StoryboardController;
@@ -88,6 +89,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('providers.contacts', ProviderContactController::class)->names('providers.contacts');
     Route::resource('providers.addresses', ProviderAddressController::class)->names('providers.addresses');
     Route::resource('providers.banks', ProviderBankController::class)->names('providers.banks');
+    Route::resource('providers.products', ProviderOsProductController::class)->names('providers.os-products');
 
     Route::resource('places', PlaceController::class)->names('places');
     Route::resource('places.documents', PlaceDocumentController::class)->names('places.documents');
