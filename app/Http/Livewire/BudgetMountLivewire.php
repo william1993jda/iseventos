@@ -451,7 +451,8 @@ class BudgetMountLivewire extends Component
         $budgetRoomProduct->days = implode(',', $days);
         $budgetRoomProduct->save();
 
-        $this->getRooms();
+        // $this->getRooms();
+        return $this->emit('saved');
     }
 
     public function onChangeQuantity(BudgetRoomProduct $budgetRoomProduct, $quantity)
@@ -460,8 +461,9 @@ class BudgetMountLivewire extends Component
             $budgetRoomProduct->quantity = $quantity;
             $budgetRoomProduct->save();
 
-            $this->dataProduct = [];
-            $this->getRooms();
+            // $this->dataProduct = [];
+            // $this->getRooms();
+            return $this->emit('saved');
         }
     }
 
@@ -471,8 +473,9 @@ class BudgetMountLivewire extends Component
             $budgetRoomLabor->quantity = $quantity;
             $budgetRoomLabor->save();
 
-            $this->dataLabor = [];
-            $this->getRooms();
+            // $this->dataLabor = [];
+            // $this->getRooms();
+            return $this->emit('saved');
         }
     }
 
@@ -482,8 +485,9 @@ class BudgetMountLivewire extends Component
             $budgetRoomLabor->days = $days;
             $budgetRoomLabor->save();
 
-            $this->dataLabor = [];
-            $this->getRooms();
+            // $this->dataLabor = [];
+            // $this->getRooms();
+            return $this->emit('saved');
         }
     }
 }

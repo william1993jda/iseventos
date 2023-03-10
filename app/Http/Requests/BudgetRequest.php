@@ -35,6 +35,7 @@ class BudgetRequest extends FormRequest
             'unmount_date' => 'nullable',
             'public' => 'nullable',
             'commercial_conditions' => 'nullable',
+            'payment_conditions' => 'nullable',
         ];
     }
 
@@ -52,6 +53,7 @@ class BudgetRequest extends FormRequest
             'unmount_date' => 'data de desmontagem',
             'public' => 'quantidade de participantes',
             'commercial_conditions' => 'condições comerciais',
+            'payment_conditions' => 'condições de pagamento',
         ];
     }
 }

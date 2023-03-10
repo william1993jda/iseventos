@@ -49,14 +49,14 @@ class EmployeeRequest extends FormRequest
             'trousers' => 'nullable|string|max:255',
             'shoe' => 'nullable|string|max:255',
             'observation' => 'nullable|string|max:255',
-            'work_card' => 'nullable|image',
-            'reservist' => 'nullable|image',
-            'voter_registration' => 'nullable|image',
+            'work_card' => 'nullable|string|max:255',
+            'reservist' => 'nullable|string|max:255',
+            'voter_registration' => 'nullable|string|max:255',
             'spouse_name' => 'nullable|string|max:255',
             'spouse_identification' => 'nullable|string|max:255',
             'spouse_social_security' => 'nullable|string|max:255',
             'spouse_birth_date' => 'nullable|string',
-            'contract' => 'nullable|image'
+            'contract' => 'nullable|string|max:255'
         ];
     }
 

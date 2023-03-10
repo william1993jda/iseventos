@@ -30,6 +30,7 @@ class Budget extends Model
         'fee',
         'fee_type',
         'commercial_conditions',
+        'payment_conditions',
     ];
 
     protected $casts = [
@@ -76,5 +77,10 @@ class Budget extends Model
     public function place()
     {
         return $this->belongsTo(Place::class);
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(BudgetExpense::class);
     }
 }

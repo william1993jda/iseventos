@@ -148,40 +148,45 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'places.rooms.documents.edit']);
         Permission::firstOrCreate(['name' => 'places.rooms.documents.destroy']);
 
-        Permission::firstOrCreate(['name' => 'statuses.list']);
+        Permission::firstOrCreate(['name' => 'statuses.index']);
         Permission::firstOrCreate(['name' => 'statuses.create']);
         Permission::firstOrCreate(['name' => 'statuses.edit']);
         Permission::firstOrCreate(['name' => 'statuses.destroy']);
 
-        Permission::firstOrCreate(['name' => 'os-statuses.list']);
+        Permission::firstOrCreate(['name' => 'os-statuses.index']);
         Permission::firstOrCreate(['name' => 'os-statuses.create']);
         Permission::firstOrCreate(['name' => 'os-statuses.edit']);
         Permission::firstOrCreate(['name' => 'os-statuses.destroy']);
 
-        Permission::firstOrCreate(['name' => 'categories.list']);
+        Permission::firstOrCreate(['name' => 'categories.index']);
         Permission::firstOrCreate(['name' => 'categories.create']);
         Permission::firstOrCreate(['name' => 'categories.edit']);
         Permission::firstOrCreate(['name' => 'categories.destroy']);
 
-        Permission::firstOrCreate(['name' => 'os-categories.list']);
+        Permission::firstOrCreate(['name' => 'os-categories.index']);
         Permission::firstOrCreate(['name' => 'os-categories.create']);
         Permission::firstOrCreate(['name' => 'os-categories.edit']);
         Permission::firstOrCreate(['name' => 'os-categories.destroy']);
 
-        Permission::firstOrCreate(['name' => 'products.list']);
+        Permission::firstOrCreate(['name' => 'products.index']);
         Permission::firstOrCreate(['name' => 'products.create']);
         Permission::firstOrCreate(['name' => 'products.edit']);
         Permission::firstOrCreate(['name' => 'products.destroy']);
 
-        Permission::firstOrCreate(['name' => 'os-products.list']);
+        Permission::firstOrCreate(['name' => 'os-products.index']);
         Permission::firstOrCreate(['name' => 'os-products.create']);
         Permission::firstOrCreate(['name' => 'os-products.edit']);
         Permission::firstOrCreate(['name' => 'os-products.destroy']);
 
-        Permission::firstOrCreate(['name' => 'budgets.list']);
+        Permission::firstOrCreate(['name' => 'budgets.index']);
         Permission::firstOrCreate(['name' => 'budgets.create']);
         Permission::firstOrCreate(['name' => 'budgets.edit']);
         Permission::firstOrCreate(['name' => 'budgets.destroy']);
         Permission::firstOrCreate(['name' => 'budgets.mount']);
+
+        Permission::firstOrCreate(['name' => 'budgets.expenses.index']);
+        Permission::firstOrCreate(['name' => 'budgets.expenses.create']);
+        Permission::firstOrCreate(['name' => 'budgets.expenses.edit']);
+        Permission::firstOrCreate(['name' => 'budgets.expenses.destroy']);
     }
 }

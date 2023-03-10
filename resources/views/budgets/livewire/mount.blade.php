@@ -220,13 +220,18 @@
                     <div class="text-l font-medium text-right">
                         SUBTOTAL: R$ {{ number_format($total, 2, ',', '.') }}
                     </div>
+
+                    @php
+                        $subtotal = $total;
+                    @endphp
+
                     @if (!empty($budget['fee']))
                         <div>
                             @if ($budget['fee_type'] == 'percent')
                                 @php
                                     $feePercentage = $budget['fee'];
                                     $totalFeePercentage = ($feePercentage / 100) * $total;
-                                    $total = $total + $totalFeePercentage;
+                                    $totalFee = $totalFeePercentage;
                                 @endphp
                                 <div class="text-l font-medium text-right">
                                     <span class="text-green-500">TAXA ({{ $budget['fee'] }}%): R$
@@ -234,7 +239,7 @@
                                 </div>
                             @else
                                 @php
-                                    $total = $total + $budget['fee'];
+                                    $totalFee = $budget['fee'];
                                 @endphp
                                 <div class="text-l font-medium text-right">
                                     <span class="text-green-500">TAXA (R$
@@ -250,7 +255,7 @@
                                 @php
                                     $discountPercentage = $budget['discount'];
                                     $totalDiscountPercentage = ($discountPercentage / 100) * $total;
-                                    $total = $total - $totalDiscountPercentage;
+                                    $totalDiscount = $totalDiscountPercentage;
                                 @endphp
                                 <div class="text-l font-medium text-right">
                                     <span class="text-red-500">DESCONTO ({{ $budget['discount'] }}%): R$
@@ -258,7 +263,7 @@
                                 </div>
                             @else
                                 @php
-                                    $total = $total - $budget['discount'];
+                                    $totalDiscount = $budget['discount'];
                                 @endphp
                                 <div class="text-l font-medium text-right">
                                     <span class="text-red-500">DESCONTO (R$
@@ -268,6 +273,10 @@
                             @endif
                         </div>
                     @endif
+
+                    @php
+                        $total = $subtotal - $totalDiscount + $totalFee;
+                    @endphp
                     <hr class="my-2">
                     <div class="text-lg font-medium text-right">
                         <span>TOTAL: R$ {{ number_format($total, 2, ',', '.') }}</span>

@@ -46,6 +46,8 @@
                                 <div class="flex justify-center items-center">
                                     <x-forms.buttons.icon route="budgets.mount" :id="$budget->id" icon="clipboard-check"
                                         label="Montar" />
+                                    <x-forms.buttons.icon route="budgets.expenses.index" :id="$budget->id"
+                                        icon="dollar-sign" label="Despesas" />
                                     <x-forms.buttons.edit route="budgets.edit" :id="$budget->id" />
                                     <x-forms.buttons.destroy route="budgets.destroy" :id="$budget->id" />
                                 </div>

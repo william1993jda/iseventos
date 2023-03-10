@@ -4,6 +4,7 @@ use App\Http\Controllers\AgencyAddressController;
 use App\Http\Controllers\AgencyContactController;
 use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\BudgetExpenseController;
 use App\Http\Controllers\EmployeeDependentController;
 use App\Http\Controllers\EmployeeBankController;
 use App\Http\Controllers\CustomerAddressController;
@@ -116,6 +117,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('budgets/room/product/{budgetRoomProduct}', [BudgetController::class, 'roomProductDestroy'])->name('budgets.room.product.destroy');
     Route::delete('budgets/room/labor/{budgetRoomLabor}', [BudgetController::class, 'roomLaborDestroy'])->name('budgets.room.labor.destroy');
     Route::resource('budgets', BudgetController::class)->names('budgets');
+    Route::resource('budgets.expenses', BudgetExpenseController::class)->names('budgets.expenses');
 
     Route::any('/imports/products', [ImportController::class, 'products'])->name('imports.products');
     Route::any('/imports/os-products', [ImportController::class, 'osProducts'])->name('imports.os-products');

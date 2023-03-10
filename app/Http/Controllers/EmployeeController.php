@@ -61,8 +61,7 @@ class EmployeeController extends Controller
         $employee->name = $user->name;
         $employee->email = $user->email;
         $roles = Employee::ROLES;
-
-        // dd($user);
+        $employee->role = $user->getRoleNames()->first();
 
         return view('employees.form', compact('employee', 'roles', 'showMode'));
     }

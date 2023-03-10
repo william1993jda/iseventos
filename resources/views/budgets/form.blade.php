@@ -8,12 +8,6 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('budgets.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
-            {{-- @if (!empty($budget->id))
-                <a href="{{ route('budgets.contacts.index', $budget->id) }}"
-                    class="btn btn-primary shadow-md mr-2">Contatos</a>
-                <a href="{{ route('budgets.addresses.index', $budget->id) }}"
-                    class="btn btn-primary shadow-md mr-2">Endereços</a>
-            @endif --}}
         </div>
         <div class="intro-y col-span-12">
             @if (empty($budget->id))
@@ -54,12 +48,11 @@
                 <div class="sm:grid grid-cols-1 gap-2 mt-3">
                     <x-forms.textarea name="commercial_conditions" label="Condições Comerciais" />
                 </div>
-                @if (!isset($showMode))
-                    <div class="text-right mt-5">
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="submit" class="btn btn-primary w-24">Salvar</button>
-                    </div>
-                @endif
+                <div class="sm:grid grid-cols-1 gap-2 mt-3">
+                    <x-forms.textarea name="payment_conditions" label="Condições de Pagamento"
+                        value="{{ isset($settings) ? $settings->payment_conditions : null }}" />
+                </div>
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$budget" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

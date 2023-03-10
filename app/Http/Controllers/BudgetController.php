@@ -14,6 +14,7 @@ use App\Models\Labor;
 use App\Models\Place;
 use App\Models\PlaceRoom;
 use App\Models\Product;
+use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -45,7 +46,9 @@ class BudgetController extends Controller
         $agencies = Agency::pluck('fantasy_name', 'id')->prepend('Selecione', '');
         $customers = Customer::pluck('fantasy_name', 'id')->prepend('Selecione', '');
 
-        return view('budgets.form', compact('budget', 'places', 'agencies', 'customers'));
+        $settings = Settings::first();
+
+        return view('budgets.form', compact('budget', 'places', 'agencies', 'customers', 'settings'));
     }
 
     public function store(BudgetRequest $request)

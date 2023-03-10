@@ -20,21 +20,6 @@
     .text-center {
         text-align: center;
     }
-
-    .text-fee {
-        color: #22C55E;
-        font-weight: bold;
-    }
-
-    .text-discount {
-        color: #EF4444;
-        font-weight: bold;
-    }
-
-    .text-total {
-        font-weight: bold;
-        font-size: 14px;
-    }
 </style>
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tbody>
@@ -250,17 +235,19 @@
                 <th style="text-align:left; width: 100%;">
                     EQUIPAMENTOS
                 </th>
+                @foreach ($room['days'] as $roomDate)
+                    <th style="text-align:center; width: 60px;">
+                        {{ substr($roomDate, 0, 5) }}
+                    </th>
+                @endforeach
                 <th style="text-align:center; width: 60px;">
-                    VALOR
+                    Valor
                 </th>
                 <th style="text-align:center; width: 60px;">
-                    QUANTIDADE
-                </th>
-                <th style="text-align:center; width: 60px;">
-                    DIAS
+                    Quantidade
                 </th>
                 <th style="text-align:center; width: 80px;">
-                    TOTAL
+                    Total
                 </th>
             </tr>
         </thead>
@@ -268,7 +255,7 @@
             @foreach ($room['categories'] as $category)
                 <tr>
                     <td><strong>{{ $category['name'] }}</strong></td>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="{{ count($room['days']) + 3 }}">&nbsp;</td>
                 </tr>
                 @foreach ($category['products'] as $product)
                     @php
@@ -277,21 +264,18 @@
                     @endphp
                     <tr>
                         <td style="text-align:left;">{{ $product['product']['name'] }}</td>
-                        {{-- @foreach ($room['days'] as $roomDate)
+                        @foreach ($room['days'] as $roomDate)
                             <td style="text-align:center;">
                                 @if (in_array($roomDate, explode(',', $product['days'])))
                                     x
                                 @endif
                             </td>
-                        @endforeach --}}
+                        @endforeach
                         <td style="text-align:center;">
                             {{ number_format($product['price'], 2, ',', '.') }}
                         </td>
                         <td style="text-align:center;">
                             {{ $product['quantity'] }}
-                        </td>
-                        <td style="text-align:center;">
-                            {{ count(explode(',', $product['days'])) }}
                         </td>
                         <td style="text-align:right;">
                             {{ number_format($product['quantity'] * $product['price'] * $days, 2, ',', '.') }}
@@ -305,14 +289,14 @@
                     @endphp
                     <tr>
                         <td>{{ $labor['labor']['name'] }}</td>
+                        <td style="text-align:right;" colspan="{{ count($room['days']) }}">
+                            {{ $labor['days'] }}&nbsp;&nbsp;diárias
+                        </td>
                         <td style="text-align:right;">
                             {{ number_format($labor['price'], 2, ',', '.') }}
                         </td>
                         <td style="text-align:center;">
                             {{ $labor['quantity'] }}
-                        </td>
-                        <td style="text-align:center;">
-                            {{ $labor['days'] }}
                         </td>
                         <td style="text-align:right;">
                             {{ number_format($labor['quantity'] * $labor['price'] * $labor['days'], 2, ',', '.') }}
@@ -327,80 +311,33 @@
 
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tr>
-        <td style="text-align:right;"><strong>SUBTOTAL</strong></td>
-        <td style="text-align:right; width: 80px;"><strong>R$ {{ number_format($total, 2, ',', '.') }}</strong></td>
+        <td style="text-align:right;"><strong>TOTAL</strong></td>
+        <td style="text-align:right; width: 80px;"><strong>{{ number_format($total, 2, ',', '.') }}</strong></td>
     </tr>
 </table>
-
-@php
-    $subtotal = $total;
-@endphp
-@if (!empty($fee))
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <tr>
-            @if ($fee_type == 'percent')
-                @php
-                    $feePercentage = $fee;
-                    $totalFeePercentage = ($feePercentage / 100) * $subtotal;
-                    $totalFee = $totalFeePercentage;
-                @endphp
-                <td style="text-align:right;"><span class="text-fee">TAXA ({{ $fee }}%):</span></td>
-                <td style="text-align:right; width: 80px;">
-                    <span class="text-fee">R$ {{ number_format($totalFeePercentage, 2, ',', '.') }}</span>
-                </td>
-            @else
-                @php
-                    $totalFee = $fee;
-                @endphp
-                <td style="text-align:right;"><span class="text-fee">TAXA (R$
-                        {{ number_format($fee, 2, ',', '.') }}):</span></td>
-                <td style="text-align:right; width: 80px;">
-                    <span class="text-fee">R$ {{ number_format($fee, 2, ',', '.') }}</span>
-                </td>
-            @endif
-        </tr>
-    </table>
-@endif
 
 @if (!empty($discount))
     <table style="border:none;border-collapse:collapse; width: 100%;">
         <tr>
             @if ($discount_type == 'percent')
                 @php
-                    $discountPercentage = $discount;
-                    $totalDiscountPercentage = ($discountPercentage / 100) * $subtotal;
-                    $totalDiscount = $totalDiscountPercentage;
+                    $percentage = $discount;
+                    
+                    $totalPercentage = ($percentage / 100) * $total;
                 @endphp
-                <td style="text-align:right;"><span class="text-discount">DESCONTO ({{ $discount }}%):</span></td>
+                <td style="text-align:right;">TOTAL COM DESCONTO DE {{ $discount }}%:</td>
                 <td style="text-align:right; width: 80px;">
-                    <span class="text-discount">R$ {{ number_format($totalDiscountPercentage, 2, ',', '.') }}</span>
+                    <strong>{{ number_format($total - $totalPercentage, 2, ',', '.') }}</strong>
                 </td>
             @else
-                @php
-                    $totalDiscount = $discount;
-                @endphp
-                <td style="text-align:right;"><span class="text-discount">DESCONTO (R$
-                        {{ number_format($discount, 2, ',', '.') }}):</span></td>
+                <td style="text-align:right;">TOTAL COM DESCONTO DE {{ $discount }}:</td>
                 <td style="text-align:right; width: 80px;">
-                    <span class="text-discount">R$ {{ number_format($discount, 2, ',', '.') }}</span>
+                    <strong>{{ number_format($total - $discount, 2, ',', '.') }}</strong>
                 </td>
             @endif
         </tr>
     </table>
 @endif
-
-@php
-    $total = $subtotal - $totalDiscount + $totalFee;
-@endphp
-
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tr>
-        <td style="text-align:right;"><span class="text-total">TOTAL:</span></td>
-        <td style="text-align:right; width: 80px;">
-            <span class="text-total">R$ {{ number_format($total, 2, ',', '.') }}</span>
-        </td>
-    </tr>
-</table>
 
 <br />
 
@@ -432,7 +369,10 @@
     Até 2 dias antes do evento, cobrança de 100% do orçamento aprovado.
 </p>
 
-@if (!empty($payment_conditions))
-    <p style="font-weight: bold;">CONDIÇÕES DE PAGAMENTO:</p>
-    <p>{!! nl2br($payment_conditions) !!}</p>
-@endif
+<p style="font-weight: bold;">CONDIÇÕES DE PAGAMENTO:</p>
+<p>
+    * Faturado diretamente pela IS após o evento com vencimento para 15 dias corridos, após aprovação de cadastro
+    por
+    nosso financeiro, o envio da P.O deve ser realizado até o término do evento, e o pagamento se dará através de
+    deposito em conta, conforme prazo previamente acordado.
+</p>
