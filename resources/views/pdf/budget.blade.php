@@ -334,6 +334,8 @@
 
 @php
     $subtotal = $total;
+    $totalFee = 0;
+    $totalDiscount = 0;
 @endphp
 @if (!empty($fee))
     <table style="border:none;border-collapse:collapse; width: 100%;">

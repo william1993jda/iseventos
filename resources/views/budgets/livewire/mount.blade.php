@@ -223,6 +223,8 @@
 
                     @php
                         $subtotal = $total;
+                        $totalFee = 0;
+                        $totalDiscount = 0;
                     @endphp
 
                     @if (!empty($budget['fee']))
