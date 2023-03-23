@@ -188,5 +188,21 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'budgets.expenses.create']);
         Permission::firstOrCreate(['name' => 'budgets.expenses.edit']);
         Permission::firstOrCreate(['name' => 'budgets.expenses.destroy']);
+
+        Permission::firstOrCreate(['name' => 'budgets.documents.index']);
+        Permission::firstOrCreate(['name' => 'budgets.documents.create']);
+        Permission::firstOrCreate(['name' => 'budgets.documents.edit']);
+        Permission::firstOrCreate(['name' => 'budgets.documents.destroy']);
+
+        Permission::firstOrCreate(['name' => 'groups.index']);
+        Permission::firstOrCreate(['name' => 'groups.create']);
+        Permission::firstOrCreate(['name' => 'groups.edit']);
+        Permission::firstOrCreate(['name' => 'groups.destroy']);
+
+
+        Permission::firstOrCreate(['name' => 'groups.products.index']);
+        Permission::firstOrCreate(['name' => 'groups.products.create']);
+        Permission::firstOrCreate(['name' => 'groups.products.edit']);
+        Permission::firstOrCreate(['name' => 'groups.products.destroy']);
     }
 }

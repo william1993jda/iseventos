@@ -236,7 +236,7 @@
                                     $totalFee = $totalFeePercentage;
                                 @endphp
                                 <div class="text-l font-medium text-right">
-                                    <span class="text-green-500">TAXA ({{ $budget['fee'] }}%): R$
+                                    <span class="text-green-500">TAXA DO CARTÃO({{ $budget['fee'] }}%): R$
                                         {{ number_format($totalFeePercentage, 2, ',', '.') }}</span>
                                 </div>
                             @else
@@ -244,7 +244,7 @@
                                     $totalFee = $budget['fee'];
                                 @endphp
                                 <div class="text-l font-medium text-right">
-                                    <span class="text-green-500">TAXA (R$
+                                    <span class="text-green-500">TAXA DO CARTÃO (R$
                                         {{ number_format($budget['fee'], 2, ',', '.') }}): R$
                                         {{ number_format($budget['fee'], 2, ',', '.') }}</span>
                                 </div>
@@ -286,11 +286,11 @@
                     <div class="flex justify-end mt-3">
                         @if (empty($budget['fee']))
                             <button type="button" class="btn btn-primary shadow-md" wire:click="addFee">
-                                Aplicar taxa
+                                Aplicar taxa do cartão
                             </button>
                         @else
                             <button type="button" class="btn btn-primary shadow-md" wire:click="removeFee">
-                                Remover taxa
+                                Remover taxa do cartão
                             </button>
                         @endif
                         @if (empty($budget['discount']))

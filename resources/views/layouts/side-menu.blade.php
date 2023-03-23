@@ -80,6 +80,12 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('groups.index') }}" class="side-menu">
+                <div class="side-menu__icon"> <i data-lucide="map-pin"></i> </div>
+                <div class="side-menu__title"> Kits </div>
+            </a>
+        </li>
+        <li>
             <a href="{{ route('statuses.index') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="layout-list"></i> </div>
                 <div class="side-menu__title"> Status - Comercial </div>

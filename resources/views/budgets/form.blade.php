@@ -8,6 +8,9 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('budgets.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
+            @if (!empty($budget->id))
+                <x-forms.buttons.primary route="budgets.documents.index" :id="$budget->id" label="Documentos" />
+            @endif
         </div>
         <div class="intro-y col-span-12">
             @if (empty($budget->id))

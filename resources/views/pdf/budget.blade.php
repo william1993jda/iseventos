@@ -212,24 +212,7 @@
         </tr>
     </tbody>
 </table>
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Condições Comerciais</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left; border:none;">
-                @if (!empty($commercial_conditions))
-                    {!! nl2br($commercial_conditions) !!}
-                @else
-                    &nbsp;
-                @endif
-            </td>
-        </tr>
-    </tbody>
-</table>
+
 
 <br />
 @php $total = 0; @endphp
@@ -437,4 +420,9 @@
 @if (!empty($payment_conditions))
     <p style="font-weight: bold;">CONDIÇÕES DE PAGAMENTO:</p>
     <p>{!! nl2br($payment_conditions) !!}</p>
+@endif
+
+@if (!empty($commercial_conditions))
+    <p style="font-weight: bold;">CONDIÇÕES COMERCIAIS:</p>
+    <p>{!! nl2br($commercial_conditions) !!}</p>
 @endif

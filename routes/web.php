@@ -5,6 +5,7 @@ use App\Http\Controllers\AgencyContactController;
 use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\BudgetExpenseController;
+use App\Http\Controllers\BudgetDocumentController;
 use App\Http\Controllers\EmployeeDependentController;
 use App\Http\Controllers\EmployeeBankController;
 use App\Http\Controllers\CustomerAddressController;
@@ -14,6 +15,8 @@ use App\Http\Controllers\EmployeeAddressController;
 use App\Http\Controllers\EmployeeContactController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeDocumentController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupProductController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\LaborController;
@@ -111,6 +114,10 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('os-products', OsProductController::class)->names('os-products');
 
+    Route::resource('groups', GroupController::class)->names('groups');
+
+    Route::resource('groups.products', GroupProductController::class)->names('groups.products');
+
     Route::post('budgets/customer-contacts', [BudgetController::class, 'getCustomerContacts'])->name('budgets.getCustomerContacts');
     Route::get('budgets/mount/{budget}', [BudgetController::class, 'mount'])->name('budgets.mount');
     Route::get('budgets/print/{budget}', [BudgetController::class, 'print'])->name('budgets.print');
@@ -118,6 +125,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('budgets/room/labor/{budgetRoomLabor}', [BudgetController::class, 'roomLaborDestroy'])->name('budgets.room.labor.destroy');
     Route::resource('budgets', BudgetController::class)->names('budgets');
     Route::resource('budgets.expenses', BudgetExpenseController::class)->names('budgets.expenses');
+    Route::resource('budgets.documents', BudgetDocumentController::class)->names('budgets.documents');
 
     Route::any('/imports/products', [ImportController::class, 'products'])->name('imports.products');
     Route::any('/imports/os-products', [ImportController::class, 'osProducts'])->name('imports.os-products');

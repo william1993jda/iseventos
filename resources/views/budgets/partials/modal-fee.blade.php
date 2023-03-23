@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="font-medium text-base mr-auto">Aplicar taxa</h2>
+                <h2 class="font-medium text-base mr-auto">Aplicar Taxa do Cartão</h2>
             </div>
             <div class="modal-body">
                 <div class="hidden" id="alert-fee-error">
@@ -12,9 +12,9 @@
                 </div>
 
                 <div class="sm:grid grid-cols-2 gap-2">
-                    <x-forms.select name="fee_type" label="Tipo de Taxa" :options="$feeDiscountTypes"
+                    <x-forms.select name="fee_type" label="Tipo de Taxa do Cartão" :options="$feeDiscountTypes"
                         wire:model="dataFee.fee_type" />
-                    <x-forms.text name="fee" label="Taxa" wire:model="dataFee.fee" />
+                    <x-forms.text name="fee" label="Taxa do Cartão" wire:model="dataFee.fee" />
                 </div>
             </div>
             <div class="modal-footer">
