@@ -204,5 +204,11 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'groups.products.create']);
         Permission::firstOrCreate(['name' => 'groups.products.edit']);
         Permission::firstOrCreate(['name' => 'groups.products.destroy']);
+
+        Permission::firstOrCreate(['name' => 'orderServices.index']);
+        Permission::firstOrCreate(['name' => 'orderServices.create']);
+        Permission::firstOrCreate(['name' => 'orderServices.edit']);
+        Permission::firstOrCreate(['name' => 'orderServices.destroy']);
+        Permission::firstOrCreate(['name' => 'orderServices.mount']);
     }
 }

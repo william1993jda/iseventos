@@ -6,6 +6,7 @@ use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\BudgetExpenseController;
 use App\Http\Controllers\BudgetDocumentController;
+use App\Http\Controllers\OrderServiceController;
 use App\Http\Controllers\EmployeeDependentController;
 use App\Http\Controllers\EmployeeBankController;
 use App\Http\Controllers\CustomerAddressController;
@@ -118,6 +119,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('groups.products', GroupProductController::class)->names('groups.products');
 
+
     Route::post('budgets/customer-contacts', [BudgetController::class, 'getCustomerContacts'])->name('budgets.getCustomerContacts');
     Route::get('budgets/mount/{budget}', [BudgetController::class, 'mount'])->name('budgets.mount');
     Route::get('budgets/print/{budget}', [BudgetController::class, 'print'])->name('budgets.print');
@@ -126,6 +128,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('budgets', BudgetController::class)->names('budgets');
     Route::resource('budgets.expenses', BudgetExpenseController::class)->names('budgets.expenses');
     Route::resource('budgets.documents', BudgetDocumentController::class)->names('budgets.documents');
+
+    Route::get('orderServices/mount/{budget}', [OrderServiceController::class, 'mount'])->name('orderServices.mount');
+    Route::resource('orderServices', OrderServiceController::class)->names('orderServices');
+
 
     Route::any('/imports/products', [ImportController::class, 'products'])->name('imports.products');
     Route::any('/imports/os-products', [ImportController::class, 'osProducts'])->name('imports.os-products');

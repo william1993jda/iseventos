@@ -134,6 +134,12 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('orderServices.index') }}" class="side-menu">
+                <div class="side-menu__icon"> <i data-lucide="clipboard-check"></i> </div>
+                <div class="side-menu__title"> Ordem de Serviço </div>
+            </a>
+        </li>
+        <li>
             <a href="#" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="clipboard-list"></i> </div>
                 <div class="side-menu__title"> Ordem de serviço </div>
