@@ -9,6 +9,8 @@ use App\Http\Controllers\BudgetDocumentController;
 use App\Http\Controllers\OrderServiceController;
 use App\Http\Controllers\EmployeeDependentController;
 use App\Http\Controllers\EmployeeBankController;
+use App\Http\Controllers\FreelancerDependentController;
+use App\Http\Controllers\FreelancerBankController;
 use App\Http\Controllers\CustomerAddressController;
 use App\Http\Controllers\CustomerContactController;
 use App\Http\Controllers\CustomerController;
@@ -16,6 +18,10 @@ use App\Http\Controllers\EmployeeAddressController;
 use App\Http\Controllers\EmployeeContactController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeDocumentController;
+use App\Http\Controllers\FreelancerAddressController;
+use App\Http\Controllers\FreelancerContactController;
+use App\Http\Controllers\FreelancerController;
+use App\Http\Controllers\FreelancerDocumentController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupProductController;
 use App\Http\Controllers\ImportController;
@@ -81,6 +87,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('employees.banks', EmployeeBankController::class)->names('employees.banks');
     Route::resource('employees.dependents', EmployeeDependentController::class)->names('employees.dependents');
     Route::resource('employees.documents', EmployeeDocumentController::class)->names('employees.documents');
+
+    Route::resource('freelancers', FreelancerController::class)->names('freelancers');
+    Route::resource('freelancers.contacts', FreelancerContactController::class)->names('freelancers.contacts');
+    Route::resource('freelancers.addresses', FreelancerAddressController::class)->names('freelancers.addresses');
+    Route::resource('freelancers.banks', FreelancerBankController::class)->names('freelancers.banks');
+    Route::resource('freelancers.dependents', FreelancerDependentController::class)->names('freelancers.dependents');
+    Route::resource('freelancers.documents', FreelancerDocumentController::class)->names('freelancers.documents');
 
     Route::resource('customers', CustomerController::class)->names('customers');
     Route::resource('customers.contacts', CustomerContactController::class)->names('customers.contacts');

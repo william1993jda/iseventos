@@ -83,6 +83,36 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'employees.documents.edit']);
         Permission::firstOrCreate(['name' => 'employees.documents.destroy']);
 
+        Permission::firstOrCreate(['name' => 'freelancers.index']);
+        Permission::firstOrCreate(['name' => 'freelancers.create']);
+        Permission::firstOrCreate(['name' => 'freelancers.edit']);
+        Permission::firstOrCreate(['name' => 'freelancers.destroy']);
+
+        Permission::firstOrCreate(['name' => 'freelancers.contacts.index']);
+        Permission::firstOrCreate(['name' => 'freelancers.contacts.create']);
+        Permission::firstOrCreate(['name' => 'freelancers.contacts.edit']);
+        Permission::firstOrCreate(['name' => 'freelancers.contacts.destroy']);
+
+        Permission::firstOrCreate(['name' => 'freelancers.addresses.index']);
+        Permission::firstOrCreate(['name' => 'freelancers.addresses.create']);
+        Permission::firstOrCreate(['name' => 'freelancers.addresses.edit']);
+        Permission::firstOrCreate(['name' => 'freelancers.addresses.destroy']);
+
+        Permission::firstOrCreate(['name' => 'freelancers.banks.index']);
+        Permission::firstOrCreate(['name' => 'freelancers.banks.create']);
+        Permission::firstOrCreate(['name' => 'freelancers.banks.edit']);
+        Permission::firstOrCreate(['name' => 'freelancers.banks.destroy']);
+
+        Permission::firstOrCreate(['name' => 'freelancers.dependents.index']);
+        Permission::firstOrCreate(['name' => 'freelancers.dependents.create']);
+        Permission::firstOrCreate(['name' => 'freelancers.dependents.edit']);
+        Permission::firstOrCreate(['name' => 'freelancers.dependents.destroy']);
+
+        Permission::firstOrCreate(['name' => 'freelancers.documents.index']);
+        Permission::firstOrCreate(['name' => 'freelancers.documents.create']);
+        Permission::firstOrCreate(['name' => 'freelancers.documents.edit']);
+        Permission::firstOrCreate(['name' => 'freelancers.documents.destroy']);
+
         Permission::firstOrCreate(['name' => 'customers.index']);
         Permission::firstOrCreate(['name' => 'customers.create']);
         Permission::firstOrCreate(['name' => 'customers.edit']);
