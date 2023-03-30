@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class Employee extends Model
+class Freelancer extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -19,8 +19,9 @@ class Employee extends Model
     ];
 
     protected $fillable = [
-        'user_id',
         'admission_date',
+        'name',
+        'email',
         'birthday',
         'phone',
         'cellphone',
@@ -94,26 +95,26 @@ class Employee extends Model
 
     public function contacts()
     {
-        return $this->hasMany(EmployeeContact::class);
+        return $this->hasMany(FreelancerContact::class);
     }
 
     public function addresses()
     {
-        return $this->hasMany(EmployeeAddress::class);
+        return $this->hasMany(FreelancerAddress::class);
     }
 
     public function banks()
     {
-        return $this->hasMany(EmployeeBank::class);
+        return $this->hasMany(FreelancerBank::class);
     }
 
     public function dependents()
     {
-        return $this->hasMany(EmployeeDependent::class);
+        return $this->hasMany(FreelancerDependent::class);
     }
 
     public function documents()
     {
-        return $this->hasMany(EmployeeDocument::class);
+        return $this->hasMany(FreelancerDocument::class);
     }
 }

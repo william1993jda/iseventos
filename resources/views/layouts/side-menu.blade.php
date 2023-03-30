@@ -50,6 +50,12 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('freelancers.index') }}" class="side-menu">
+                <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
+                <div class="side-menu__title"> Freelancers </div>
+            </a>
+        </li>
+        <li>
             <a href="{{ route('labors.index') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="contact"></i> </div>
                 <div class="side-menu__title"> Mão de obra </div>
