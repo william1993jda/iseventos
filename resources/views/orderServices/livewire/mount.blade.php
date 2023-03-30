@@ -297,11 +297,11 @@
         @endif
     </div>
 
-    @include('orderservices.partials.modal-product')
-    @include('orderservices.partials.modal-provider')
-    @include('orderservices.partials.modal-kit')
-    @include('orderservices.partials.modal-status')
-    @include('orderservices.partials.modal-observation')
+    @include('orderServices.partials.modal-product')
+    @include('orderServices.partials.modal-provider')
+    @include('orderServices.partials.modal-kit')
+    @include('orderServices.partials.modal-status')
+    @include('orderServices.partials.modal-observation')
 
     @push('custom-scripts')
         <script type="text/javascript">
