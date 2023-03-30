@@ -7,6 +7,9 @@ use App\Models\Agency;
 use App\Models\Budget;
 use App\Models\OsStatus;
 use App\Models\OrderService;
+use App\Models\OrderServiceRoomGroup;
+use App\Models\OrderServiceRoomProduct;
+use App\Models\OrderServiceRoomProvider;
 use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -88,13 +91,29 @@ class OrderServiceController extends Controller
     }
 
 
-    // public function roomProductDestroy(OrderServiceRoomProduct $budgetRoomProduct)
-    // {
-    //     $budget = $budgetRoomProduct->budget;
-    //     $budgetRoomProduct->delete();
+    public function roomProductDestroy(OrderServiceRoomProduct $orderServiceRoomProduct)
+    {
+        $orderService = $orderServiceRoomProduct->orderService;
+        $orderServiceRoomProduct->delete();
 
-    //     return redirect()->route('budgets.mount', $budget->id);
-    // }
+        return redirect()->route('orderServices.mount', $orderService->id);
+    }
+
+    public function roomProviderDestroy(OrderServiceRoomProvider $orderServiceRoomProvider)
+    {
+        $orderService = $orderServiceRoomProvider->orderService;
+        $orderServiceRoomProvider->delete();
+
+        return redirect()->route('orderServices.mount', $orderService->id);
+    }
+
+    public function roomGroupDestroy(OrderServiceRoomGroup $orderServiceRoomGroup)
+    {
+        $orderService = $orderServiceRoomGroup->orderService;
+        $orderServiceRoomGroup->delete();
+
+        return redirect()->route('orderServices.mount', $orderService->id);
+    }
 
 
     // public function print($id)

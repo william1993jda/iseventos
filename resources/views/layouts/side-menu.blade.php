@@ -81,7 +81,7 @@
         </li>
         <li>
             <a href="{{ route('groups.index') }}" class="side-menu">
-                <div class="side-menu__icon"> <i data-lucide="map-pin"></i> </div>
+                <div class="side-menu__icon"> <i data-lucide="package-plus"></i> </div>
                 <div class="side-menu__title"> Kits </div>
             </a>
         </li>
@@ -121,12 +121,6 @@
                 <div class="side-menu__title"> Equipamentos - Estoque </div>
             </a>
         </li>
-        {{-- <li>
-            <a href="#" class="side-menu">
-                <div class="side-menu__icon"> <i data-lucide="package-plus"></i> </div>
-                <div class="side-menu__title"> Kits </div>
-            </a>
-        </li> --}}
         <li>
             <a href="{{ route('budgets.index') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="clipboard-check"></i> </div>
@@ -135,14 +129,8 @@
         </li>
         <li>
             <a href="{{ route('orderServices.index') }}" class="side-menu">
-                <div class="side-menu__icon"> <i data-lucide="clipboard-check"></i> </div>
-                <div class="side-menu__title"> Ordem de Serviço </div>
-            </a>
-        </li>
-        <li>
-            <a href="#" class="side-menu">
                 <div class="side-menu__icon"> <i data-lucide="clipboard-list"></i> </div>
-                <div class="side-menu__title"> Ordem de serviço </div>
+                <div class="side-menu__title"> Ordem de Serviço </div>
             </a>
         </li>
         {{-- <li>

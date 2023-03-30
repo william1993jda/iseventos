@@ -38,9 +38,10 @@ class ProviderOsProductController extends Controller
 
     public function store(Provider $provider, OsProductRequest $request)
     {
-        $request->merge(['provider_id' => $provider->id]);
+        $params = $request->validated();
+        $params['provider_id'] = $provider->id;
 
-        OsProduct::create($request->validated());
+        OsProduct::create($params);
 
         return redirect()->route('providers.os-products.index', $provider->id);
     }

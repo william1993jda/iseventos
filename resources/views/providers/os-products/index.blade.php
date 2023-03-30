@@ -32,13 +32,13 @@
                     @foreach ($osProducts as $osProduct)
                         <tr class="intro-x">
                             <td>
-                                <a href="{{ route('os-products.show', $osProduct->id) }}"
+                                <a href="{{ route('providers.os-products.show', [$provider->id, $osProduct->id]) }}"
                                     class="font-medium whitespace-nowrap">{{ $osProduct->name }}</a>
                             </td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit route="os-products.edit" :id="[$provider->id, $osProduct->id]" />
-                                    <x-forms.buttons.destroy route="os-products.destroy" :id="[$provider->id, $osProduct->id]" />
+                                    <x-forms.buttons.edit route="providers.os-products.edit" :id="[$provider->id, $osProduct->id]" />
+                                    <x-forms.buttons.destroy route="providers.os-products.destroy" :id="[$provider->id, $osProduct->id]" />
                                 </div>
                             </td>
                         </tr>

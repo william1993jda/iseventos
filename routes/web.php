@@ -129,7 +129,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('budgets.expenses', BudgetExpenseController::class)->names('budgets.expenses');
     Route::resource('budgets.documents', BudgetDocumentController::class)->names('budgets.documents');
 
-    Route::get('orderServices/mount/{budget}', [OrderServiceController::class, 'mount'])->name('orderServices.mount');
+    Route::get('orderServices/mount/{orderService}', [OrderServiceController::class, 'mount'])->name('orderServices.mount');
+    Route::get('orderServices/print/{orderService}', [OrderServiceController::class, 'print'])->name('orderServices.print');
+    Route::delete('orderServices/room/product/{orderServiceRoomProduct}', [OrderServiceController::class, 'roomProductDestroy'])->name('orderServices.room.product.destroy');
+    Route::delete('orderServices/room/provider/{orderServiceRoomProvider}', [OrderServiceController::class, 'roomProviderDestroy'])->name('orderServices.room.provider.destroy');
+    Route::delete('orderServices/room/provider/{orderServiceRoomGroup}', [OrderServiceController::class, 'roomGroupDestroy'])->name('orderServices.room.group.destroy');
     Route::resource('orderServices', OrderServiceController::class)->names('orderServices');
 
 

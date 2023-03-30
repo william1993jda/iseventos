@@ -6,19 +6,20 @@
     </div>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <a href="{{ route('os-products.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
+            <a href="{{ route('providers.os-products.index', $provider->id) }}"
+                class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
         </div>
         <div class="intro-y col-span-12">
-            @if (empty($osProduct->id))
+            @if (empty($product->id))
                 {!! Form::open([
-                    'route' => 'os-products.store',
+                    'route' => ['providers.os-products.store', $provider->id],
                     'method' => 'post',
                     'class' => 'needs-validation',
                 ]) !!}
             @else
-                {!! Form::model($osProduct, [
-                    'route' => ['os-products.update', $osProduct->id],
+                {!! Form::model($product, [
+                    'route' => ['providers.os-products.update', [$provider->id, $product->id]],
                     'method' => 'put',
                     'class' => 'needs-validation',
                 ]) !!}
@@ -40,10 +41,10 @@
                     <x-forms.text name="weight" label="Peso" />
                 </div>
                 <div class="sm:grid grid-cols-2 gap-2 mt-3">
-                    <x-forms.checkbox name="customization" label="Customizar" :options="$osProduct->getCustomization()" />
-                    <x-forms.checkbox name="active" label="Ativo" :options="$osProduct->getActive()" />
+                    <x-forms.checkbox name="customization" label="Customizar" :options="$product->getCustomization()" />
+                    <x-forms.checkbox name="active" label="Ativo" :options="$product->getActive()" />
                 </div>
-                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$osProduct" />
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$product" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

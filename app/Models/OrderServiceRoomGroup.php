@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OrderServiceRoomProduct extends Model
+class OrderServiceRoomGroup extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'order_service_id',
         'place_room_id',
-        'os_product_id',
+        'group_id',
         'days',
         'quantity',
     ];
@@ -28,8 +28,8 @@ class OrderServiceRoomProduct extends Model
         return $this->belongsTo(PlaceRoom::class);
     }
 
-    public function osProduct()
+    public function group()
     {
-        return $this->belongsTo(OsProduct::class);
+        return $this->belongsTo(Group::class);
     }
 }
