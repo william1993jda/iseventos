@@ -1,21 +1,10 @@
 <x-app-layout>
     <h2 class="intro-y text-lg font-medium mt-10">
-        Kits - Produtos
+        Kits - {{ $group->name }}
     </h2>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <form action="{{ route('groups.products.index', $group->id) }}" method="GET" class="flex">
-                <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
-                    <div class="w-56 relative text-slate-500">
-                        <input type="text" name="query" class="form-control w-56 box pr-10" groupholder="Buscar..."
-                            value="{{ $query }}">
-                        <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-lucide="search"></i>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary shadow-md ml-2">Buscar</button>
-                <a href="{{ route('groups.products.index', $group->id) }}"
-                    class="btn btn-secondary shadow-md ml-2">Limpar</a>
-            </form>
+            <a href="{{ route('groups.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
             <x-forms.buttons.create route="groups.products.create" :id="$group->id" />
         </div>
@@ -34,9 +23,9 @@
                                 <a href="{{ route('groups.products.show', [$group->id, $product->id]) }}"
                                     class="font-medium whitespace-nowrap">{{ $product->product->name }}</a>
                             </td>
-                            <td class="table-report__action w-56">
+                            <td class="table-report__action w-28">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.edit route="groups.products.edit" :id="[$group->id, $product->id]" />
+                                    {{-- <x-forms.buttons.edit route="groups.products.edit" :id="[$group->id, $product->id]" /> --}}
                                     <x-forms.buttons.destroy route="groups.products.destroy" :id="[$group->id, $product->id]" />
                                 </div>
                             </td>

@@ -20,27 +20,12 @@
     .text-center {
         text-align: center;
     }
-
-    .text-fee {
-        color: #22C55E;
-        font-weight: bold;
-    }
-
-    .text-discount {
-        color: #EF4444;
-        font-weight: bold;
-    }
-
-    .text-total {
-        font-weight: bold;
-        font-size: 14px;
-    }
 </style>
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tbody>
         <tr>
             <td style="text-align:center; border:none;">
-                <img src="{{ public_path('dist/images/logo-horizontal.png') }}" width="300">
+                <img src="{{ public_path('assets/admin/images/logo-horizontal.png') }}" width="300">
             </td>
         </tr>
     </tbody>
@@ -213,9 +198,8 @@
     </tbody>
 </table>
 
-
 <br />
-@php $total = 0; @endphp
+
 @foreach ($rooms as $room)
     <table style="border:none;border-collapse:collapse; width: 100%;">
         <thead>
@@ -233,11 +217,13 @@
                 <th style="text-align:left; width: 100%;">
                     EQUIPAMENTOS
                 </th>
+                @foreach (explode(',', $room['days']) as $roomDate)
+                    <th style="text-align:center; width: 60px;">
+                        {{ substr($roomDate, 0, 5) }}
+                    </th>
+                @endforeach
                 <th style="text-align:center; width: 60px;">
-                    QUANTIDADE
-                </th>
-                <th style="text-align:center; width: 60px;">
-                    DIAS
+                    Quantidade
                 </th>
             </tr>
         </thead>
@@ -245,52 +231,23 @@
             @foreach ($room['categories'] as $category)
                 <tr>
                     <td><strong>{{ $category['name'] }}</strong></td>
-                    <td colspan="2">&nbsp;</td>
+                    <td colspan="{{ count(explode(',', $room['days'])) + 1 1}}">&nbsp;</td>
                 </tr>
                 @foreach ($category['products'] as $product)
+                    @php
+                        $days = count(explode(',', $product['days']));
+                    @endphp
                     <tr>
-                        <td style="text-align:left;">{{ $product['os_product']['name'] }}</td>
+                        <td style="text-align:left;">{{ $product['product']['name'] }}</td>
+                        @foreach (explode(',', $room['days']) as $roomDate)
+                            <td style="text-align:center;">
+                                @if (in_array($roomDate, explode(',', $product['days'])))
+                                    x
+                                @endif
+                            </td>
+                        @endforeach
                         <td style="text-align:center;">
                             {{ $product['quantity'] }}
-                        </td>
-                        <td style="text-align:center;">
-                            {{ count(explode(',', $product['days'])) }}
-                        </td>
-                    </tr>
-                @endforeach
-                @foreach ($category['providers'] as $provider)
-                    <tr>
-                        <td>
-                            <div class="font-medium">
-                                {{ $provider['os_product']['provider']['fantasy_name'] }}
-                            </div>
-                            {{ $provider['os_product']['name'] }}
-                        </td>
-                        <td style="text-align:center;">
-                            {{ $provider['quantity'] }}
-                        </td>
-                        <td style="text-align:center;">
-                            {{ count(explode(',', $provider['days'])) }}
-                        </td>
-                    </tr>
-                @endforeach
-                @foreach ($category['groups'] as $group)
-                    <tr>
-                        <td>
-                            <div class="font-medium">
-                                {{ $group['group']['name'] }}
-                            </div>
-                            <ul>
-                                @foreach ($group['group']['products'] as $product)
-                                    <li>{{ $product['name'] }}</li>
-                                @endforeach
-                            </ul>
-                        </td>
-                        <td style="text-align:center;">
-                            {{ $group['quantity'] }}
-                        </td>
-                        <td style="text-align:center;">
-                            {{ count(explode(',', $group['days'])) }}
                         </td>
                     </tr>
                 @endforeach

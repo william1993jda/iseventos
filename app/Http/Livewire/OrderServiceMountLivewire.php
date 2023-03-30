@@ -5,7 +5,9 @@ namespace App\Http\Livewire;
 use App\Models\BudgetRoomLabor;
 use App\Models\BudgetRoomProduct;
 use App\Models\Category;
+use App\Models\Group;
 use App\Models\Labor;
+use App\Models\OrderServiceRoomGroup;
 use App\Models\OrderServiceRoomProduct;
 use App\Models\OrderServiceRoomProvider;
 use App\Models\OsCategory;
@@ -25,11 +27,13 @@ class OrderServiceMountLivewire extends Component
     public $osStatuses = [];
     public $products = [];
     public $providers = [];
+    public $groups = [];
     public $placeRooms = [];
     public $rooms = [];
     public $dataOrderService = [];
     public $dataProduct = [];
     public $dataProvider = [];
+    public $dataGroup = [];
     public $dataStatus = [];
 
     public function mount($orderService)
@@ -44,7 +48,8 @@ class OrderServiceMountLivewire extends Component
     {
         $orderServiceRoomProducts = OrderServiceRoomProduct::where('order_service_id', $this->orderService->id)->pluck('place_room_id')->toArray();
         $orderServiceRoomProviders = OrderServiceRoomProvider::where('order_service_id', $this->orderService->id)->pluck('place_room_id')->toArray();
-        $placeRoomIds = array_unique(array_merge($orderServiceRoomProducts, $orderServiceRoomProviders));
+        $orderServiceRoomGroups = OrderServiceRoomGroup::where('order_service_id', $this->orderService->id)->pluck('place_room_id')->toArray();
+        $placeRoomIds = array_unique(array_merge($orderServiceRoomProducts, $orderServiceRoomProviders, $orderServiceRoomGroups));
 
         $arRoom = [];
 
@@ -58,6 +63,10 @@ class OrderServiceMountLivewire extends Component
             $providers = OrderServiceRoomProvider::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
             $providersId = $providers->pluck('os_product_id')->toArray();
             $providersList = $providers->get();
+
+            $groups = OrderServiceRoomGroup::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
+            $groupsId = $groups->pluck('group_id')->toArray();
+            $groupsList = $groups->get();
 
             $categoryProductsId = OsProduct::whereIn('id', $productsId)->groupBy('os_category_id')->pluck('os_category_id')->toArray();
             $categoryProvidersId = OsProduct::whereIn('id', $providersId)->groupBy('os_category_id')->pluck('os_category_id')->toArray();
@@ -92,9 +101,36 @@ class OrderServiceMountLivewire extends Component
                     'name' => $category->name,
                     'products' => $categoryProducts,
                     'providers' => $categoryProviders,
+                    'groups' => [],
                 ];
 
                 array_push($arCategories, $obCategory);
+            }
+
+            if (count($groupsList) > 0) {
+
+                $arGroups = [];
+
+                foreach ($groupsList as $group) {
+                    $arGroup = $group->toArray();
+                    $arGroup['group'] = $group->group->toArray();
+                    $arGroup['group']['products'] = $group->group->products->map(function ($product) {
+                        return [
+                            'id' => $product->os_product_id,
+                            'name' => $product->product->name,
+                        ];
+                    })->toArray();
+
+                    array_push($arGroups, $arGroup);
+                }
+
+                array_push($arCategories, [
+                    'id' => 0,
+                    'name' => 'KITS',
+                    'products' => [],
+                    'providers' => [],
+                    'groups' => $arGroups,
+                ]);
             }
 
             $budgetDays = explode('-', $this->orderService->budget->budget_days);
@@ -144,6 +180,13 @@ class OrderServiceMountLivewire extends Component
         $providers = Provider::pluck('fantasy_name', 'id')->prepend('Selecione', '');
 
         $this->emit('addProvider', $providers);
+    }
+
+    public function addKit()
+    {
+        $groups = Group::pluck('name', 'id')->prepend('Selecione', '');
+
+        $this->emit('addKit', $groups);
     }
 
     public function editStatus()
@@ -313,6 +356,63 @@ class OrderServiceMountLivewire extends Component
         ]);
 
         $this->dataProvider = [];
+
+        return $this->emit('saved');
+    }
+
+    public function saveKit()
+    {
+        // $this->validate([
+        //     'dataGroup.group_id' => 'required',
+        //     'dataGroup.place_room_id' => 'required',
+        //     'dataGroup.quantity' => 'required',
+        // ], [], [
+        //     'dataGroup.provider_id' => 'kit',
+        //     'dataGroup.place_room_id' => 'sala',
+        //     'dataGroup.quantity' => 'quantidade',
+        // ]);
+
+        if (empty($this->dataGroup['group_id'])) {
+            return $this->emit('groupError', true);
+        }
+
+
+        if (empty($this->dataGroup['place_room_id'])) {
+            return $this->emit('groupError', true);
+        }
+
+        if (empty($this->dataGroup['quantity'])) {
+            return $this->emit('groupError', true);
+        }
+
+        $this->emit('groupError', false);
+
+        $budgetDays = explode('-', $this->orderService->budget->budget_days);
+        $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
+        $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
+
+        $diifDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
+
+        $days = [];
+
+        array_push($days, Carbon::parse($startDay)->format('d/m'));
+
+        for ($i = 0; $i < $diifDays; $i++) {
+            $date = Carbon::parse($startDay)->addDays($i + 1);
+            array_push($days, $date->format('d/m'));
+        }
+
+        array_push($days, Carbon::parse($endDay)->format('d/m'));
+
+        OrderServiceRoomGroup::create([
+            'order_service_id' => $this->orderService->id,
+            'place_room_id' => $this->dataGroup['place_room_id'],
+            'group_id' => $this->dataGroup['group_id'],
+            'days' => implode(',', $days),
+            'quantity' => $this->dataGroup['quantity'],
+        ]);
+
+        $this->dataGroup = [];
 
         return $this->emit('saved');
     }

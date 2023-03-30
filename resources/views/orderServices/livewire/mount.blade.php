@@ -10,8 +10,8 @@
             <div class="hidden md:block mx-auto text-slate-500"></div>
             <button class="btn btn-primary shadow-md mr-2" wire:click="editObservation">Observações</button>
             <button class="btn btn-primary shadow-md mr-2" wire:click="editStatus">Status</button>
-            {{-- <a href="{{ route('orderServices.print', $budget->id) }}" target="_blank"
-                class="btn btn-primary shadow-md mr-2">Imprimir</a> --}}
+            <a href="{{ route('orderServices.print', $orderService->id) }}" target="_blank"
+                class="btn btn-primary shadow-md mr-2">Imprimir</a>
         </div>
         <div class="intro-y col-span-12 box px-5 pt-5">
             <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
@@ -111,6 +111,9 @@
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProvider">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Fornecedor
             </button>
+            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addKit">
+                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Kit
+            </button>
         </div>
         @if (count($rooms) > 0)
             <div class="intro-x col-span-12">
@@ -207,6 +210,47 @@
                                                 </td>
                                             </tr>
                                         @endforeach
+                                        @foreach ($category['groups'] as $group)
+                                            @php
+                                                $days = count(explode(',', $group['days']));
+                                            @endphp
+                                            <tr>
+                                                <td class="whitespace-nowrap">
+                                                    <div class="font-medium">
+                                                        {{ $group['group']['name'] }}
+                                                    </div>
+                                                    <ul>
+                                                        @foreach ($group['group']['products'] as $product)
+                                                            <li>{{ $product['name'] }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </td>
+                                                @foreach ($room['days'] as $roomDate)
+                                                    <td class="whitespace-nowrap">
+                                                        @if (in_array($roomDate, explode(',', $group['days'])))
+                                                            <x-forms.checkbox name="active" :checked="true"
+                                                                wire:click="checkDayRoom({{ $group['id'] }}, '{{ $roomDate }}')" />
+                                                        @else
+                                                            <x-forms.checkbox name="active" :checked="false"
+                                                                wire:click="checkDayRoom({{ $group['id'] }}, '{{ $roomDate }}')" />
+                                                        @endif
+                                                    </td>
+                                                @endforeach
+                                                <td class="whitespace-nowrap">
+                                                    <x-forms.number name="quantity" min="1" :value="$group['quantity']"
+                                                        wire:change="onChangeQuantity({{ $group['id'] }}, $event.target.value)" />
+                                                </td>
+                                                <td class="whitespace-nowrap" wire:ignore>
+                                                    <button
+                                                        class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
+                                                        data-action="{{ route('orderServices.room.provider.destroy', $group['id']) }}"
+                                                        data-tw-toggle="modal"
+                                                        data-tw-target="#delete-confirmation-modal" type="button">
+                                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                         {{-- @foreach ($category['labors'] as $labor)
                                             @php
                                                 $days = $labor['days'];
@@ -255,6 +299,7 @@
 
     @include('orderservices.partials.modal-product')
     @include('orderservices.partials.modal-provider')
+    @include('orderservices.partials.modal-kit')
     @include('orderservices.partials.modal-status')
     @include('orderservices.partials.modal-observation')
 
@@ -262,6 +307,7 @@
         <script type="text/javascript">
             var modalOrderServiceProduct = null;
             var modalOrderServiceProvider = null;
+            var modalOrderServiceKit = null;
             var modalOrderServiceStatus = null;
             var modalOrderServiceObservation = null;
             var selectCategoryId = null;
@@ -269,8 +315,10 @@
             var selectProviderId = null;
             var selectProviderCategoryId = null;
             var selectProviderProductId = null;
+            var selectGroupId = null;
             var alertProductError = null;
             var alertProviderError = null;
+            var alertKitError = null;
             var alertStatusError = null;
 
             document.addEventListener("DOMContentLoaded", function(e) {
@@ -279,13 +327,17 @@
                 selectProviderId = document.getElementById('provider_id').tomselect;
                 selectProviderCategoryId = document.getElementById('provider_category_id').tomselect;
                 selectProviderProductId = document.getElementById('provider_product_id').tomselect;
+                selectGroupId = document.getElementById('group_id').tomselect;
                 alertProductError = document.getElementById('alert-product-error');
                 alertProviderError = document.getElementById('alert-provider-error');
+                alertKitError = document.getElementById('alert-kit-error');
                 alertStatusError = document.getElementById('alert-status-error');
                 modalOrderServiceProduct = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-orderservice-product"));
                 modalOrderServiceProvider = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-orderservice-provider"));
+                modalOrderServiceKit = tailwind.Modal.getInstance(document.querySelector(
+                    "#modal-orderservice-kit"));
                 modalOrderServiceStatus = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-orderservice-status"));
                 modalOrderServiceObservation = tailwind.Modal.getInstance(document.querySelector(
@@ -316,6 +368,19 @@
                 });
 
                 modalOrderServiceProvider.show();
+            });
+
+            window.livewire.on('addKit', (data) => {
+                selectGroupId.clear();
+                selectGroupId.clearOptions();
+                Object.keys(data).forEach(function(key) {
+                    selectGroupId.addOption({
+                        value: key,
+                        text: data[key]
+                    });
+                });
+
+                modalOrderServiceKit.show();
             });
 
             window.livewire.on('editStatus', () => {
@@ -377,6 +442,14 @@
                     alertProviderError.classList.remove('hidden');
                 } else {
                     alertProviderError.classList.add('hidden');
+                }
+            });
+
+            window.livewire.on('groupError', (show) => {
+                if (show) {
+                    alertKitError.classList.remove('hidden');
+                } else {
+                    alertKitError.classList.add('hidden');
                 }
             });
 
