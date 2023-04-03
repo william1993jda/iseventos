@@ -114,6 +114,10 @@
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addKit">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Kit
             </button>
+            <div class="hidden md:block mx-auto text-slate-500"></div>
+            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="listPrintProviders">
+                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Pedidos Fornecedor
+            </button>
         </div>
         @if (count($rooms) > 0)
             <div class="intro-x col-span-12">
@@ -302,6 +306,7 @@
     @include('orderServices.partials.modal-kit')
     @include('orderServices.partials.modal-status')
     @include('orderServices.partials.modal-observation')
+    @include('orderServices.partials.modal-print-provider')
 
     @push('custom-scripts')
         <script type="text/javascript">
@@ -310,6 +315,7 @@
             var modalOrderServiceKit = null;
             var modalOrderServiceStatus = null;
             var modalOrderServiceObservation = null;
+            var modalOrderServicePrintProvider = null;
             var selectCategoryId = null;
             var selectProductId = null;
             var selectProviderId = null;
@@ -342,6 +348,8 @@
                     "#modal-orderservice-status"));
                 modalOrderServiceObservation = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-orderservice-observation"));
+                modalOrderServicePrintProvider = tailwind.Modal.getInstance(document.querySelector(
+                    "#modal-orderservice-print-provider"));
             });
 
             window.livewire.on('addProduct', (data) => {
@@ -389,6 +397,10 @@
 
             window.livewire.on('editObservation', () => {
                 modalOrderServiceObservation.toggle();
+            });
+
+            window.livewire.on('showPrintProviders', () => {
+                modalOrderServicePrintProvider.toggle();
             });
 
             window.livewire.on('updateProductList', (data) => {

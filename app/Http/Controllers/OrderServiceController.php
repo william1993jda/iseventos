@@ -14,6 +14,7 @@ use App\Models\OrderServiceRoomProvider;
 use App\Models\OsCategory;
 use App\Models\OsProduct;
 use App\Models\PlaceRoom;
+use App\Models\Provider;
 use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -346,5 +347,24 @@ class OrderServiceController extends Controller
 
         $pdf = PDF::loadView('pdf.orderService', $data);
         return $pdf->stream();
+    }
+
+    public function printProvider(OrderService $orderService, Provider $provider)
+    {
+        $orderServiceRoomProviders = OrderServiceRoomProvider::where('order_service_id', $orderService->id)->get();
+
+        $arProducts = [];
+
+        foreach ($orderServiceRoomProviders as $orderServiceRoomProvider) {
+            if ($orderServiceRoomProvider->osProduct->provider_id == $provider->id) {
+                array_push($arProducts, [
+                    'id' => $orderServiceRoomProvider->osProduct->id,
+                    'name' => $orderServiceRoomProvider->osProduct->name,
+                    'quantity' => $orderServiceRoomProvider->quantity,
+                ]);
+            }
+        }
+
+        dd($arProducts);
     }
 }

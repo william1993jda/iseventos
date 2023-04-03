@@ -144,6 +144,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('orderServices/mount/{orderService}', [OrderServiceController::class, 'mount'])->name('orderServices.mount');
     Route::get('orderServices/print/{orderService}', [OrderServiceController::class, 'print'])->name('orderServices.print');
+    Route::get('orderServices/print/provider/{orderService}/{provider}', [OrderServiceController::class, 'printProvider'])->name('orderServices.print.provider');
     Route::delete('orderServices/room/product/{orderServiceRoomProduct}', [OrderServiceController::class, 'roomProductDestroy'])->name('orderServices.room.product.destroy');
     Route::delete('orderServices/room/provider/{orderServiceRoomProvider}', [OrderServiceController::class, 'roomProviderDestroy'])->name('orderServices.room.provider.destroy');
     Route::delete('orderServices/room/provider/{orderServiceRoomGroup}', [OrderServiceController::class, 'roomGroupDestroy'])->name('orderServices.room.group.destroy');

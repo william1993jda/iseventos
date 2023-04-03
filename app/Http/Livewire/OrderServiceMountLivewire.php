@@ -27,6 +27,7 @@ class OrderServiceMountLivewire extends Component
     public $osStatuses = [];
     public $products = [];
     public $providers = [];
+    public $printProviders = [];
     public $groups = [];
     public $placeRooms = [];
     public $rooms = [];
@@ -489,5 +490,20 @@ class OrderServiceMountLivewire extends Component
             // $this->getRooms();
             return $this->emit('saved');
         }
+    }
+
+    public function listPrintProviders()
+    {
+        $productProviders = OrderServiceRoomProvider::where('order_service_id', $this->orderService->id)->get();
+        $arProviders = [];
+
+        foreach ($productProviders as $productProvider) {
+            if (!in_array($productProvider->osProduct->provider->id, $arProviders))
+                array_push($arProviders, $productProvider->osProduct->provider->id);
+        }
+
+        $this->printProviders = Provider::whereIn('id', $arProviders)->get();
+
+        $this->emit('showPrintProviders');
     }
 }
