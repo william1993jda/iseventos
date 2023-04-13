@@ -28,13 +28,13 @@ class OsProductImport implements ToModel, WithHeadingRow
             }
 
             $product = OsProduct::where('os_category_id', $category->id)
-                ->where('name', $row['equipamentos_orcamento'])
+                ->where('name', $row['equipamentos_os'])
                 ->first();
 
             if (empty($product)) {
                 $product = OsProduct::firstOrCreate([
                     "os_category_id" => $category->id,
-                    "name" => $row['equipamentos_orcamento'],
+                    "name" => $row['equipamentos_os'],
                     "brand" => $row['marca'],
                     "model" => $row['modelo'],
                     "serie" => $row['no_serie'],
