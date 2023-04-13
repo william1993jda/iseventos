@@ -7,6 +7,7 @@ use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\BudgetExpenseController;
 use App\Http\Controllers\BudgetDocumentController;
 use App\Http\Controllers\OrderServiceController;
+use App\Http\Controllers\OrderServiceDocumentController;
 use App\Http\Controllers\EmployeeDependentController;
 use App\Http\Controllers\EmployeeBankController;
 use App\Http\Controllers\FreelancerDependentController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\FreelancerBankController;
 use App\Http\Controllers\CustomerAddressController;
 use App\Http\Controllers\CustomerContactController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerDocumentController;
 use App\Http\Controllers\EmployeeAddressController;
 use App\Http\Controllers\EmployeeContactController;
 use App\Http\Controllers\EmployeeController;
@@ -98,6 +100,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('customers', CustomerController::class)->names('customers');
     Route::resource('customers.contacts', CustomerContactController::class)->names('customers.contacts');
     Route::resource('customers.addresses', CustomerAddressController::class)->names('customers.addresses');
+    Route::resource('customers.documents', CustomerDocumentController::class)->names('customers.documents');
 
     Route::resource('agencies', AgencyController::class)->names('agencies');
     Route::resource('agencies.contacts', AgencyContactController::class)->names('agencies.contacts');
@@ -149,6 +152,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('orderServices/room/provider/{orderServiceRoomProvider}', [OrderServiceController::class, 'roomProviderDestroy'])->name('orderServices.room.provider.destroy');
     Route::delete('orderServices/room/provider/{orderServiceRoomGroup}', [OrderServiceController::class, 'roomGroupDestroy'])->name('orderServices.room.group.destroy');
     Route::resource('orderServices', OrderServiceController::class)->names('orderServices');
+    Route::resource('orderServices.documents', OrderServiceDocumentController::class)->names('orderServices.documents');
 
 
     Route::any('/imports/products', [ImportController::class, 'products'])->name('imports.products');

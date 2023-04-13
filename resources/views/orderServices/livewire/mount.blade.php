@@ -10,6 +10,7 @@
             <div class="hidden md:block mx-auto text-slate-500"></div>
             <button class="btn btn-primary shadow-md mr-2" wire:click="editObservation">Observações</button>
             <button class="btn btn-primary shadow-md mr-2" wire:click="editStatus">Status</button>
+            <x-forms.buttons.primary route="orderServices.documents.index" :id="$orderService->id" label="Documentos" />
             <a href="{{ route('orderServices.print', $orderService->id) }}" target="_blank"
                 class="btn btn-primary shadow-md mr-2">Imprimir</a>
         </div>

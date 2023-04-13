@@ -17,6 +17,7 @@ class Customer extends Model
         'ein',
         'email',
         'phone',
+        'payment_term',
     ];
 
     public function contacts()
@@ -27,5 +28,10 @@ class Customer extends Model
     public function addresses()
     {
         return $this->hasMany(CustomerAddress::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(CustomerDocument::class);
     }
 }
