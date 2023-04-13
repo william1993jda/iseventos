@@ -361,10 +361,16 @@ class OrderServiceController extends Controller
                     'id' => $orderServiceRoomProvider->osProduct->id,
                     'name' => $orderServiceRoomProvider->osProduct->name,
                     'quantity' => $orderServiceRoomProvider->quantity,
+                    'days' => $orderServiceRoomProvider->days,
                 ]);
             }
         }
 
-        dd($arProducts);
+        $data = $provider->toArray();
+        $data['os_number'] = $orderService->os_number;
+        $data['products'] = $arProducts;
+
+        $pdf = PDF::loadView('pdf.orderServiceProvider', $data);
+        return $pdf->stream();
     }
 }
