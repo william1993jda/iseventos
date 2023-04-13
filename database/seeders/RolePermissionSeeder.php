@@ -128,6 +128,11 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'customers.addresses.edit']);
         Permission::firstOrCreate(['name' => 'customers.addresses.destroy']);
 
+        Permission::firstOrCreate(['name' => 'customers.documents.index']);
+        Permission::firstOrCreate(['name' => 'customers.documents.create']);
+        Permission::firstOrCreate(['name' => 'customers.documents.edit']);
+        Permission::firstOrCreate(['name' => 'customers.documents.destroy']);
+
         Permission::firstOrCreate(['name' => 'providers.index']);
         Permission::firstOrCreate(['name' => 'providers.create']);
         Permission::firstOrCreate(['name' => 'providers.edit']);
@@ -240,5 +245,10 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'orderServices.edit']);
         Permission::firstOrCreate(['name' => 'orderServices.destroy']);
         Permission::firstOrCreate(['name' => 'orderServices.mount']);
+
+        Permission::firstOrCreate(['name' => 'orderServices.documents.index']);
+        Permission::firstOrCreate(['name' => 'orderServices.documents.create']);
+        Permission::firstOrCreate(['name' => 'orderServices.documents.edit']);
+        Permission::firstOrCreate(['name' => 'orderServices.documents.destroy']);
     }
 }

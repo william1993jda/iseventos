@@ -53,7 +53,7 @@
                 </div>
                 <div class="sm:grid grid-cols-1 gap-2 mt-3">
                     <x-forms.textarea name="payment_conditions" label="Condições de Pagamento"
-                        value="{{ isset($settings) ? $settings->payment_conditions : null }}" />
+                        value="{{ isset($settings) ? $settings->payment_conditions : $budget->payment_conditions }}" />
                 </div>
                 <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$budget" />
             </div>

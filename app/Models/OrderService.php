@@ -28,4 +28,9 @@ class OrderService extends Model
     {
         return $this->belongsTo(Budget::class);
     }
+
+    public function documents()
+    {
+        return $this->hasMany(OrderServiceDocument::class);
+    }
 }

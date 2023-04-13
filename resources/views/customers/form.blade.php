@@ -11,6 +11,7 @@
             @if (!empty($customer->id))
                 <x-forms.buttons.primary route="customers.contacts.index" :id="$customer->id" label="Contatos" />
                 <x-forms.buttons.primary route="customers.addresses.index" :id="$customer->id" label="Endereços" />
+                <x-forms.buttons.primary route="customers.documents.index" :id="$customer->id" label="Documentos" />
             @endif
         </div>
         <div class="intro-y col-span-12">
@@ -29,12 +30,13 @@
             @endif
             <!-- BEGIN: Form Layout -->
             <div class="intro-y box p-5">
-                <div class="sm:grid grid-cols-2 gap-2">
+                <div class="sm:grid grid-cols-3 gap-2">
                     <x-forms.text name="fantasy_name" label="Nome Fantasia" />
                     <x-forms.text name="corporate_name" label="Razão Social" />
+                    <x-forms.text name="ein" label="CNPJ" mask="'99.999.999/9999-99'" />
                 </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
-                    <x-forms.text name="ein" label="CNPJ" mask="'99.999.999/9999-99'" />
+                    <x-forms.text name="payment_term" label="Prazo de Pagamento" mask="'99/99/9999'" />
                     <x-forms.email name="email" label="E-mail" />
                     <x-forms.text name="phone" label="Telefone" mask="'(99) 99999-9999'" />
                 </div>

@@ -28,6 +28,7 @@ class CustomerRequest extends FormRequest
             'ein' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|max:255',
             'phone' => 'nullable|string|max:255',
+            'payment_term' => 'nullable|string|max:255',
         ];
     }
 
@@ -39,6 +40,7 @@ class CustomerRequest extends FormRequest
             'ein' => 'cnpj',
             'email' => 'e-mail',
             'phone' => 'telefone',
+            'payment_term' => 'prazo de pagamento'
         ];
     }
 }
