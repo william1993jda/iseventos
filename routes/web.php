@@ -29,6 +29,7 @@ use App\Http\Controllers\GroupProductController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\LaborController;
+use App\Http\Controllers\BriefingController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\OsStatusController;
 use App\Http\Controllers\CategoryController;
@@ -118,6 +119,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('places.rooms.documents', PlaceRoomDocumentController::class)->names('places.rooms.documents');
 
     Route::resource('labors', LaborController::class)->names('labors');
+
+    Route::resource('briefings', BriefingController::class)->names('briefings');
 
     Route::resource('statuses', StatusController::class)->names('statuses');
 
