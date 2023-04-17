@@ -8,9 +8,6 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('budgets.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
-            @if (!empty($budget->id))
-                <x-forms.buttons.primary route="budgets.documents.index" :id="$budget->id" label="Documentos" />
-            @endif
         </div>
         <div class="intro-y col-span-12">
             @if (empty($budget->id))
@@ -96,12 +93,16 @@
                         const selectCustomerContactId = document.getElementById('customer_contact_id').tomselect;
                         selectCustomerContactId.clear();
                         selectCustomerContactId.clearOptions();
-                        Object.keys(data).forEach(function(key) {
+
+                        for (let index = 0; index < data.length; index++) {
+                            const item = data[index];
+
                             selectCustomerContactId.addOption({
-                                value: key,
-                                text: data[key]
+                                value: item.id,
+                                text: item.name
                             });
-                        });
+                        }
+
                         if (customer_contact_id) {
                             selectCustomerContactId.setValue(customer_contact_id);
                         }

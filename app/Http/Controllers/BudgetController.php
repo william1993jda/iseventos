@@ -94,7 +94,7 @@ class BudgetController extends Controller
 
     public function getCustomerContacts(Request $request)
     {
-        $contacts = CustomerContact::where('customer_id', $request->customer_id)->orderBy('name', 'asc')->get()->pluck('name', 'id');
+        $contacts = CustomerContact::where('customer_id', $request->customer_id)->orderBy('name', 'asc')->get();
 
         return response()->json($contacts);
     }

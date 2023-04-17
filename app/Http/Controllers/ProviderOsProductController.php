@@ -30,10 +30,10 @@ class ProviderOsProductController extends Controller
 
     public function create(Provider $provider)
     {
-        $osProduct = new OsProduct();
+        $product = new OsProduct();
         $osCategories = OsCategory::pluck('name', 'id')->prepend('Selecione', '');
 
-        return view('providers.os-products.form', compact('provider', 'osProduct', 'osCategories'));
+        return view('providers.os-products.form', compact('provider', 'product', 'osCategories'));
     }
 
     public function store(Provider $provider, OsProductRequest $request)

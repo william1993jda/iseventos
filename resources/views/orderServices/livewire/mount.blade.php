@@ -109,6 +109,9 @@
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProduct">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Equipamento
             </button>
+            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addLabor">
+                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Mão de obra
+            </button>
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProvider">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Fornecedor
             </button>
@@ -151,7 +154,8 @@
                                                 $days = count(explode(',', $product['days']));
                                             @endphp
                                             <tr>
-                                                <td class="whitespace-nowrap">{{ $product['os_product']['name'] }}</td>
+                                                <td class="whitespace-nowrap">{{ $product['os_product']['name'] }}
+                                                </td>
                                                 @foreach ($room['days'] as $roomDate)
                                                     <td class="whitespace-nowrap">
                                                         @if (in_array($roomDate, explode(',', $product['days'])))
@@ -303,6 +307,7 @@
     </div>
 
     @include('orderServices.partials.modal-product')
+    @include('orderServices.partials.modal-labor')
     @include('orderServices.partials.modal-provider')
     @include('orderServices.partials.modal-kit')
     @include('orderServices.partials.modal-status')
@@ -312,25 +317,31 @@
     @push('custom-scripts')
         <script type="text/javascript">
             var modalOrderServiceProduct = null;
+            var modalOrderServiceLabor = null;
             var modalOrderServiceProvider = null;
             var modalOrderServiceKit = null;
             var modalOrderServiceStatus = null;
             var modalOrderServiceObservation = null;
             var modalOrderServicePrintProvider = null;
+            var selectOsCategoryId = null;
             var selectCategoryId = null;
             var selectProductId = null;
+            var selectLaborId = null;
             var selectProviderId = null;
             var selectProviderCategoryId = null;
             var selectProviderProductId = null;
             var selectGroupId = null;
             var alertProductError = null;
+            var alertLaborError = null;
             var alertProviderError = null;
             var alertKitError = null;
             var alertStatusError = null;
 
             document.addEventListener("DOMContentLoaded", function(e) {
+                selectOsCategoryId = document.getElementById('os_category_id').tomselect;
                 selectCategoryId = document.getElementById('category_id').tomselect;
                 selectProductId = document.getElementById('product_id').tomselect;
+                selectLaborId = document.getElementById('labor_id').tomselect;
                 selectProviderId = document.getElementById('provider_id').tomselect;
                 selectProviderCategoryId = document.getElementById('provider_category_id').tomselect;
                 selectProviderProductId = document.getElementById('provider_product_id').tomselect;
@@ -341,6 +352,8 @@
                 alertStatusError = document.getElementById('alert-status-error');
                 modalOrderServiceProduct = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-orderservice-product"));
+                modalOrderServiceLabor = tailwind.Modal.getInstance(document.querySelector(
+                    "#modal-orderservice-labor"));
                 modalOrderServiceProvider = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-orderservice-provider"));
                 modalOrderServiceKit = tailwind.Modal.getInstance(document.querySelector(
@@ -354,6 +367,19 @@
             });
 
             window.livewire.on('addProduct', (data) => {
+                selectOsCategoryId.clear();
+                selectOsCategoryId.clearOptions();
+                Object.keys(data).forEach(function(key) {
+                    selectOsCategoryId.addOption({
+                        value: key,
+                        text: data[key]
+                    });
+                });
+
+                modalOrderServiceProduct.show();
+            });
+
+            window.livewire.on('addLabor', (data) => {
                 selectCategoryId.clear();
                 selectCategoryId.clearOptions();
                 Object.keys(data).forEach(function(key) {
@@ -363,7 +389,7 @@
                     });
                 });
 
-                modalOrderServiceProduct.show();
+                modalOrderServiceLabor.show();
             });
 
             window.livewire.on('addProvider', (data) => {
@@ -409,6 +435,17 @@
                 selectProductId.clearOptions();
                 Object.keys(data).forEach(function(key) {
                     selectProductId.addOption({
+                        value: key,
+                        text: data[key]
+                    });
+                });
+            });
+
+            window.livewire.on('updateLaborList', (data) => {
+                selectLaborId.clear();
+                selectLaborId.clearOptions();
+                Object.keys(data).forEach(function(key) {
+                    selectLaborId.addOption({
                         value: key,
                         text: data[key]
                     });

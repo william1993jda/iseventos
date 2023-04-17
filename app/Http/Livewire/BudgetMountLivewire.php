@@ -99,18 +99,22 @@ class BudgetMountLivewire extends Component
             $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
             $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
 
-            $diifDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
+            if ($startDay == $endDay) {
+                $days = [Carbon::parse($startDay)->format('d/m')];
+            } else {
+                $difDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
 
-            $days = [];
+                $days = [];
 
-            array_push($days, Carbon::parse($startDay)->format('d/m'));
+                array_push($days, Carbon::parse($startDay)->format('d/m'));
 
-            for ($i = 0; $i < $diifDays; $i++) {
-                $date = Carbon::parse($startDay)->addDays($i + 1);
-                array_push($days, $date->format('d/m'));
+                for ($i = 0; $i < $difDays; $i++) {
+                    $date = Carbon::parse($startDay)->addDays($i + 1);
+                    array_push($days, $date->format('d/m'));
+                }
+
+                array_push($days, Carbon::parse($endDay)->format('d/m'));
             }
-
-            array_push($days, Carbon::parse($endDay)->format('d/m'));
 
             $arRoom[] = [
                 'place_room_name' => $placeRoom->name,
@@ -238,18 +242,23 @@ class BudgetMountLivewire extends Component
         $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
         $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
 
-        $diifDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
+        if ($startDay == $endDay) {
+            $days = [Carbon::parse($startDay)->format('d/m')];
+        } else {
+            $difDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
 
-        $days = [];
+            $days = [];
 
-        array_push($days, Carbon::parse($startDay)->format('d/m'));
+            array_push($days, Carbon::parse($startDay)->format('d/m'));
 
-        for ($i = 0; $i < $diifDays; $i++) {
-            $date = Carbon::parse($startDay)->addDays($i + 1);
-            array_push($days, $date->format('d/m'));
+            for ($i = 0; $i < $difDays; $i++) {
+                $date = Carbon::parse($startDay)->addDays($i + 1);
+                array_push($days, $date->format('d/m'));
+            }
+
+            array_push($days, Carbon::parse($endDay)->format('d/m'));
         }
 
-        array_push($days, Carbon::parse($endDay)->format('d/m'));
 
         BudgetRoomProduct::create([
             'budget_id' => $this->budget->id,
@@ -341,20 +350,13 @@ class BudgetMountLivewire extends Component
 
         $this->emit('feeError', false);
 
-        if ($this->dataFee['fee_type'] == 'percent') {
-            $this->budget->update([
-                'fee_type' => $this->dataFee['fee_type'],
-                'fee' => intval($this->dataFee['fee']),
-            ]);
-        } else {
-            $fee = str_replace('.', '', $this->dataFee['fee']);
-            $fee = str_replace(',', '.', $fee);
+        $fee = str_replace('.', '', $this->dataFee['fee']);
+        $fee = str_replace(',', '.', $fee);
 
-            $this->budget->update([
-                'fee_type' => $this->dataFee['fee_type'],
-                'fee' => $fee,
-            ]);
-        }
+        $this->budget->update([
+            'fee_type' => $this->dataFee['fee_type'],
+            'fee' => $fee,
+        ]);
 
         return $this->emit('saved');
     }

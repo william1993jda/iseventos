@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Group;
 use App\Models\Labor;
 use App\Models\OrderServiceRoomGroup;
+use App\Models\OrderServiceRoomLabor;
 use App\Models\OrderServiceRoomProduct;
 use App\Models\OrderServiceRoomProvider;
 use App\Models\OsCategory;
@@ -24,6 +25,7 @@ class OrderServiceMountLivewire extends Component
 {
     public $orderService;
     public $osCategories = [];
+    public $categories = [];
     public $osStatuses = [];
     public $products = [];
     public $providers = [];
@@ -33,6 +35,7 @@ class OrderServiceMountLivewire extends Component
     public $rooms = [];
     public $dataOrderService = [];
     public $dataProduct = [];
+    public $dataLabor = [];
     public $dataProvider = [];
     public $dataGroup = [];
     public $dataStatus = [];
@@ -61,12 +64,15 @@ class OrderServiceMountLivewire extends Component
             $productsId = $products->pluck('os_product_id')->toArray();
             $productsList = $products->get();
 
+            $labors = OrderServiceRoomLabor::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
+            $laborsId = $labors->pluck('labor_id')->toArray();
+            $laborsList = $labors->get();
+
             $providers = OrderServiceRoomProvider::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
             $providersId = $providers->pluck('os_product_id')->toArray();
             $providersList = $providers->get();
 
             $groups = OrderServiceRoomGroup::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
-            $groupsId = $groups->pluck('group_id')->toArray();
             $groupsList = $groups->get();
 
             $categoryProductsId = OsProduct::whereIn('id', $productsId)->groupBy('os_category_id')->pluck('os_category_id')->toArray();
@@ -176,6 +182,13 @@ class OrderServiceMountLivewire extends Component
         $this->emit('addProduct', $osCategories);
     }
 
+    public function addLabor()
+    {
+        $categories = category::pluck('name', 'id')->prepend('Selecione', '');
+
+        $this->emit('addLabor', $categories);
+    }
+
     public function addProvider()
     {
         $providers = Provider::pluck('fantasy_name', 'id')->prepend('Selecione', '');
@@ -201,11 +214,18 @@ class OrderServiceMountLivewire extends Component
         $this->emit('editObservation');
     }
 
-    public function onSelectCategory(OsCategory $osCategory)
+    public function onSelectOsCategory(OsCategory $osCategory)
     {
         $products = $osCategory->products->pluck('name', 'id');
 
         $this->emit('updateProductList', $products);
+    }
+
+    public function onSelectCategoryLabor(Category $category)
+    {
+        $labors = $category->labors->pluck('name', 'id');
+
+        $this->emit('updateLaborList', $labors);
     }
 
     public function onSelectProvider(Provider $provider)
@@ -234,18 +254,18 @@ class OrderServiceMountLivewire extends Component
     public function saveProduct()
     {
         // $this->validate([
-        //     'dataProduct.category_id' => 'required',
+        //     'dataProduct.os_category_id' => 'required',
         //     'dataProduct.product_id' => 'required',
         //     'dataProduct.place_room_id' => 'required',
         //     'dataProduct.quantity' => 'required',
         // ], [], [
-        //     'dataProduct.category_id' => 'categoria',
+        //     'dataProduct.os_category_id' => 'categoria',
         //     'dataProduct.product_id' => 'equipamento',
         //     'dataProduct.place_room_id' => 'sala',
         //     'dataProduct.quantity' => 'quantidade',
         // ]);
 
-        if (empty($this->dataProduct['category_id'])) {
+        if (empty($this->dataProduct['os_category_id'])) {
             return $this->emit('productError', true);
         }
 
@@ -289,6 +309,56 @@ class OrderServiceMountLivewire extends Component
         ]);
 
         $this->dataProduct = [];
+
+        return $this->emit('saved');
+    }
+
+    public function saveLabor()
+    {
+        // $this->validate([
+        //     'dataLabor.category_id' => 'required',
+        //     'dataLabor.labor_id' => 'required',
+        //     'dataLabor.place_room_id' => 'required',
+        //     'dataLabor.quantity' => 'required',
+        // ], [], [
+        //     'dataLabor.category_id' => 'categoria',
+        //     'dataLabor.labor_id' => 'equipamento',
+        //     'dataLabor.place_room_id' => 'sala',
+        //     'dataLabor.quantity' => 'quantidade',
+        // ]);
+
+        if (empty($this->dataLabor['category_id'])) {
+            return $this->emit('laborError', true);
+        }
+
+        if (empty($this->dataLabor['labor_id'])) {
+            return $this->emit('laborError', true);
+        }
+
+        if (empty($this->dataLabor['place_room_id'])) {
+            return $this->emit('laborError', true);
+        }
+
+
+        if (empty($this->dataLabor['quantity'])) {
+            return $this->emit('laborError', true);
+        }
+
+        if (empty($this->dataLabor['days'])) {
+            return $this->emit('laborError', true);
+        }
+
+        $this->emit('laborError', false);
+
+        OrderServiceRoomLabor::create([
+            'order_service_id' => $this->orderService->id,
+            'place_room_id' => $this->dataLabor['place_room_id'],
+            'labor_id' => $this->dataLabor['labor_id'],
+            'days' => $this->dataLabor['days'],
+            'quantity' => $this->dataLabor['quantity'],
+        ]);
+
+        $this->dataLabor = [];
 
         return $this->emit('saved');
     }

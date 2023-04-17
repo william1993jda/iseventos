@@ -133,6 +133,21 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'customers.documents.edit']);
         Permission::firstOrCreate(['name' => 'customers.documents.destroy']);
 
+        Permission::firstOrCreate(['name' => 'agencies.index']);
+        Permission::firstOrCreate(['name' => 'agencies.create']);
+        Permission::firstOrCreate(['name' => 'agencies.edit']);
+        Permission::firstOrCreate(['name' => 'agencies.destroy']);
+
+        Permission::firstOrCreate(['name' => 'agencies.contacts.index']);
+        Permission::firstOrCreate(['name' => 'agencies.contacts.create']);
+        Permission::firstOrCreate(['name' => 'agencies.contacts.edit']);
+        Permission::firstOrCreate(['name' => 'agencies.contacts.destroy']);
+
+        Permission::firstOrCreate(['name' => 'agencies.addresses.index']);
+        Permission::firstOrCreate(['name' => 'agencies.addresses.create']);
+        Permission::firstOrCreate(['name' => 'agencies.addresses.edit']);
+        Permission::firstOrCreate(['name' => 'agencies.addresses.destroy']);
+
         Permission::firstOrCreate(['name' => 'providers.index']);
         Permission::firstOrCreate(['name' => 'providers.create']);
         Permission::firstOrCreate(['name' => 'providers.edit']);

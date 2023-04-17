@@ -30,7 +30,6 @@ class GroupController extends Controller
     {
         $group = new Group();
 
-
         return view('groups.form', compact('group'));
     }
 
@@ -57,12 +56,7 @@ class GroupController extends Controller
 
     public function destroy(Group $group)
     {
-        $group->rooms()->get()->each(function ($room) {
-            $room->documents()->delete();
-        });
-
-        $group->rooms()->delete();
-        $group->documents()->delete();
+        $group->products()->delete();
         $group->delete();
 
         return redirect()->route('groups.index');
