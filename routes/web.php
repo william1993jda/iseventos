@@ -120,6 +120,13 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('labors', LaborController::class)->names('labors');
 
+    Route::get('briefings/create/{type}', [BriefingController::class, 'create'])->name('briefings.create.type');
+    Route::post('briefings/store/online', [BriefingController::class, 'storeOnline'])->name('briefings.store.online');
+    Route::put('briefings/update/online', [BriefingController::class, 'updateOnline'])->name('briefings.update.online');
+    Route::post('briefings/store/person', [BriefingController::class, 'storePerson'])->name('briefings.store.person');
+    Route::put('briefings/update/person', [BriefingController::class, 'updatePerson'])->name('briefings.update.person');
+    Route::post('briefings/store/hybrid', [BriefingController::class, 'storeHybrid'])->name('briefings.store.hybrid');
+    Route::put('briefings/update/hybrid', [BriefingController::class, 'updateHybrid'])->name('briefings.update.hybrid');
     Route::resource('briefings', BriefingController::class)->names('briefings');
 
     Route::resource('statuses', StatusController::class)->names('statuses');

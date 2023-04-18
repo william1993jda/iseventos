@@ -14,7 +14,19 @@
         </div>
         <div class="intro-y col-span-12">
             <!-- BEGIN: Form Layout -->
-
+            @if (empty($briefing->id))
+                {!! Form::open([
+                    'route' => 'briefings.store.online',
+                    'method' => 'post',
+                    'class' => 'needs-validation',
+                ]) !!}
+            @else
+                {!! Form::model($briefing, [
+                    'route' => ['briefings.update.online', $briefing->id],
+                    'method' => 'put',
+                    'class' => 'needs-validation',
+                ]) !!}
+            @endif
             <div class="col-span-12 xl:col-span-8 mt-6">
                 <div class="intro-y block sm:flex items-center h-10">
                     <h2 class="text-lg font-medium truncate mr-5">
@@ -50,20 +62,20 @@
                     <div>
                         <div class="sm:grid grid-cols-2 gap-2 mt-3">
                             <div class="sm:grid grid-cols-4 gap-2 mt-3">
-                                <x-forms.text name="start_date" label="Inicio" class="datepicker form-control w-full"
-                                    data-single-mode="true" />
-                                <x-forms.text name="end_date" label="Fim" class="datepicker form-control w-full"
-                                    data-daterange="true" />
-                                <x-forms.text name="start_date" label="Inicio" class="datepicker form-control w-full"
-                                    data-single-mode="true" />
-                                <x-forms.text name="end_date" label="Fim" class="datepicker form-control w-full"
-                                    data-daterange="true" />
+                                <x-forms.text name="start_date_rehearsal" label="Inicio"
+                                    class="datepicker form-control w-full" data-single-mode="true" />
+                                <x-forms.text name="end_date_rehearsal" label="Fim"
+                                    class="datepicker form-control w-full" data-daterange="true" />
+                                <x-forms.text name="start_date_rehearsal" label="Inicio"
+                                    class="datepicker form-control w-full" data-single-mode="true" />
+                                <x-forms.text name="end_date_rehearsal" label="Fim"
+                                    class="datepicker form-control w-full" data-daterange="true" />
                             </div>
                             <div class="sm:grid grid-cols-2 gap-2 mt-3">
-                                <x-forms.text name="start_date" label="Inicio" class="datepicker form-control w-full"
-                                    data-single-mode="true" />
-                                <x-forms.text name="end_date" label="Fim" class="datepicker form-control w-full"
-                                    data-daterange="true" />
+                                <x-forms.text name="start_date_event" label="Inicio"
+                                    class="datepicker form-control w-full" data-single-mode="true" />
+                                <x-forms.text name="end_date_event" label="Fim"
+                                    class="datepicker form-control w-full" data-daterange="true" />
                             </div>
                         </div>
                     </div>
@@ -127,13 +139,13 @@
                 </div>
                 <div class="intro-y box p-5 mt-12 sm:mt-5">
                     <div class="sm:grid grid-cols-2 gap-2 mt-3">
-                        <x-forms.select name="platform" label="Plataforma:" :options="[
+                        <x-forms.select name="platform_transmission" label="Plataforma:" :options="[
                             '0' => 'Selecione...',
                             '1' => 'Zoom meeting',
                             '2' => 'Zoom webinar',
                             '3' => 'Zoom +',
                         ]" />
-                        <x-forms.select name="link" label="Link zoom - IS:" :options="['0' => 'Selecione...', '1' => 'Sim', '2' => 'Não']" />
+                        <x-forms.select name="link_event" label="Link zoom - IS:" :options="['0' => 'Selecione...', '1' => 'Sim', '2' => 'Não']" />
                     </div>
                     <div class="intro-y box p-5 mt-12 sm:mt-5">
                         <div class="sm:grid grid-cols-2 gap-2 mt-3">
@@ -227,6 +239,7 @@
                             <x-forms.textarea name="observation_description" label="Descreva:" />
                         </div>
                     </div>
+                    <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$briefing" />
                 </div>
                 {!! Form::close() !!}
                 <!-- END: Form Layout -->
