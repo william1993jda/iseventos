@@ -10,6 +10,7 @@
             <div class="hidden md:block mx-auto text-slate-500"></div>
             <button class="btn btn-primary shadow-md mr-2" wire:click="editObservation">Observações</button>
             <button class="btn btn-primary shadow-md mr-2" wire:click="addStatus">Status</button>
+            <x-forms.buttons.primary route="budgets.documents.index" :id="$budget->id" label="Documentos" />
             <a href="{{ route('budgets.print', $budget->id) }}" target="_blank"
                 class="btn btn-primary shadow-md mr-2">Imprimir</a>
         </div>
@@ -236,7 +237,7 @@
                                     $totalFee = $totalFeePercentage;
                                 @endphp
                                 <div class="text-l font-medium text-right">
-                                    <span class="text-green-500">TAXA DO CARTÃO({{ $budget['fee'] }}%): R$
+                                    <span class="text-green-500">TAXA DO CARTÃO ({{ $budget['fee'] }}%): R$
                                         {{ number_format($totalFeePercentage, 2, ',', '.') }}</span>
                                 </div>
                             @else

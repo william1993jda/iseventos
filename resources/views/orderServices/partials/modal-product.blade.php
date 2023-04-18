@@ -12,8 +12,8 @@
                 </div>
 
                 <div class="sm:grid grid-cols-1 gap-2">
-                    <x-forms.select name="category_id" label="Categoria" :options="$osCategories"
-                        wire:model="dataProduct.category_id" wire:change="onSelectCategory($event.target.value)" />
+                    <x-forms.select name="os_category_id" label="Categoria" :options="$osCategories"
+                        wire:model="dataProduct.os_category_id" wire:change="onSelectOsCategory($event.target.value)" />
                 </div>
                 <div class="sm:grid grid-cols-1 gap-2 mt-3">
                     <x-forms.select name="product_id" label="Equipamento" :options="[]"
