@@ -1,11 +1,16 @@
-import "./bootstrap";
-import "@left4code/tw-starter/dist/js/svg-loader";
-import "@left4code/tw-starter/dist/js/accordion";
-import "@left4code/tw-starter/dist/js/alert";
-import "@left4code/tw-starter/dist/js/dropdown";
-import "@left4code/tw-starter/dist/js/modal";
-import "@left4code/tw-starter/dist/js/tab";
+import mask from "@alpinejs/mask";
+import { Calendar } from "@fullcalendar/core";
+import Alpine from "alpinejs";
+import Toastify from "toastify-js";
+import TomSelect from "tom-select";
+import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import listPlugin from "@fullcalendar/list";
 
+import "./bootstrap";
+/*import "./tabulator";*/
+// import "./calendar";
 /*
  |--------------------------------------------------------------------------
  | 3rd Party Libraries
@@ -15,19 +20,13 @@ import "@left4code/tw-starter/dist/js/tab";
  |
  */
 import "./chart";
+import "./chat";
+import "./copy-code";
+import "./dark-mode-switcher";
+import "./datepicker";
+import "./dropzone";
 import "./highlight";
 import "./lucide";
-import "./tiny-slider";
-import "./tippy";
-import "./datepicker";
-import "./tom-select";
-import "./dropzone";
-import "./validation";
-import "./zoom";
-import "./notification";
-/*import "./tabulator";*/
-import "./calendar";
-
 /*
  |--------------------------------------------------------------------------
  | Custom Components
@@ -37,26 +36,36 @@ import "./calendar";
  |
  */
 import "./maps";
-import "./chat";
+import "./mobile-menu";
+import "./notification";
+import "./search";
+import "./show-code";
+import "./show-dropdown";
 import "./show-modal";
 import "./show-slide-over";
-import "./show-dropdown";
-import "./search";
-import "./copy-code";
-import "./show-code";
 import "./side-menu";
-import "./mobile-menu";
 import "./side-menu-tooltip";
-import "./dark-mode-switcher";
-
-import mask from "@alpinejs/mask";
-import Alpine from "alpinejs";
-import TomSelect from "tom-select";
-import Toastify from "toastify-js";
+import "./tiny-slider";
+import "./tippy";
+import "./tom-select";
+import "./validation";
+import "./zoom";
+import "@left4code/tw-starter/dist/js/accordion";
+import "@left4code/tw-starter/dist/js/alert";
+import "@left4code/tw-starter/dist/js/dropdown";
+import "@left4code/tw-starter/dist/js/modal";
+import "@left4code/tw-starter/dist/js/svg-loader";
+import "@left4code/tw-starter/dist/js/tab";
 
 window.Alpine = Alpine;
 window.TomSelect = TomSelect;
 window.Toastify = Toastify;
+window.Calendar = Calendar;
+window.Draggable = Draggable;
+window.interactionPlugin = interactionPlugin;
+window.dayGridPlugin = dayGridPlugin;
+window.timeGridPlugin = timeGridPlugin;
+window.listPlugin = listPlugin;
 
 Alpine.plugin(mask);
 Alpine.start();

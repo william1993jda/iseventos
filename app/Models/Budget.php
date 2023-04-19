@@ -23,6 +23,8 @@ class Budget extends Model
         'budget_days',
         'mount_date',
         'unmount_date',
+        'start_time',
+        'end_time',
         'public',
         'observation',
         'discount',
@@ -36,7 +38,7 @@ class Budget extends Model
     protected $casts = [
         'request_date' => 'date',
         'mount_date' => 'date',
-        'unmount_date' => 'date',
+        'unmount_date' => 'date'
     ];
 
     public function setRequestDateAttribute($value)

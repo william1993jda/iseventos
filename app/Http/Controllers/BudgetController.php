@@ -126,8 +126,11 @@ class BudgetController extends Controller
 
         $data = $budget->toArray();
         $data['request_date'] = $budget->request_date->format('d/m/Y');
+        $data['status'] = $budget->status->name;
+        $data['budget_number'] = $budget->budget_number;
         $data['observation'] = $budget->observation;
         $data['customer'] = $budget->customer->fantasy_name;
+        $data['customer_ein'] = $budget->customer->ein;
         $data['customer_name'] = '';
         $data['customer_phone'] = '';
         $data['customer_email'] = '';
@@ -141,12 +144,47 @@ class BudgetController extends Controller
 
         $data['agency'] = $budget->agency ? $budget->agency->fantasy_name : null;
         $data['place'] = $budget->place->name;
+        $data['place_address'] = '';
+
+        if ($budget->place->street) {
+            $data['place_address'] = $budget->place->street;
+
+            if ($budget->place->number) {
+                $data['place_address'] .= ', ' . $budget->place->number;
+            }
+
+            if ($budget->place->complement) {
+                $data['place_address'] .= ' - ' . $budget->place->complement;
+            }
+
+            if ($budget->place->district) {
+                $data['place_address'] .= ' - ' . $budget->place->district;
+            }
+
+            if ($budget->place->city) {
+                $data['place_address'] .= ' - ' . $budget->place->city;
+            }
+
+            if ($budget->place->state) {
+                $data['place_address'] .= ' - ' . $budget->place->state;
+            }
+        }
+
         $data['city'] = $budget->city;
 
         $budgetDays = explode('-', $budget->budget_days);
 
         $data['start_date'] = trim($budgetDays[0]);
         $data['end_date'] = trim($budgetDays[1]);
+
+        if (!empty($budget->start_time)) {
+            $data['start_date'] .= ' - ' . substr($budget->start_time, 0, 5);
+        }
+
+        if (!empty($budget->end_time)) {
+            $data['end_date'] .= ' - ' . substr($budget->end_time, 0, 5);
+        }
+
         $data['mount_date'] = $budget->mount_date ? $budget->mount_date->format('d/m/Y') : null;
         $data['unmount_date'] = $budget->unmount_date ? $budget->unmount_date->format('d/m/Y') : null;
         $data['public'] = $budget->public;

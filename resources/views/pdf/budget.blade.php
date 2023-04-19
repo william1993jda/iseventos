@@ -36,173 +36,126 @@
         font-size: 14px;
     }
 </style>
-<table style="border:none;border-collapse:collapse; width: 100%;">
+<table style="border:none;border-collapse:collapse; width: 100%; background-color: lightgrey; padding: 20px;">
+    <tbody>
+        <tr>
+            <td style="text-align:center; border:none; width: 100%;">
+                <span style="font-size: 22px; font-weight: bold;">PROPOSTA</span>
+            </td>
+            <td style="text-align:right; border:none;">
+                <img src="{{ public_path('dist/images/logo_is_vermelho_preto_squad.png') }}" width="100">
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table style="border:none;border-collapse:collapse; width: 100%; background-color: lightgrey; padding: 5px;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none; width: 70%;">
+                <strong>Data da solicitação</strong>:&nbsp;{{ $request_date }}
+            </td>
+            <td style="text-align:left; border:none; width: 30%;">
+                <strong>Status</strong>:&nbsp;{{ $status }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none; width: 70%;">
+                <strong>Orçamento N&deg;</strong>:&nbsp;{{ $budget_number }}
+            </td>
+            <td style="text-align:left; border:none; width: 30%;">
+                &nbsp;
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table style="border:none;border-collapse:collapse; width: 100%; background-color: #F4F4F4; padding: 5px;">
     <tbody>
         <tr>
             <td style="text-align:center; border:none;">
-                <img src="{{ public_path('dist/images/logo-horizontal.png') }}" width="300">
+                <strong>Dados do Cliente</strong>
             </td>
         </tr>
     </tbody>
 </table>
-
-<br />
-
-<table style="border:none;border-collapse:collapse; width: 100%;">
+<table style="border:none; border-collapse:collapse; width: 100%; padding: 5px 0px;">
     <tbody>
         <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Nome do Evento</strong>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Cliente</strong>:&nbsp;{{ $customer }}
             </td>
-            <td style="text-align:center; width: 120px; border:none;">
-                <strong>Data da solicitação</strong>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>CNPJ</strong>:&nbsp;{{ $customer_ein }}
             </td>
         </tr>
         <tr>
-            <td style="border:none">
-                {{ $name }}
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Contato</strong>:&nbsp;{{ $customer_name }}
             </td>
-            <td style="text-align:center; width: 120px; border:none;">
-                {{ $request_date }}
+            <td style="text-align:left; border:none; width: 50%;">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>E-mail</strong>:&nbsp;{{ $customer_email }}
+            </td>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Telefone</strong>:&nbsp;{{ $customer_phone }}
             </td>
         </tr>
     </tbody>
 </table>
-<table style="border:none;border-collapse:collapse; width: 100%;">
+<table style="border:none;border-collapse:collapse; width: 100%; background-color: #F4F4F4; padding: 5px;">
     <tbody>
         <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Cliente</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Contato</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Telefone</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>E-mail</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="border:none;">
-                {{ $customer }}
-            </td>
-            <td style="border:none;">
-                {{ $customer_name }}
-            </td>
-            <td style="border:none;">
-                {{ $customer_phone }}
-            </td>
-            <td style="border:none;">
-                {{ $customer_email }}
+            <td style="text-align:center; border:none;">
+                <strong>Dados do Evento</strong>
             </td>
         </tr>
     </tbody>
 </table>
-@if (!empty($agency))
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <tbody>
-            <tr>
-                <td style="text-align:left; border:none;">
-                    <strong>Agência</strong>
-                </td>
-            </tr>
-            <tr>
-                <td style="border:none;">
-                    {{ $agency }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-@endif
-<table style="border:none;border-collapse:collapse; width: 100%;">
+<table style="border:none; border-collapse:collapse; width: 100%; padding: 5px 0px;">
     <tbody>
         <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Data Inicio</strong>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Evento</strong>:&nbsp;{{ $name }}
             </td>
-            <td style="text-align:left; border:none;">
-                <strong>Data Fim</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Data Montagem</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Data Desmontagem</strong>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Quantidade de participantes</strong>:&nbsp;{{ $public }}
             </td>
         </tr>
         <tr>
-            <td style="text-align:left; border:none;">
-                {{ $start_date }}
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Local</strong>:&nbsp;{{ $place }}
             </td>
-            <td style="text-align:left; border:none;">
-                {{ $end_date }}
-            </td>
-            <td style="text-align:left; border:none;">
-                {{ $mount_date }}
-            </td>
-            <td style="text-align:left; border:none;">
-                {{ $unmount_date }}
-            </td>
-        </tr>
-    </tbody>
-</table>
-@if (!empty($public) || !empty($situation))
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <tbody>
-            <tr>
-                <td style="text-align:left; border:none;">
-                    <strong>Público</strong>
-                </td>
-                <td style="text-align:left; border:none;">
-                    <strong>Situação</strong>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align:left; border:none;">
-                    {{ $public }}
-                </td>
-                <td style="text-align:left; border:none;">
-                    {{ $situation }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-@endif
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Local</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Cidade</strong>
+            <td style="text-align:left; border:none; width: 50%;">
+                &nbsp;
             </td>
         </tr>
         <tr>
-            <td style="text-align:left; border:none;">
-                @if (!empty($place))
-                    {{ $place }}
-                @else
-                    &nbsp;
-                @endif
-            </td>
-            <td style="text-align:left; border:none;">
-                {{ $city }}
-            </td>
-        </tr>
-    </tbody>
-</table>
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Observações</strong>
+            <td style="text-align:left; border:none; width: 50%;" colspan="2">
+                <strong>Endereço</strong>:&nbsp;{{ $place_address }}
             </td>
         </tr>
         <tr>
-            <td style="text-align:left; border:none;">
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Data de início</strong>:&nbsp;{{ $start_date }}
+            </td>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Data de término</strong>:&nbsp;{{ $end_date }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Data de montagem</strong>:&nbsp;{{ $mount_date }}
+            </td>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Data de desmontagem</strong>:&nbsp;{{ $unmount_date }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none; width: 50%;" colspan="2">
+                <strong>Observações</strong>:&nbsp;<br />
                 @if (!empty($observation))
                     {!! nl2br($observation) !!}
                 @else
@@ -356,7 +309,8 @@
                     $totalDiscountPercentage = ($discountPercentage / 100) * $subtotal;
                     $totalDiscount = $totalDiscountPercentage;
                 @endphp
-                <td style="text-align:right;"><span class="text-discount">DESCONTO ({{ $discount }}%):</span></td>
+                <td style="text-align:right;"><span class="text-discount">DESCONTO ({{ $discount }}%):</span>
+                </td>
                 <td style="text-align:right; width: 80px;">
                     <span class="text-discount">R$ {{ number_format($totalDiscountPercentage, 2, ',', '.') }}</span>
                 </td>

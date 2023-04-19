@@ -25,16 +25,18 @@
             @endif
             <!-- BEGIN: Form Layout -->
             <div class="intro-y box p-5">
-                <div class="sm:grid grid-cols-3 gap-2">
+                <div class="sm:grid grid-cols-4 gap-2">
                     <x-forms.text name="name" label="Nome do Evento" />
                     <x-forms.select name="place_id" label="Local" :options="$places" />
                     <x-forms.text name="public" label="Quantidade de Participantes" />
-                </div>
-                <div class="sm:grid grid-cols-4 gap-2 mt-3">
                     <x-forms.text name="request_date" label="Data da solicitação" class="datepicker form-control w-full"
                         data-single-mode="true" />
+                </div>
+                <div class="sm:grid grid-cols-5 gap-2 mt-3">
                     <x-forms.text name="budget_days" label="Dias do evento" class="datepicker form-control w-full"
                         data-daterange="true" />
+                    <x-forms.time name="start_time" label="Horário de início" class="form-control w-full" />
+                    <x-forms.time name="end_time" label="Horário de término" class="form-control w-full" />
                     <x-forms.text name="mount_date" label="Data da Montagem" class="datepicker form-control w-full"
                         data-single-mode="true" />
                     <x-forms.text name="unmount_date" label="Data da Desmontagem" class="datepicker form-control w-full"

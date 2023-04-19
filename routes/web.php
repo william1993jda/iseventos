@@ -33,6 +33,7 @@ use App\Http\Controllers\BriefingController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\OsStatusController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OsCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OsProductController;
@@ -81,6 +82,8 @@ Route::middleware('auth')->group(function () {
     Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('roles/create/{role}', [RoleController::class, 'create'])->name('roles.create');
     Route::post('roles/store/{role}', [RoleController::class, 'store'])->name('roles.store');
+
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     Route::resource('users', UserController::class)->names('users');
 
