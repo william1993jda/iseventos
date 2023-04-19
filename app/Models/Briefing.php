@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
 class Briefing extends Model
 {
     use HasFactory, SoftDeletes;
@@ -18,29 +19,37 @@ class Briefing extends Model
         'company',
         'email',
         'phone',
-
+        'start_date_rehearsal',
+        'end_date_rehearsal',
+        'start_date_event',
+        'end_date_event',
+        'pax',
+        'du',
+        'focal_point',
+        'agency_name',
+        'agency_contact',
+        'agency_phone',
+        'agency_email',
+        'agency_production',
+        'agency_criation',
+        'agency_logistic',
+        'room_quantity',
+        'room_format',
+        'room_description',
     ];
 
-    // public function setPriceAttribute($value)
-    // {
-    //     $price = str_replace('.', '', $value);
-    //     $price = str_replace(',', '.', $price);
+    public function online()
+    {
+        return $this->hasOne(BriefingOnline::class);
+    }
 
-    //     $this->attributes['price'] = $price;
-    // }
+    public function person()
+    {
+        return $this->hasOne(BriefingPerson::class);
+    }
 
-    // public function getPriceFormated()
-    // {
-    //     return number_format($this->attributes['price'], 2, ',', '.');
-    // }
-
-    // public function getActive()
-    // {
-    //     if (!empty($this->attributes['id'])) {
-    //         return $this->attributes['active'] ? true : false;
-    //     }
-
-    //     return $this->attributes['active'] = true;
-    // }
-
+    public function hybrid()
+    {
+        return $this->hasOne(BriefingHybrid::class);
+    }
 }

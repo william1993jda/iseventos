@@ -14,6 +14,19 @@
         </div>
         <div class="intro-y col-span-12">
             <!-- BEGIN: Form Layout -->
+            @if (empty($briefing->id))
+                {!! Form::open([
+                    'route' => 'briefings.store.hybrid',
+                    'method' => 'post',
+                    'class' => 'needs-validation',
+                ]) !!}
+            @else
+                {!! Form::model($briefing, [
+                    'route' => ['briefings.update.hybrid', $briefing->id],
+                    'method' => 'put',
+                    'class' => 'needs-validation',
+                ]) !!}
+            @endif
 
             <div class="col-span-12 xl:col-span-8 mt-6">
                 <div class="intro-y block sm:flex items-center h-10">
@@ -50,20 +63,20 @@
                     <div>
                         <div class="sm:grid grid-cols-2 gap-2 mt-3">
                             <div class="sm:grid grid-cols-4 gap-2 mt-3">
-                                <x-forms.text name="start_date" label="Inicio" class="datepicker form-control w-full"
-                                    data-single-mode="true" />
-                                <x-forms.text name="end_date" label="Fim" class="datepicker form-control w-full"
-                                    data-daterange="true" />
-                                <x-forms.text name="start_date" label="Inicio" class="datepicker form-control w-full"
-                                    data-single-mode="true" />
-                                <x-forms.text name="end_date" label="Fim" class="datepicker form-control w-full"
-                                    data-daterange="true" />
+                                <x-forms.text name="start_date_rehearsal" label="Inicio"
+                                    class="datepicker form-control w-full" data-single-mode="true" />
+                                <x-forms.text name="end_date_rehearsal" label="Fim"
+                                    class="datepicker form-control w-full" data-daterange="true" />
+                                <x-forms.text name="start_date_rehearsal" label="Inicio"
+                                    class="datepicker form-control w-full" data-single-mode="true" />
+                                <x-forms.text name="end_date_rehearsal" label="Fim"
+                                    class="datepicker form-control w-full" data-daterange="true" />
                             </div>
                             <div class="sm:grid grid-cols-2 gap-2 mt-3">
-                                <x-forms.text name="start_date" label="Inicio" class="datepicker form-control w-full"
-                                    data-single-mode="true" />
-                                <x-forms.text name="end_date" label="Fim" class="datepicker form-control w-full"
-                                    data-daterange="true" />
+                                <x-forms.text name="start_date_event" label="Inicio"
+                                    class="datepicker form-control w-full" data-single-mode="true" />
+                                <x-forms.text name="end_date_event" label="Fim"
+                                    class="datepicker form-control w-full" data-daterange="true" />
                             </div>
                         </div>
                     </div>
@@ -123,7 +136,6 @@
                     <h2 class="text-lg font-medium truncate mr-5">
                         Mobiliário
                     </h2>
-
                 </div>
                 <div class="intro-y box p-5 mt-12 sm:mt-5">
                     <div class="sm:grid grid-cols-3 gap-2 mt-3">
@@ -365,6 +377,7 @@
                             <x-forms.textarea name="observation_description" label="Descreva:" />
                         </div>
                     </div>
+                    <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$briefing" />
                 </div>
                 {!! Form::close() !!}
                 <!-- END: Form Layout -->
