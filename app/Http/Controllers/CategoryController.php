@@ -64,7 +64,7 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return redirect()->route('statuses.index');
+        return redirect()->route('categories.index');
     }
 
     public function show(Category $category)

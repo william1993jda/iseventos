@@ -57,11 +57,12 @@ class PlaceRoomDocumentController extends Controller
         return redirect()->route('places.rooms.documents.index', $placeRoom->id);
     }
 
-    public function destroy(PlaceRoom $placeRoom, PlaceRoomDocument $document)
+    public function destroy($place, $placeRoom, $document)
     {
+        $document = PlaceRoomDocument::findOrFail($document);
         $document->delete();
 
-        return redirect()->route('places.rooms.documents.index', $placeRoom->id);
+        return redirect()->route('places.rooms.documents.index', [$place, $placeRoom]);
     }
 
     public function show(PlaceRoom $placeRoom, PlaceRoomDocument $document)

@@ -62,6 +62,30 @@ class BriefingController extends Controller
         $params = $request->validated();
         $params['type_event'] = 1;
 
+        if (empty($params['start_date_mount'])) {
+            unset($params['start_date_mount']);
+        }
+
+        if (empty($params['end_date_mount'])) {
+            unset($params['end_date_mount']);
+        }
+
+        if (empty($params['start_date_rehearsal'])) {
+            unset($params['start_date_rehearsal']);
+        }
+
+        if (empty($params['end_date_rehearsal'])) {
+            unset($params['end_date_rehearsal']);
+        }
+
+        if (empty($params['start_date_event'])) {
+            unset($params['start_date_event']);
+        }
+
+        if (empty($params['end_date_event'])) {
+            unset($params['end_date_event']);
+        }
+
         if (empty($params['agency_production'])) {
             $params['agency_production'] = 0;
         }
@@ -121,6 +145,30 @@ class BriefingController extends Controller
     {
         $params = $request->validated();
         $params['type_event'] = 2;
+
+        if (empty($params['start_date_mount'])) {
+            unset($params['start_date_mount']);
+        }
+
+        if (empty($params['end_date_mount'])) {
+            unset($params['end_date_mount']);
+        }
+
+        if (empty($params['start_date_rehearsal'])) {
+            unset($params['start_date_rehearsal']);
+        }
+
+        if (empty($params['end_date_rehearsal'])) {
+            unset($params['end_date_rehearsal']);
+        }
+
+        if (empty($params['start_date_event'])) {
+            unset($params['start_date_event']);
+        }
+
+        if (empty($params['end_date_event'])) {
+            unset($params['end_date_event']);
+        }
 
         if (empty($params['agency_production'])) {
             $params['agency_production'] = 0;
@@ -192,12 +240,16 @@ class BriefingController extends Controller
             $briefing = Briefing::create($params);
             $briefingPerson = $briefing->person()->create($params);
 
-            foreach ($params['room_name'] as $index => $roomName) {
-                $briefingPerson->rooms()->create([
-                    'name' => $roomName,
-                    'room_format' => $params['room_format'][$index],
-                    'comments' => $params['room_description'][$index],
-                ]);
+            if (!empty($params['room_name'])) {
+                foreach ($params['room_name'] as $index => $roomName) {
+                    if (!empty($roomName)) {
+                        $briefingPerson->rooms()->create([
+                            'name' => $roomName,
+                            'room_format' => $params['room_format'][$index],
+                            'comments' => $params['room_description'][$index],
+                        ]);
+                    }
+                }
             }
 
             DB::commit();
@@ -212,6 +264,30 @@ class BriefingController extends Controller
     {
         $params = $request->validated();
         $params['type_event'] = 3;
+
+        if (empty($params['start_date_mount'])) {
+            unset($params['start_date_mount']);
+        }
+
+        if (empty($params['end_date_mount'])) {
+            unset($params['end_date_mount']);
+        }
+
+        if (empty($params['start_date_rehearsal'])) {
+            unset($params['start_date_rehearsal']);
+        }
+
+        if (empty($params['end_date_rehearsal'])) {
+            unset($params['end_date_rehearsal']);
+        }
+
+        if (empty($params['start_date_event'])) {
+            unset($params['start_date_event']);
+        }
+
+        if (empty($params['end_date_event'])) {
+            unset($params['end_date_event']);
+        }
 
         if (empty($params['agency_production'])) {
             $params['agency_production'] = 0;
@@ -311,12 +387,16 @@ class BriefingController extends Controller
             $briefing = Briefing::create($params);
             $briefingHybrid = $briefing->hybrid()->create($params);
 
-            foreach ($params['room_name'] as $index => $roomName) {
-                $briefingHybrid->rooms()->create([
-                    'name' => $roomName,
-                    'room_format' => $params['room_format'][$index],
-                    'comments' => $params['room_description'][$index],
-                ]);
+            if (!empty($params['room_name'])) {
+                foreach ($params['room_name'] as $index => $roomName) {
+                    if (!empty($roomName)) {
+                        $briefingHybrid->rooms()->create([
+                            'name' => $roomName,
+                            'room_format' => $params['room_format'][$index],
+                            'comments' => $params['room_description'][$index],
+                        ]);
+                    }
+                }
             }
 
             DB::commit();
@@ -344,6 +424,30 @@ class BriefingController extends Controller
     public function updateOnline($id, BriefingOnlineRequest $request)
     {
         $params = $request->validated();
+
+        if (empty($params['start_date_mount'])) {
+            unset($params['start_date_mount']);
+        }
+
+        if (empty($params['end_date_mount'])) {
+            unset($params['end_date_mount']);
+        }
+
+        if (empty($params['start_date_rehearsal'])) {
+            unset($params['start_date_rehearsal']);
+        }
+
+        if (empty($params['end_date_rehearsal'])) {
+            unset($params['end_date_rehearsal']);
+        }
+
+        if (empty($params['start_date_event'])) {
+            unset($params['start_date_event']);
+        }
+
+        if (empty($params['end_date_event'])) {
+            unset($params['end_date_event']);
+        }
 
         if (empty($params['agency_production'])) {
             $params['agency_production'] = 0;
@@ -406,6 +510,30 @@ class BriefingController extends Controller
     public function updatePerson($id, BriefingPersonRequest $request)
     {
         $params = $request->validated();
+
+        if (empty($params['start_date_mount'])) {
+            unset($params['start_date_mount']);
+        }
+
+        if (empty($params['end_date_mount'])) {
+            unset($params['end_date_mount']);
+        }
+
+        if (empty($params['start_date_rehearsal'])) {
+            unset($params['start_date_rehearsal']);
+        }
+
+        if (empty($params['end_date_rehearsal'])) {
+            unset($params['end_date_rehearsal']);
+        }
+
+        if (empty($params['start_date_event'])) {
+            unset($params['start_date_event']);
+        }
+
+        if (empty($params['end_date_event'])) {
+            unset($params['end_date_event']);
+        }
 
         if (empty($params['agency_production'])) {
             $params['agency_production'] = 0;
@@ -483,12 +611,16 @@ class BriefingController extends Controller
 
             $briefingPerson->rooms()->delete();
 
-            foreach ($params['room_name'] as $index => $roomName) {
-                $briefingPerson->rooms()->create([
-                    'name' => $roomName,
-                    'room_format' => $params['room_format'][$index],
-                    'comments' => $params['room_description'][$index],
-                ]);
+            if (!empty($params['room_name'])) {
+                foreach ($params['room_name'] as $index => $roomName) {
+                    if (!empty($roomName)) {
+                        $briefingPerson->rooms()->create([
+                            'name' => $roomName,
+                            'room_format' => $params['room_format'][$index],
+                            'comments' => $params['room_description'][$index],
+                        ]);
+                    }
+                }
             }
 
             DB::commit();
@@ -503,6 +635,30 @@ class BriefingController extends Controller
     public function updateHybrid($id, BriefingHybridRequest $request)
     {
         $params = $request->validated();
+
+        if (empty($params['start_date_mount'])) {
+            unset($params['start_date_mount']);
+        }
+
+        if (empty($params['end_date_mount'])) {
+            unset($params['end_date_mount']);
+        }
+
+        if (empty($params['start_date_rehearsal'])) {
+            unset($params['start_date_rehearsal']);
+        }
+
+        if (empty($params['end_date_rehearsal'])) {
+            unset($params['end_date_rehearsal']);
+        }
+
+        if (empty($params['start_date_event'])) {
+            unset($params['start_date_event']);
+        }
+
+        if (empty($params['end_date_event'])) {
+            unset($params['end_date_event']);
+        }
 
         if (empty($params['agency_production'])) {
             $params['agency_production'] = 0;
@@ -608,12 +764,16 @@ class BriefingController extends Controller
 
             $briefingHybrid->rooms()->delete();
 
-            foreach ($params['room_name'] as $index => $roomName) {
-                $briefingHybrid->rooms()->create([
-                    'name' => $roomName,
-                    'room_format' => $params['room_format'][$index],
-                    'comments' => $params['room_description'][$index],
-                ]);
+            if (!empty($params['room_name'])) {
+                foreach ($params['room_name'] as $index => $roomName) {
+                    if (!empty($roomName)) {
+                        $briefingHybrid->rooms()->create([
+                            'name' => $roomName,
+                            'room_format' => $params['room_format'][$index],
+                            'comments' => $params['room_description'][$index],
+                        ]);
+                    }
+                }
             }
 
             DB::commit();

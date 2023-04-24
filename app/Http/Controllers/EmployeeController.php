@@ -52,6 +52,8 @@ class EmployeeController extends Controller
 
         Employee::create($params);
 
+        $user->syncRoles($params['role']);
+
         return redirect()->route('employees.index');
     }
 

@@ -26,7 +26,7 @@
                                 <a href="{{ route('budgets.expenses.show', [$budget->id, $expense->id]) }}"
                                     class="font-medium whitespace-nowrap">{{ $expense->name }}</a>
                             </td>
-                            <td class="text-center">{{ $expense->getPriceFormated() }}</td>
+                            <td class="text-center">{{ $expense->price }}</td>
                             <td class="text-center">{{ $expense->date }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">

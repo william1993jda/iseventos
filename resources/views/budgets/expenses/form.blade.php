@@ -28,7 +28,7 @@
             <div class="intro-y box p-5">
                 <div class="sm:grid grid-cols-3 gap-2">
                     <x-forms.text name="name" label="Nome" />
-                    <x-forms.text name="price" label="Valor" mask="$money($input, ',')" />
+                    <x-forms.currency name="price" label="Valor" />
                     <x-forms.text name="date" label="Data" class="datepicker form-control w-full"
                         data-single-mode="true" />
                 </div>

@@ -248,7 +248,7 @@ class OrderServiceMountLivewire extends Component
     {
         $this->orderService->update($this->dataOrderService);
 
-        return $this->emit('editObservation');
+        return $this->emit('saved');
     }
 
     public function saveProduct()
@@ -509,9 +509,9 @@ class OrderServiceMountLivewire extends Component
         return $this->emit('saved');
     }
 
-    public function checkDayRoom(BudgetRoomProduct $budgetRoomProduct, $roomDate)
+    public function checkDayRoomProduct(OrderServiceRoomProduct $orderServiceRoomProduct, $roomDate)
     {
-        $days = explode(',', $budgetRoomProduct->days);
+        $days = explode(',', $orderServiceRoomProduct->days);
 
         if (in_array($roomDate, $days)) {
             unset($days[array_search($roomDate, $days)]);
@@ -519,21 +519,70 @@ class OrderServiceMountLivewire extends Component
             $days[] = $roomDate;
         }
 
-        $budgetRoomProduct->days = implode(',', $days);
-        $budgetRoomProduct->save();
+        $orderServiceRoomProduct->days = implode(',', $days);
+        $orderServiceRoomProduct->save();
 
-        // $this->getRooms();
         return $this->emit('saved');
     }
 
-    public function onChangeQuantity(BudgetRoomProduct $budgetRoomProduct, $quantity)
+    public function checkDayRoomProvider(OrderServiceRoomProvider $orderServiceRoomProvider, $roomDate)
+    {
+        $days = explode(',', $orderServiceRoomProvider->days);
+
+        if (in_array($roomDate, $days)) {
+            unset($days[array_search($roomDate, $days)]);
+        } else {
+            $days[] = $roomDate;
+        }
+
+        $orderServiceRoomProvider->days = implode(',', $days);
+        $orderServiceRoomProvider->save();
+
+        return $this->emit('saved');
+    }
+
+    public function checkDayRoomGroup(OrderServiceRoomGroup $orderServiceRoomGroup, $roomDate)
+    {
+        $days = explode(',', $orderServiceRoomGroup->days);
+
+        if (in_array($roomDate, $days)) {
+            unset($days[array_search($roomDate, $days)]);
+        } else {
+            $days[] = $roomDate;
+        }
+
+        $orderServiceRoomGroup->days = implode(',', $days);
+        $orderServiceRoomGroup->save();
+
+        return $this->emit('saved');
+    }
+
+    public function onChangeQuantityProduct(OrderServiceRoomProduct $orderServiceRoomProduct, $quantity)
     {
         if ($quantity > 0) {
-            $budgetRoomProduct->quantity = $quantity;
-            $budgetRoomProduct->save();
+            $orderServiceRoomProduct->quantity = $quantity;
+            $orderServiceRoomProduct->save();
 
-            // $this->dataProduct = [];
-            // $this->getRooms();
+            return $this->emit('saved');
+        }
+    }
+
+    public function onChangeQuantityProvider(OrderServiceRoomProvider $orderServiceRoomProvider, $quantity)
+    {
+        if ($quantity > 0) {
+            $orderServiceRoomProvider->quantity = $quantity;
+            $orderServiceRoomProvider->save();
+
+            return $this->emit('saved');
+        }
+    }
+
+    public function onChangeQuantityGroup(OrderServiceRoomGroup $orderServiceRoomGroup, $quantity)
+    {
+        if ($quantity > 0) {
+            $orderServiceRoomGroup->quantity = $quantity;
+            $orderServiceRoomGroup->save();
+
             return $this->emit('saved');
         }
     }

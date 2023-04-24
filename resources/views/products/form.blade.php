@@ -30,7 +30,7 @@
                     <x-forms.text name="name" label="Nome" />
                 </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
-                    <x-forms.text name="price" label="Preço" mask="$money($input, ',')" />
+                    <x-forms.currency name="price" label="Preço" />
                     <x-forms.checkbox name="customization" label="Customizar" :options="$product->getCustomization()" />
                     <x-forms.checkbox name="active" label="Ativo" :options="$product->getActive()" />
                 </div>

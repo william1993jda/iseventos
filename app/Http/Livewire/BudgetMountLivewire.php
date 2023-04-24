@@ -181,23 +181,23 @@ class BudgetMountLivewire extends Component
 
     public function onSelectProduct(Product $product)
     {
-        $this->dataProduct['price'] = $product->getPriceFormated();
+        $this->dataProduct['price'] = $product->price;
 
-        $this->emit('updateProductPrice', $product->getPriceFormated());
+        $this->emit('updateProductPrice', $product->price);
     }
 
     public function onSelectLabor(Labor $labor)
     {
-        $this->dataLabor['price'] = $labor->getPriceFormated();
+        $this->dataLabor['price'] = $labor->price;
 
-        $this->emit('updateLaborPrice', $labor->getPriceFormated());
+        $this->emit('updateLaborPrice', $labor->price);
     }
 
     public function saveObservation()
     {
         $this->budget->update($this->dataBudget);
 
-        return $this->emit('editObservation');
+        return $this->emit('saved');
     }
 
     public function saveProduct()
@@ -453,7 +453,6 @@ class BudgetMountLivewire extends Component
         $budgetRoomProduct->days = implode(',', $days);
         $budgetRoomProduct->save();
 
-        // $this->getRooms();
         return $this->emit('saved');
     }
 

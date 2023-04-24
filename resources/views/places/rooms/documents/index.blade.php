@@ -21,15 +21,11 @@
                 <tbody>
                     @foreach ($documents as $document)
                         <tr class="intro-x">
-                            <td>
-                                <a href="{{ route('places.documents.show', [$room->id, $document->id]) }}"
-                                    class="font-medium whitespace-nowrap">{{ $document->name }}</a>
-                            </td>
+                            <td>{{ $document->name }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
                                     <x-forms.buttons.download :route="$document->getLink()" />
-                                    {{-- <x-forms.buttons.edit route="places.documents.edit', [$place->id, $document->id])" /> --}}
-                                    <x-forms.buttons.destroy route="places.documents.destroy" :id="[$room->id, $document->id]" />
+                                    <x-forms.buttons.destroy route="places.rooms.documents.destroy" :id="[$room->place_id, $room->id, $document->id]" />
                                 </div>
                             </td>
                         </tr>

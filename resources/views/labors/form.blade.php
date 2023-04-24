@@ -31,7 +31,7 @@
                 </div>
                 <div class="sm:grid grid-cols-2 gap-2 mt-3">
 
-                    <x-forms.text name="price" label="Preço" mask="'R$ 9999999,99'" />
+                    <x-forms.currency name="price" label="Preço" />
                     <x-forms.checkbox name="active" label="Ativo" :options="$labor->getActive()" />
                 </div>
                 <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$labor" />

@@ -160,16 +160,16 @@
                                                     <td class="whitespace-nowrap">
                                                         @if (in_array($roomDate, explode(',', $product['days'])))
                                                             <x-forms.checkbox name="active" :checked="true"
-                                                                wire:click="checkDayRoom({{ $product['id'] }}, '{{ $roomDate }}')" />
+                                                                wire:click="checkDayRoomProduct({{ $product['id'] }}, '{{ $roomDate }}')" />
                                                         @else
                                                             <x-forms.checkbox name="active" :checked="false"
-                                                                wire:click="checkDayRoom({{ $product['id'] }}, '{{ $roomDate }}')" />
+                                                                wire:click="checkDayRoomProduct({{ $product['id'] }}, '{{ $roomDate }}')" />
                                                         @endif
                                                     </td>
                                                 @endforeach
                                                 <td class="whitespace-nowrap">
                                                     <x-forms.number name="quantity" min="1" :value="$product['quantity']"
-                                                        wire:change="onChangeQuantity({{ $product['id'] }}, $event.target.value)" />
+                                                        wire:change="onChangeQuantityProduct({{ $product['id'] }}, $event.target.value)" />
                                                 </td>
                                                 <td class="whitespace-nowrap" wire:ignore>
                                                     <button
@@ -197,16 +197,16 @@
                                                     <td class="whitespace-nowrap">
                                                         @if (in_array($roomDate, explode(',', $provider['days'])))
                                                             <x-forms.checkbox name="active" :checked="true"
-                                                                wire:click="checkDayRoom({{ $provider['id'] }}, '{{ $roomDate }}')" />
+                                                                wire:click="checkDayRoomProvider({{ $provider['id'] }}, '{{ $roomDate }}')" />
                                                         @else
                                                             <x-forms.checkbox name="active" :checked="false"
-                                                                wire:click="checkDayRoom({{ $provider['id'] }}, '{{ $roomDate }}')" />
+                                                                wire:click="checkDayRoomProvider({{ $provider['id'] }}, '{{ $roomDate }}')" />
                                                         @endif
                                                     </td>
                                                 @endforeach
                                                 <td class="whitespace-nowrap">
                                                     <x-forms.number name="quantity" min="1" :value="$provider['quantity']"
-                                                        wire:change="onChangeQuantity({{ $provider['id'] }}, $event.target.value)" />
+                                                        wire:change="onChangeQuantityProvider({{ $provider['id'] }}, $event.target.value)" />
                                                 </td>
                                                 <td class="whitespace-nowrap" wire:ignore>
                                                     <button
@@ -238,16 +238,16 @@
                                                     <td class="whitespace-nowrap">
                                                         @if (in_array($roomDate, explode(',', $group['days'])))
                                                             <x-forms.checkbox name="active" :checked="true"
-                                                                wire:click="checkDayRoom({{ $group['id'] }}, '{{ $roomDate }}')" />
+                                                                wire:click="checkDayRoomGroup({{ $group['id'] }}, '{{ $roomDate }}')" />
                                                         @else
                                                             <x-forms.checkbox name="active" :checked="false"
-                                                                wire:click="checkDayRoom({{ $group['id'] }}, '{{ $roomDate }}')" />
+                                                                wire:click="checkDayRoomGroup({{ $group['id'] }}, '{{ $roomDate }}')" />
                                                         @endif
                                                     </td>
                                                 @endforeach
                                                 <td class="whitespace-nowrap">
                                                     <x-forms.number name="quantity" min="1" :value="$group['quantity']"
-                                                        wire:change="onChangeQuantity({{ $group['id'] }}, $event.target.value)" />
+                                                        wire:change="onChangeQuantityGroup({{ $group['id'] }}, $event.target.value)" />
                                                 </td>
                                                 <td class="whitespace-nowrap" wire:ignore>
                                                     <button
