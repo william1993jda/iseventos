@@ -32,10 +32,15 @@ class OsProduct extends Model
         $this->attributes['price'] = $price;
     }
 
-    public function getPriceFormated()
+    public function getPriceAttribute()
     {
         return number_format($this->attributes['price'], 2, ',', '.');
     }
+
+    // public function getPriceFormated()
+    // {
+    //     return number_format($this->attributes['price'], 2, ',', '.');
+    // }
 
     public function stocks()
     {

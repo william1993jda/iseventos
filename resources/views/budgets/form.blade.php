@@ -8,6 +8,11 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('budgets.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
+            @if (!empty($budget->id))
+                <a href="{{ route('budgets.mount', $budget->id) }}" class="btn btn-primary shadow-md mr-2">Montar</a>
+                <a href="{{ route('budgets.expenses.index', $budget->id) }}"
+                    class="btn btn-primary shadow-md mr-2">Despesas</a>
+            @endif
         </div>
         <div class="intro-y col-span-12">
             @if (empty($budget->id))

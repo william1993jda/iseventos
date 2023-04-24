@@ -38,14 +38,11 @@ class BriefingHybrid extends Model
         'sound_restaurant',
         'microphone_quantity',
         'translation',
+        'translation_comments',
         'languages',
-        'amount_radio',
-        'description_translation',
-        'recommendation_translation',
+        'radio_quantity',
         'name_interpreter',
         'phone_interpreter',
-        'additional_description',
-        'observation_description',
         'platform_transmission',
         'link_event',
         'site_landing',
@@ -53,7 +50,10 @@ class BriefingHybrid extends Model
         'speaker',
         'speaker_quantity',
         'speaker_description',
-        'artistic_direction',
+        'speaker_studio',
+        'speaker_studio_quantity',
+        'speaker_studio_description',
+        'direction',
         'direction_quantity',
         'direction_description',
         'rehearsal',
@@ -67,7 +67,48 @@ class BriefingHybrid extends Model
         'ipad_description',
         'studio_local',
         'studio_room',
-        'studio_amount',
+        'studio_speakers_quantity',
         'studio_type',
+        'additionals',
+        'observations',
     ];
+
+    public function setLanguagesAttribute($value)
+    {
+        $this->attributes['languages'] = implode('#@#', $value);
+    }
+
+    public function getLanguagesAttribute($value)
+    {
+        return explode('#@#', $value);
+    }
+
+    public function setAdditionalsAttribute($value)
+    {
+        $additionals = [];
+
+        foreach ($value as $key => $item) {
+            if ($item == '1') {
+                $key = str_replace("'", "", $key);
+                array_push($additionals, $key);
+            }
+        }
+
+        $this->attributes['additionals'] = implode('#@#', $additionals);
+    }
+
+    public function getAdditionalsAttribute($value)
+    {
+        return explode('#@#', $value);
+    }
+
+    public function briefing()
+    {
+        return $this->belongsTo(Briefing::class);
+    }
+
+    public function rooms()
+    {
+        return $this->hasMany(BriefingHybridRoom::class);
+    }
 }

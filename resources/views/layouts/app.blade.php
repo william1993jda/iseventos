@@ -63,6 +63,33 @@
     </div>
     <!-- END: Delete Confirmation Modal -->
 
+    <!-- BEGIN: Delete Confirmation Modal -->
+    <div id="recovery-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="p-5 text-center">
+                        <i data-lucide="database-backup" class="w-16 h-16 text-danger mx-auto mt-3"></i>
+                        <div class="text-3xl mt-5">Deseja recuperar?</div>
+                        <div class="text-slate-500 mt-2">
+                            Tem certeza que deseja recuperar esse item?
+                        </div>
+                    </div>
+                    <div class="px-5 pb-8 text-center">
+                        <form action="#" method="POST" id="recovery-confirmation-modal-form">
+                            @csrf
+                            <input type="hidden" name="recovery_module" id="recovery-confirmation-modal-input">
+                            <button type="button" data-tw-dismiss="modal"
+                                class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
+                            <button type="submit" class="btn btn-danger w-24">Recuperar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Delete Confirmation Modal -->
+
     <!-- BEGIN: Notification Content -->
     <div id="error-notification" class="toastify-content hidden flex"> <i class="text-danger" data-lucide="slash"></i>
         <div class="ml-4 mr-4">

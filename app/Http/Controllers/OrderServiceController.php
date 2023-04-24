@@ -46,7 +46,6 @@ class OrderServiceController extends Controller
         $osStatuses = OsStatus::pluck('name', 'id')->prepend('Selecione', '');
         $budgets = Budget::pluck('name', 'id')->prepend('Selecione', '');
 
-
         return view('orderServices.form', compact('orderService', 'budgets', 'osStatuses'));
     }
 
@@ -55,18 +54,25 @@ class OrderServiceController extends Controller
         $params = $request->validated();
         $params['os_number'] = (int) OrderService::max('os_number') + 1;
 
-        OrderService::create($params);
+        $orderService = OrderService::create($params);
+
+        $orderServicesToday = OrderService::join('budgets', 'budgets.id', '=', 'order_services.budget_id')
+            ->where('budgets.mount_date', '=', $orderService->budget->mount_date)
+            ->count();
+
+        if ($orderServicesToday > 3) {
+            return redirect()->route('orderServices.index')->with('warning', 'Já existem 3 ou mais eventos nesta mesma data.');
+        }
 
         return redirect()->route('orderServices.index');
     }
 
-    public function edit(OrderService $orderService)
+    public function edit(OrderService $orderService, $showMode = false)
     {
-        $os_statuses = OsStatus::pluck('name', 'id')->prepend('Selecione', '');
+        $osStatuses = OsStatus::pluck('name', 'id')->prepend('Selecione', '');
         $budgets = Budget::pluck('name', 'id')->prepend('Selecione', '');
 
-
-        return view('orderServices.form', compact('orderService', 'os_statuses', 'budgets'));
+        return view('orderServices.form', compact('orderService', 'osStatuses', 'budgets', 'showMode'));
     }
 
     public function update(OrderService $orderService, OrderServiceRequest $request)
@@ -85,9 +91,7 @@ class OrderServiceController extends Controller
 
     public function show(OrderService $orderService)
     {
-        $showMode = true;
-
-        return view('orderServices.form', compact('orderService', 'showMode'));
+        return $this->edit($orderService, true);
     }
 
     public function mount(OrderService $orderService)

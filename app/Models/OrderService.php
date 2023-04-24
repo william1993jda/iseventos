@@ -33,4 +33,9 @@ class OrderService extends Model
     {
         return $this->hasMany(OrderServiceDocument::class);
     }
+
+    public function products()
+    {
+        return $this->hasMany(OrderServiceRoomProduct::class);
+    }
 }

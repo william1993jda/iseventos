@@ -29,7 +29,7 @@
                 <div class="sm:grid grid-cols-3 gap-2">
                     <x-forms.select name="os_category_id" label="Categoria" :options="$osCategories" />
                     <x-forms.text name="name" label="Nome" />
-                    <x-forms.text name="price" label="Preço" mask="$money($input)" />
+                    <x-forms.currency name="price" label="Preço" />
                 </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
                     <x-forms.text name="brand" label="Marca" />

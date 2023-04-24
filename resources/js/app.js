@@ -7,6 +7,7 @@ import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
+import brLocale from "@fullcalendar/core/locales/pt-br";
 
 import "./bootstrap";
 /*import "./tabulator";*/
@@ -66,6 +67,7 @@ window.interactionPlugin = interactionPlugin;
 window.dayGridPlugin = dayGridPlugin;
 window.timeGridPlugin = timeGridPlugin;
 window.listPlugin = listPlugin;
+window.brLocale = brLocale;
 
 Alpine.plugin(mask);
 Alpine.start();
@@ -82,4 +84,20 @@ const deleteConfirmationButtons = document.getElementsByClassName(
 
 Array.from(deleteConfirmationButtons).forEach(
     (el) => (el.onclick = deleteConfirmation)
+);
+
+function recoveryConfirmation() {
+    const form = document.getElementById("recovery-confirmation-modal-form");
+    form.setAttribute("action", this.getAttribute("data-action"));
+
+    const input = document.getElementById("recovery-confirmation-modal-input");
+    input.setAttribute("value", this.getAttribute("data-module"));
+}
+
+const recoveryConfirmationButtons = document.getElementsByClassName(
+    "recovery-confirmation-button"
+);
+
+Array.from(recoveryConfirmationButtons).forEach(
+    (el) => (el.onclick = recoveryConfirmation)
 );

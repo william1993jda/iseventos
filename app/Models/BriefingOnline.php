@@ -12,15 +12,7 @@ class BriefingOnline extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'translation',
-        'languages',
-        'amount_radio',
-        'description_translation',
-        'recommendation_translation',
-        'name_interpreter',
-        'phone_interpreter',
-        'additional_description',
-        'observation_description',
+        'briefing_id',
         'platform_transmission',
         'link_event',
         'site_landing',
@@ -28,12 +20,51 @@ class BriefingOnline extends Model
         'speaker',
         'speaker_quantity',
         'speaker_description',
-        'artistic_direction',
+        'direction',
         'direction_quantity',
         'direction_description',
         'rehearsal',
         'rehearsal_address',
         'recording',
         'recording_address',
+        'translation',
+        'translation_comments',
+        'languages',
+        'additionals',
+        'observations',
     ];
+
+    public function setLanguagesAttribute($value)
+    {
+        $this->attributes['languages'] = implode('#@#', $value);
+    }
+
+    public function getLanguagesAttribute($value)
+    {
+        return explode('#@#', $value);
+    }
+
+    public function setAdditionalsAttribute($value)
+    {
+        $additionals = [];
+
+        foreach ($value as $key => $item) {
+            if ($item == '1') {
+                $key = str_replace("'", "", $key);
+                array_push($additionals, $key);
+            }
+        }
+
+        $this->attributes['additionals'] = implode('#@#', $additionals);
+    }
+
+    public function getAdditionalsAttribute($value)
+    {
+        return explode('#@#', $value);
+    }
+
+    public function briefing()
+    {
+        return $this->belongsTo(Briefing::class);
+    }
 }

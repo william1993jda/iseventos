@@ -90,4 +90,9 @@ class Budget extends Model
     {
         return $this->hasMany(BudgetDocument::class);
     }
+
+    public function orderService()
+    {
+        return $this->hasOne(OrderService::class);
+    }
 }

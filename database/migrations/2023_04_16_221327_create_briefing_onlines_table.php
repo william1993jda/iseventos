@@ -14,30 +14,27 @@ return new class extends Migration
         Schema::create('briefing_onlines', function (Blueprint $table) {
             $table->id();
             $table->foreignId('briefing_id')->constrained('briefings');
-            $table->string('translation')->nullable();
-            $table->string('languages')->nullable();
-            $table->string('amount_radio')->nullable();
-            $table->string('description_translation')->nullable();
-            $table->string('recommendation_translation')->nullable();
-            $table->string('name_interpreter')->nullable();
-            $table->string('phone_interpreter')->nullable();
-            $table->string('additional_description')->nullable();
-            $table->string('observation_description')->nullable();
             $table->string('platform_transmission')->nullable();
             $table->string('link_event')->nullable();
             $table->string('site_landing')->nullable();
             $table->string('social_network')->nullable();
-            $table->string('speaker')->nullable();
+            $table->tinyInteger('speaker')->default(0);
             $table->string('speaker_quantity')->nullable();
-            $table->string('speaker_description')->nullable();
-            $table->string('artistic_direction')->nullable();
+            $table->text('speaker_description')->nullable();
+            $table->tinyInteger('direction')->default(0);
             $table->string('direction_quantity')->nullable();
-            $table->string('direction_description')->nullable();
-            $table->string('rehearsal')->nullable();
+            $table->text('direction_description')->nullable();
+            $table->tinyInteger('rehearsal')->default(0);
             $table->string('rehearsal_address')->nullable();
-            $table->string('recording')->nullable();
+            $table->tinyInteger('recording')->default(0);
             $table->string('recording_address')->nullable();
+            $table->tinyInteger('translation')->default(0);
+            $table->text('translation_comments')->nullable();
+            $table->text('languages')->nullable();
+            $table->text('additionals')->nullable();
+            $table->text('observations')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

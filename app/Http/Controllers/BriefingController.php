@@ -8,8 +8,13 @@ use App\Http\Requests\BriefingPersonRequest;
 use App\Http\Requests\BriefingRequest;
 use App\Models\Category;
 use App\Models\Briefing;
+use App\Models\BriefingHybrid;
+use App\Models\BriefingOnline;
+use App\Models\BriefingPerson;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BriefingController extends Controller
 {
@@ -55,95 +60,590 @@ class BriefingController extends Controller
     public function storeOnline(BriefingOnlineRequest $request)
     {
         $params = $request->validated();
-        $params['type_event'] = 0;
+        $params['type_event'] = 1;
 
-        $briefing = Briefing::create($params);
-        $briefing->online()->create($params);
+        if (empty($params['agency_production'])) {
+            $params['agency_production'] = 0;
+        }
 
-        return redirect()->route('briefings.index');
+        if (empty($params['agency_criation'])) {
+            $params['agency_criation'] = 0;
+        }
+
+        if (empty($params['agency_logistic'])) {
+            $params['agency_logistic'] = 0;
+        }
+
+        if (empty($params['speaker'])) {
+            $params['speaker'] = 0;
+        }
+
+        if (empty($params['direction'])) {
+            $params['direction'] = 0;
+        }
+
+        if (empty($params['rehearsal'])) {
+            $params['rehearsal'] = 0;
+        }
+
+        if (empty($params['recording'])) {
+            $params['recording'] = 0;
+        }
+
+        if (empty($params['translation'])) {
+            $params['translation'] = 0;
+        }
+
+        if (empty($params['dedicated_internet'])) {
+            $params['dedicated_internet'] = 0;
+        }
+
+        if (empty($params['generator'])) {
+            $params['generator'] = 0;
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $briefing = Briefing::create($params);
+            $briefing->online()->create($params);
+
+            DB::commit();
+
+            return redirect()->route('briefings.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage(), 1);
+        }
     }
 
     public function storePerson(BriefingPersonRequest $request)
     {
         $params = $request->validated();
-        $params['type_event'] = 0;
+        $params['type_event'] = 2;
 
-        $briefing = Briefing::create($params);
-        $briefing->person()->create($params);
+        if (empty($params['agency_production'])) {
+            $params['agency_production'] = 0;
+        }
 
-        return redirect()->route('briefings.index');
+        if (empty($params['agency_criation'])) {
+            $params['agency_criation'] = 0;
+        }
+
+        if (empty($params['agency_logistic'])) {
+            $params['agency_logistic'] = 0;
+        }
+
+        if (empty($params['armchair'])) {
+            $params['armchair'] = 0;
+        }
+
+        if (empty($params['pulpit'])) {
+            $params['pulpit'] = 0;
+        }
+
+        if (empty($params['table'])) {
+            $params['table'] = 0;
+        }
+
+        if (empty($params['lounge'])) {
+            $params['lounge'] = 0;
+        }
+
+        if (empty($params['lighting_decorative'])) {
+            $params['lighting_decorative'] = 0;
+        }
+
+        if (empty($params['lighting_foyer'])) {
+            $params['lighting_foyer'] = 0;
+        }
+
+        if (empty($params['lighting_restaurant'])) {
+            $params['lighting_restaurant'] = 0;
+        }
+
+        if (empty($params['lighting_stage'])) {
+            $params['lighting_stage'] = 0;
+        }
+
+        if (empty($params['lighting_effects'])) {
+            $params['lighting_effects'] = 0;
+        }
+
+        if (empty($params['sound_room'])) {
+            $params['sound_room'] = 0;
+        }
+
+        if (empty($params['sound_foyer'])) {
+            $params['sound_foyer'] = 0;
+        }
+
+        if (empty($params['sound_restaurant'])) {
+            $params['sound_restaurant'] = 0;
+        }
+
+        if (empty($params['translation'])) {
+            $params['translation'] = 0;
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $briefing = Briefing::create($params);
+            $briefingPerson = $briefing->person()->create($params);
+
+            foreach ($params['room_name'] as $index => $roomName) {
+                $briefingPerson->rooms()->create([
+                    'name' => $roomName,
+                    'room_format' => $params['room_format'][$index],
+                    'comments' => $params['room_description'][$index],
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('briefings.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage(), 1);
+        }
     }
     public function storeHybrid(BriefingHybridRequest $request)
     {
         $params = $request->validated();
-        $params['type_event'] = 0;
+        $params['type_event'] = 3;
 
-        $briefing = Briefing::create($params);
-        $briefing->hybrid()->create($params);
+        if (empty($params['agency_production'])) {
+            $params['agency_production'] = 0;
+        }
 
-        return redirect()->route('briefings.index');
+        if (empty($params['agency_criation'])) {
+            $params['agency_criation'] = 0;
+        }
+
+        if (empty($params['agency_logistic'])) {
+            $params['agency_logistic'] = 0;
+        }
+
+        if (empty($params['armchair'])) {
+            $params['armchair'] = 0;
+        }
+
+        if (empty($params['pulpit'])) {
+            $params['pulpit'] = 0;
+        }
+
+        if (empty($params['table'])) {
+            $params['table'] = 0;
+        }
+
+        if (empty($params['lounge'])) {
+            $params['lounge'] = 0;
+        }
+
+        if (empty($params['lighting_decorative'])) {
+            $params['lighting_decorative'] = 0;
+        }
+
+        if (empty($params['lighting_foyer'])) {
+            $params['lighting_foyer'] = 0;
+        }
+
+        if (empty($params['lighting_restaurant'])) {
+            $params['lighting_restaurant'] = 0;
+        }
+
+        if (empty($params['lighting_stage'])) {
+            $params['lighting_stage'] = 0;
+        }
+
+        if (empty($params['lighting_effects'])) {
+            $params['lighting_effects'] = 0;
+        }
+
+        if (empty($params['sound_room'])) {
+            $params['sound_room'] = 0;
+        }
+
+        if (empty($params['sound_foyer'])) {
+            $params['sound_foyer'] = 0;
+        }
+
+        if (empty($params['sound_restaurant'])) {
+            $params['sound_restaurant'] = 0;
+        }
+
+        if (empty($params['translation'])) {
+            $params['translation'] = 0;
+        }
+
+        if (empty($params['speaker'])) {
+            $params['speaker'] = 0;
+        }
+
+        if (empty($params['direction'])) {
+            $params['direction'] = 0;
+        }
+
+        if (empty($params['speaker_studio'])) {
+            $params['speaker_studio'] = 0;
+        }
+
+        if (empty($params['rehearsal'])) {
+            $params['rehearsal'] = 0;
+        }
+
+        if (empty($params['recording'])) {
+            $params['recording'] = 0;
+        }
+
+        if (empty($params['teleprompter'])) {
+            $params['teleprompter'] = 0;
+        }
+
+        if (empty($params['ipad'])) {
+            $params['ipad'] = 0;
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $briefing = Briefing::create($params);
+            $briefingHybrid = $briefing->hybrid()->create($params);
+
+            foreach ($params['room_name'] as $index => $roomName) {
+                $briefingHybrid->rooms()->create([
+                    'name' => $roomName,
+                    'room_format' => $params['room_format'][$index],
+                    'comments' => $params['room_description'][$index],
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('briefings.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage(), 1);
+        }
     }
 
     public function edit(Briefing $briefing, $showMode = false)
     {
-
-
-        return view('briefings.form', compact('briefing', 'categories', 'showMode'));
+        if ($briefing->type_event == '1') {
+            return view('briefings.form-online', compact('briefing', 'showMode'));
+        }
+        if ($briefing->type_event == '2') {
+            return view('briefings.form-person', compact('briefing', 'showMode'));
+        }
+        if ($briefing->type_event == '3') {
+            return view('briefings.form-hybrid', compact('briefing', 'showMode'));
+        }
     }
 
-    public function update(Briefing $briefing, Request $request)
+    public function updateOnline($id, BriefingOnlineRequest $request)
     {
         $params = $request->validated();
 
-        if (!$request->has('active')) {
-            $params['active'] = 0;
+        if (empty($params['agency_production'])) {
+            $params['agency_production'] = 0;
         }
 
-        $briefing->update($params);
+        if (empty($params['agency_criation'])) {
+            $params['agency_criation'] = 0;
+        }
 
-        return redirect()->route('briefings.index');
+        if (empty($params['agency_logistic'])) {
+            $params['agency_logistic'] = 0;
+        }
+
+        if (empty($params['speaker'])) {
+            $params['speaker'] = 0;
+        }
+
+        if (empty($params['direction'])) {
+            $params['direction'] = 0;
+        }
+
+        if (empty($params['rehearsal'])) {
+            $params['rehearsal'] = 0;
+        }
+
+        if (empty($params['recording'])) {
+            $params['recording'] = 0;
+        }
+
+        if (empty($params['translation'])) {
+            $params['translation'] = 0;
+        }
+
+        if (empty($params['dedicated_internet'])) {
+            $params['dedicated_internet'] = 0;
+        }
+
+        if (empty($params['generator'])) {
+            $params['generator'] = 0;
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $briefingOnline = BriefingOnline::find($id);
+            $briefingOnline->update($params);
+
+            $briefing = Briefing::find($briefingOnline->briefing_id);
+            $briefing->update($params);
+
+            DB::commit();
+
+            return redirect()->route('briefings.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage(), 1);
+        }
     }
 
-    public function updateOnline(Briefing $briefing, BriefingOnlineRequest $request)
+    public function updatePerson($id, BriefingPersonRequest $request)
     {
         $params = $request->validated();
 
-        if (!$request->has('active')) {
-            $params['active'] = 0;
+        if (empty($params['agency_production'])) {
+            $params['agency_production'] = 0;
         }
 
-        $briefing->update($params);
+        if (empty($params['agency_criation'])) {
+            $params['agency_criation'] = 0;
+        }
 
-        return redirect()->route('briefings.index');
+        if (empty($params['agency_logistic'])) {
+            $params['agency_logistic'] = 0;
+        }
+
+        if (empty($params['armchair'])) {
+            $params['armchair'] = 0;
+        }
+
+        if (empty($params['pulpit'])) {
+            $params['pulpit'] = 0;
+        }
+
+        if (empty($params['table'])) {
+            $params['table'] = 0;
+        }
+
+        if (empty($params['lounge'])) {
+            $params['lounge'] = 0;
+        }
+
+        if (empty($params['lighting_decorative'])) {
+            $params['lighting_decorative'] = 0;
+        }
+
+        if (empty($params['lighting_foyer'])) {
+            $params['lighting_foyer'] = 0;
+        }
+
+        if (empty($params['lighting_restaurant'])) {
+            $params['lighting_restaurant'] = 0;
+        }
+
+        if (empty($params['lighting_stage'])) {
+            $params['lighting_stage'] = 0;
+        }
+
+        if (empty($params['lighting_effects'])) {
+            $params['lighting_effects'] = 0;
+        }
+
+        if (empty($params['sound_room'])) {
+            $params['sound_room'] = 0;
+        }
+
+        if (empty($params['sound_foyer'])) {
+            $params['sound_foyer'] = 0;
+        }
+
+        if (empty($params['sound_restaurant'])) {
+            $params['sound_restaurant'] = 0;
+        }
+
+        if (empty($params['translation'])) {
+            $params['translation'] = 0;
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $briefingPerson = BriefingPerson::find($id);
+            $briefingPerson->update($params);
+
+            $briefing = Briefing::find($briefingPerson->briefing_id);
+            $briefing->update($params);
+
+            $briefingPerson->rooms()->delete();
+
+            foreach ($params['room_name'] as $index => $roomName) {
+                $briefingPerson->rooms()->create([
+                    'name' => $roomName,
+                    'room_format' => $params['room_format'][$index],
+                    'comments' => $params['room_description'][$index],
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('briefings.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage(), 1);
+        }
     }
-    public function updatePerson(Briefing $briefing, BriefingPersonRequest $request)
+
+    public function updateHybrid($id, BriefingHybridRequest $request)
     {
         $params = $request->validated();
 
-        if (!$request->has('active')) {
-            $params['active'] = 0;
+        if (empty($params['agency_production'])) {
+            $params['agency_production'] = 0;
         }
 
-        $briefing->update($params);
-
-        return redirect()->route('briefings.index');
-    }
-    public function updateHybrid(Briefing $briefing, BriefingHybridRequest $request)
-    {
-        $params = $request->validated();
-
-        if (!$request->has('active')) {
-            $params['active'] = 0;
+        if (empty($params['agency_criation'])) {
+            $params['agency_criation'] = 0;
         }
 
-        $briefing->update($params);
+        if (empty($params['agency_logistic'])) {
+            $params['agency_logistic'] = 0;
+        }
 
-        return redirect()->route('briefings.index');
+        if (empty($params['armchair'])) {
+            $params['armchair'] = 0;
+        }
+
+        if (empty($params['pulpit'])) {
+            $params['pulpit'] = 0;
+        }
+
+        if (empty($params['table'])) {
+            $params['table'] = 0;
+        }
+
+        if (empty($params['lounge'])) {
+            $params['lounge'] = 0;
+        }
+
+        if (empty($params['lighting_decorative'])) {
+            $params['lighting_decorative'] = 0;
+        }
+
+        if (empty($params['lighting_foyer'])) {
+            $params['lighting_foyer'] = 0;
+        }
+
+        if (empty($params['lighting_restaurant'])) {
+            $params['lighting_restaurant'] = 0;
+        }
+
+        if (empty($params['lighting_stage'])) {
+            $params['lighting_stage'] = 0;
+        }
+
+        if (empty($params['lighting_effects'])) {
+            $params['lighting_effects'] = 0;
+        }
+
+        if (empty($params['sound_room'])) {
+            $params['sound_room'] = 0;
+        }
+
+        if (empty($params['sound_foyer'])) {
+            $params['sound_foyer'] = 0;
+        }
+
+        if (empty($params['sound_restaurant'])) {
+            $params['sound_restaurant'] = 0;
+        }
+
+        if (empty($params['translation'])) {
+            $params['translation'] = 0;
+        }
+
+        if (empty($params['speaker'])) {
+            $params['speaker'] = 0;
+        }
+
+        if (empty($params['direction'])) {
+            $params['direction'] = 0;
+        }
+
+        if (empty($params['speaker_studio'])) {
+            $params['speaker_studio'] = 0;
+        }
+
+        if (empty($params['rehearsal'])) {
+            $params['rehearsal'] = 0;
+        }
+
+        if (empty($params['recording'])) {
+            $params['recording'] = 0;
+        }
+
+        if (empty($params['teleprompter'])) {
+            $params['teleprompter'] = 0;
+        }
+
+        if (empty($params['ipad'])) {
+            $params['ipad'] = 0;
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $briefingHybrid = BriefingHybrid::find($id);
+            $briefingHybrid->update($params);
+
+            $briefing = Briefing::find($briefingHybrid->briefing_id);
+            $briefing->update($params);
+
+            $briefingHybrid->rooms()->delete();
+
+            foreach ($params['room_name'] as $index => $roomName) {
+                $briefingHybrid->rooms()->create([
+                    'name' => $roomName,
+                    'room_format' => $params['room_format'][$index],
+                    'comments' => $params['room_description'][$index],
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('briefings.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage(), 1);
+        }
     }
 
     public function destroy(Briefing $briefing)
     {
-        $briefing->delete();
+        if ($briefing->type_event == '1') {
+            $briefingOnline = BriefingOnline::where('briefing_id', $briefing->id)->first();
+            $briefingOnline->delete();
+            $briefing->delete();
+        }
+
+        if ($briefing->type_event == '2') {
+            $briefingPerson = BriefingPerson::where('briefing_id', $briefing->id)->first();
+            $briefingPerson->delete();
+            $briefing->delete();
+        }
+
+        if ($briefing->type_event == '3') {
+            $briefingHybrid = BriefingHybrid::where('briefing_id', $briefing->id)->first();
+            $briefingHybrid->delete();
+            $briefing->delete();
+        }
 
         return redirect()->route('briefings.index');
     }

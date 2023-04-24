@@ -50,4 +50,26 @@
         {{ $orderServices->links('layouts.paginator') }}
 
     </div>
+    @push('custom-scripts')
+        @if (session('warning'))
+            <script type="text/javascript">
+                document.addEventListener("DOMContentLoaded", function(e) {
+                    console.log('xxx');
+                    document.getElementById('error-notification-title').innerHTML = "Atenção!";
+                    document.getElementById('error-notification-message').innerHTML = "{{ session('warning') }}";
+
+                    Toastify({
+                        node: $("#error-notification").clone().removeClass("hidden")[0],
+                        duration: 5000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "transparent",
+                        stopOnFocus: true,
+                    }).showToast();
+                });
+            </script>
+        @endif
+    @endpush
 </x-app-layout>

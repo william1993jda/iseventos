@@ -31,8 +31,16 @@
             document.querySelectorAll('input').forEach(function(input) {
                 input.setAttribute('readonly', true);
             });
+            document.querySelectorAll('textarea').forEach(function(input) {
+                input.setAttribute('readonly', true);
+            });
             document.querySelectorAll('select').forEach(function(select) {
                 select.setAttribute('readonly', true);
+            });
+            document.querySelectorAll('.tom-select').forEach(function(select) {
+                if (select.tomselect) {
+                    select.tomselect.disable();
+                }
             });
         });
     </script>

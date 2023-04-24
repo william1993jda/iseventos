@@ -46,9 +46,11 @@ use App\Http\Controllers\ProviderBankController;
 use App\Http\Controllers\ProviderContactController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ProviderOsProductController;
+use App\Http\Controllers\RecoveryController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StoryboardController;
+use App\Http\Controllers\SubleasedController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -125,11 +127,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('briefings/create/{type}', [BriefingController::class, 'create'])->name('briefings.create.type');
     Route::post('briefings/store/online', [BriefingController::class, 'storeOnline'])->name('briefings.store.online');
-    Route::put('briefings/update/online', [BriefingController::class, 'updateOnline'])->name('briefings.update.online');
+    Route::put('briefings/update/online/{id}', [BriefingController::class, 'updateOnline'])->name('briefings.update.online');
     Route::post('briefings/store/person', [BriefingController::class, 'storePerson'])->name('briefings.store.person');
-    Route::put('briefings/update/person', [BriefingController::class, 'updatePerson'])->name('briefings.update.person');
+    Route::put('briefings/update/person/{id}', [BriefingController::class, 'updatePerson'])->name('briefings.update.person');
     Route::post('briefings/store/hybrid', [BriefingController::class, 'storeHybrid'])->name('briefings.store.hybrid');
-    Route::put('briefings/update/hybrid', [BriefingController::class, 'updateHybrid'])->name('briefings.update.hybrid');
+    Route::put('briefings/update/hybrid/{id}', [BriefingController::class, 'updateHybrid'])->name('briefings.update.hybrid');
     Route::resource('briefings', BriefingController::class)->names('briefings');
 
     Route::resource('statuses', StatusController::class)->names('statuses');
@@ -167,9 +169,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('orderServices', OrderServiceController::class)->names('orderServices');
     Route::resource('orderServices.documents', OrderServiceDocumentController::class)->names('orderServices.documents');
 
-
     Route::any('/imports/products', [ImportController::class, 'products'])->name('imports.products');
     Route::any('/imports/os-products', [ImportController::class, 'osProducts'])->name('imports.os-products');
+
+    Route::any('recoveries', [RecoveryController::class, 'index'])->name('recoveries.index');
+    Route::post('recoveries/recovery/{id}', [RecoveryController::class, 'recovery'])->name('recoveries.recovery');
+
+    Route::any('subleases', [SubleasedController::class, 'index'])->name('subleases.index');
 });
 
 require __DIR__ . '/auth.php';

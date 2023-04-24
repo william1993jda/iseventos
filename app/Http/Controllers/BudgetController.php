@@ -62,13 +62,13 @@ class BudgetController extends Controller
         return redirect()->route('budgets.index');
     }
 
-    public function edit(Budget $budget)
+    public function edit(Budget $budget, $showMode = false)
     {
         $places = Place::pluck('name', 'id')->prepend('Selecione', '');
         $agencies = Agency::pluck('fantasy_name', 'id')->prepend('Selecione', '');
         $customers = Customer::pluck('fantasy_name', 'id')->prepend('Selecione', '');
 
-        return view('budgets.form', compact('budget', 'places', 'agencies', 'customers'));
+        return view('budgets.form', compact('budget', 'places', 'agencies', 'customers', 'showMode'));
     }
 
     public function update(Budget $budget, BudgetRequest $request)
@@ -87,9 +87,7 @@ class BudgetController extends Controller
 
     public function show(Budget $budget)
     {
-        $showMode = true;
-
-        return view('budgets.form', compact('budget', 'showMode'));
+        return $this->edit($budget, true);
     }
 
     public function getCustomerContacts(Request $request)

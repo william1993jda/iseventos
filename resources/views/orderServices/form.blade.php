@@ -7,6 +7,11 @@
     <div class="grid grid-cols-12 gap-6 mt-5">
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('orderServices.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
+            <div class="hidden md:block mx-auto text-slate-500"></div>
+            @if (!empty($orderService->id))
+                <x-forms.buttons.primary route="orderServices.documents.index" :id="$orderService->id" label="Documentos" />
+                <x-forms.buttons.primary route="orderServices.mount" :id="$orderService->id" label="Montar" />
+            @endif
         </div>
         <div class="intro-y col-span-12">
             @if (empty($orderService->id))
