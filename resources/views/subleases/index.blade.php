@@ -9,7 +9,7 @@
                 <thead>
                     <tr>
                         <th class="whitespace-nowrap">PRODUTO</th>
-                        <th class="text-center whitespace-nowrap">QUANTIDADE</th>
+                        <th class="text-center whitespace-nowrap">LOCAR</th>
                         <th class="text-center whitespace-nowrap">OS Nº</th>
                         <th class="text-center whitespace-nowrap">DIAS</th>
                     </tr>
