@@ -76,6 +76,155 @@
 <br />
 
 <table style="border:none;border-collapse:collapse; width: 100%;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none;">
+                <strong>Nome do Evento</strong>
+            </td>
+            <td style="text-align:center; width: 120px; border:none;">
+                <strong>Data da solicitação</strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="border:none">
+                {{ $name }}
+            </td>
+            <td style="text-align:center; width: 120px; border:none;">
+                {{ $request_date }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none;">
+                <strong>Cliente</strong>
+            </td>
+            <td style="text-align:left; border:none;">
+                <strong>Contato</strong>
+            </td>
+            <td style="text-align:left; border:none;">
+                <strong>Telefone</strong>
+            </td>
+            <td style="text-align:left; border:none;">
+                <strong>E-mail</strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="border:none;">
+                {{ $customer }}
+            </td>
+            <td style="border:none;">
+                {{ $customer_name }}
+            </td>
+            <td style="border:none;">
+                {{ $customer_phone }}
+            </td>
+            <td style="border:none;">
+                {{ $customer_email }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+@if (!empty($agency))
+    <table style="border:none;border-collapse:collapse; width: 100%;">
+        <tbody>
+            <tr>
+                <td style="text-align:left; border:none;">
+                    <strong>Agência</strong>
+                </td>
+            </tr>
+            <tr>
+                <td style="border:none;">
+                    {{ $agency }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+@endif
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none;">
+                <strong>Data Inicio</strong>
+            </td>
+            <td style="text-align:left; border:none;">
+                <strong>Data Fim</strong>
+            </td>
+            <td style="text-align:left; border:none;">
+                <strong>Data Montagem</strong>
+            </td>
+            <td style="text-align:left; border:none;">
+                <strong>Data Desmontagem</strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none;">
+                {{ $start_date }}
+            </td>
+            <td style="text-align:left; border:none;">
+                {{ $end_date }}
+            </td>
+            <td style="text-align:left; border:none;">
+                {{ $mount_date }}
+            </td>
+            <td style="text-align:left; border:none;">
+                {{ $unmount_date }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+@if (!empty($public) || !empty($situation))
+    <table style="border:none;border-collapse:collapse; width: 100%;">
+        <tbody>
+            <tr>
+                <td style="text-align:left; border:none;">
+                    <strong>Público</strong>
+                </td>
+                <td style="text-align:left; border:none;">
+                    <strong>Situação</strong>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align:left; border:none;">
+                    {{ $public }}
+                </td>
+                <td style="text-align:left; border:none;">
+                    {{ $situation }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+@endif
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none;">
+                <strong>Local</strong>
+            </td>
+            <td style="text-align:left; border:none;">
+                <strong>Cidade</strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none;">
+                @if (!empty($place))
+                    {{ $place }}
+                @else
+                    &nbsp;
+                @endif
+            </td>
+            <td style="text-align:left; border:none;">
+                {{ $city }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+
+<table style="border:none;border-collapse:collapse; width: 100%;">
     <thead>
         <tr>
             <th style="text-align:left; width: 100%;">

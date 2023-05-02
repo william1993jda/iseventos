@@ -28,6 +28,7 @@ class BudgetMountLivewire extends Component
     public $dataDiscount = [];
     public $feeDiscountTypes = [];
     public $dataStatus = [];
+    public $canEdit = false;
 
     public function mount($budget)
     {
@@ -39,6 +40,10 @@ class BudgetMountLivewire extends Component
             'money' => 'Valor',
         ];
         $this->status = Status::pluck('name', 'id')->prepend('Selecione', '');
+
+        if ($this->budget->status->slug == 'aberto' || $this->budget->status->slug == 'revisao') {
+            $this->canEdit = true;
+        }
 
         $this->getRooms();
     }
@@ -490,5 +495,17 @@ class BudgetMountLivewire extends Component
             // $this->getRooms();
             return $this->emit('saved');
         }
+    }
+
+    public function generateNewVersion()
+    {
+        $status = Status::where('slug', 'revisao')->first();
+
+        $this->budget->update([
+            'budget_version' => $this->budget->budget_version + 1,
+            'status_id' => $status->id,
+        ]);
+
+        return $this->emit('saved');
     }
 }

@@ -52,6 +52,18 @@
     <tbody>
         <tr>
             <td style="text-align:left; border:none;">
+                <strong>OS</strong>&nbsp;#{{ $os_number }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none;">
                 <strong>Nome do Evento</strong>
             </td>
             <td style="text-align:center; width: 120px; border:none;">

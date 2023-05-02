@@ -73,6 +73,14 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
+Route::prefix('front')->group(function () {
+    Route::get('briefings', [BriefingController::class, 'indexFront'])->name('front.briefings.index');
+    Route::get('briefings/create/{type}', [BriefingController::class, 'createFront'])->name('front.briefings.create.type');
+    Route::post('briefings/store/online', [BriefingController::class, 'storeOnlineFront'])->name('front.briefings.store.online');
+    Route::post('briefings/store/person', [BriefingController::class, 'storePersonFront'])->name('front.briefings.store.person');
+    Route::post('briefings/store/hybrid', [BriefingController::class, 'storeHybridFront'])->name('front.briefings.store.hybrid');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/list', [StoryboardController::class, 'list'])->name('storyboard.list');
     Route::get('/form', [StoryboardController::class, 'form'])->name('storyboard.form');

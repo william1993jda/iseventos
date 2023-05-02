@@ -24,6 +24,11 @@
                 <thead>
                     <tr>
                         <th class="whitespace-nowrap">NOME</th>
+                        <th class="text-center whitespace-nowrap">DIAS DO EVENTO</th>
+                        <th class="text-center whitespace-nowrap">LOCAL</th>
+                        <th class="text-center whitespace-nowrap">OS NUMBER</th>
+                        <th class="text-center whitespace-nowrap">STATUS</th>
+                        <th class="text-center whitespace-nowrap">AÇÕES</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,6 +38,10 @@
                                 <a href="{{ route('orderServices.show', $orderService->id) }}"
                                     class="font-medium whitespace-nowrap">{{ $orderService->budget->name }}</a>
                             </td>
+                            <td class="text-center">{{ $orderService->budget->budget_days }}</td>
+                            <td class="text-center">{{ $orderService->budget->place->name }}</td>
+                            <td class="text-center">{{ $orderService->os_number }}</td>
+                            <td class="text-center">{{ $orderService->budget->status->name }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
                                     <x-forms.buttons.icon route="orderServices.mount" :id="$orderService->id"
@@ -54,7 +63,6 @@
         @if (session('warning'))
             <script type="text/javascript">
                 document.addEventListener("DOMContentLoaded", function(e) {
-                    console.log('xxx');
                     document.getElementById('error-notification-title').innerHTML = "Atenção!";
                     document.getElementById('error-notification-message').innerHTML = "{{ session('warning') }}";
 

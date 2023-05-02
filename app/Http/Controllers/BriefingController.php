@@ -35,9 +35,26 @@ class BriefingController extends Controller
         return view('briefings.index', compact('briefings', 'query'));
     }
 
-    public function create($type)
+    public function indexFront()
+    {
+        return view('front.briefings.index');
+    }
+
+    public function create($type, $front = false)
     {
         $briefing = new Briefing();
+
+        if ($front) {
+            if ($type == 'online') {
+                return view('front.briefings.form-online', compact('briefing'));
+            }
+            if ($type == 'person') {
+                return view('front.briefings.form-person', compact('briefing'));
+            }
+            if ($type == 'hybrid') {
+                return view('front.briefings.form-hybrid', compact('briefing'));
+            }
+        }
 
         if ($type == 'online') {
             return view('briefings.form-online', compact('briefing'));
@@ -50,6 +67,11 @@ class BriefingController extends Controller
         }
     }
 
+    public function createFront($type)
+    {
+        return $this->create($type, true);
+    }
+
     public function store(Request $request)
     {
         Briefing::create($request->validated());
@@ -57,7 +79,7 @@ class BriefingController extends Controller
         return redirect()->route('briefings.index');
     }
 
-    public function storeOnline(BriefingOnlineRequest $request)
+    public function storeOnline(BriefingOnlineRequest $request, $front = false)
     {
         $params = $request->validated();
         $params['type_event'] = 1;
@@ -134,6 +156,10 @@ class BriefingController extends Controller
 
             DB::commit();
 
+            if ($front) {
+                return redirect()->route('front.briefings.index')->with('success', 'Briefing enviado com sucesso!');
+            }
+
             return redirect()->route('briefings.index');
         } catch (Exception $e) {
             DB::rollBack();
@@ -141,7 +167,12 @@ class BriefingController extends Controller
         }
     }
 
-    public function storePerson(BriefingPersonRequest $request)
+    public function storeOnlineFront(BriefingOnlineRequest $request)
+    {
+        return $this->storeOnline($request, true);
+    }
+
+    public function storePerson(BriefingPersonRequest $request, $front = false)
     {
         $params = $request->validated();
         $params['type_event'] = 2;
@@ -254,13 +285,23 @@ class BriefingController extends Controller
 
             DB::commit();
 
+            if ($front) {
+                return redirect()->route('front.briefings.index')->with('success', 'Briefing enviado com sucesso!');
+            }
+
             return redirect()->route('briefings.index');
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage(), 1);
         }
     }
-    public function storeHybrid(BriefingHybridRequest $request)
+
+    public function storePersonFront(BriefingPersonRequest $request)
+    {
+        return $this->storePerson($request, true);
+    }
+
+    public function storeHybrid(BriefingHybridRequest $request, $front = false)
     {
         $params = $request->validated();
         $params['type_event'] = 3;
@@ -401,11 +442,20 @@ class BriefingController extends Controller
 
             DB::commit();
 
+            if ($front) {
+                return redirect()->route('front.briefings.index')->with('success', 'Briefing enviado com sucesso!');
+            }
+
             return redirect()->route('briefings.index');
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage(), 1);
         }
+    }
+
+    public function storeHybridFront(BriefingHybridRequest $request)
+    {
+        return $this->storeHybrid($request, true);
     }
 
     public function edit(Briefing $briefing, $showMode = false)

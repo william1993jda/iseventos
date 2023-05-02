@@ -8,8 +8,15 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('budgets.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
-            <button class="btn btn-primary shadow-md mr-2" wire:click="editObservation">Observações</button>
-            <button class="btn btn-primary shadow-md mr-2" wire:click="addStatus">Status</button>
+            @if ($canEdit)
+                <button class="btn btn-primary shadow-md mr-2" wire:click="editObservation">Observações</button>
+                <button class="btn btn-primary shadow-md mr-2" wire:click="addStatus">Status</button>
+            @else
+                <button class="btn btn-primary shadow-md mr-2" data-tw-toggle="modal"
+                    data-tw-target="#budget-new-version-modal" type="button">Nova versão</button>
+                <button class="btn btn-primary shadow-md mr-2" disabled>Observações</button>
+                <button class="btn btn-primary shadow-md mr-2" disabled>Status</button>
+            @endif
             <x-forms.buttons.primary route="budgets.documents.index" :id="$budget->id" label="Documentos" />
             <a href="{{ route('budgets.print', $budget->id) }}" target="_blank"
                 class="btn btn-primary shadow-md mr-2">Imprimir</a>
@@ -22,6 +29,9 @@
                     <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                         <div class="truncate sm:whitespace-normal flex items-center">
                             <span class="font-semibold">Orçamento Nº:</span>&nbsp;#{{ $budget->id }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center">
+                            <span class="font-semibold">Versão Nº:</span>&nbsp;#{{ $budget->budget_version }}
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Nome do Evento:</span>&nbsp;{{ $budget->name }}
@@ -98,12 +108,21 @@
             </div>
         </div>
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2" wire:ignore>
-            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProduct">
-                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Equipamento
-            </button>
-            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addLabor">
-                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Mão de obra
-            </button>
+            @if ($canEdit)
+                <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProduct">
+                    <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Equipamento
+                </button>
+                <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addLabor">
+                    <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Mão de obra
+                </button>
+            @else
+                <button type="button" class="btn btn-primary shadow-md mr-2" disabled>
+                    <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Equipamento
+                </button>
+                <button type="button" class="btn btn-primary shadow-md mr-2" disabled>
+                    <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Mão de obra
+                </button>
+            @endif
         </div>
         @if (count($rooms) > 0)
             @php
@@ -145,12 +164,22 @@
                                                 <td class="whitespace-nowrap">{{ $product['product']['name'] }}</td>
                                                 @foreach ($room['days'] as $roomDate)
                                                     <td class="whitespace-nowrap">
-                                                        @if (in_array($roomDate, explode(',', $product['days'])))
-                                                            <x-forms.checkbox name="active" :checked="true"
-                                                                wire:click="checkDayRoom({{ $product['id'] }}, '{{ $roomDate }}')" />
+                                                        @if ($canEdit)
+                                                            @if (in_array($roomDate, explode(',', $product['days'])))
+                                                                <x-forms.checkbox name="active" :checked="true"
+                                                                    wire:click="checkDayRoom({{ $product['id'] }}, '{{ $roomDate }}')" />
+                                                            @else
+                                                                <x-forms.checkbox name="active" :checked="false"
+                                                                    wire:click="checkDayRoom({{ $product['id'] }}, '{{ $roomDate }}')" />
+                                                            @endif
                                                         @else
-                                                            <x-forms.checkbox name="active" :checked="false"
-                                                                wire:click="checkDayRoom({{ $product['id'] }}, '{{ $roomDate }}')" />
+                                                            @if (in_array($roomDate, explode(',', $product['days'])))
+                                                                <x-forms.checkbox name="active" :checked="true"
+                                                                    disabled />
+                                                            @else
+                                                                <x-forms.checkbox name="active" :checked="false"
+                                                                    disabled />
+                                                            @endif
                                                         @endif
                                                     </td>
                                                 @endforeach
@@ -158,20 +187,35 @@
                                                     {{ number_format($product['price'], 2, ',', '.') }}
                                                 </td>
                                                 <td class="whitespace-nowrap">
-                                                    <x-forms.number name="quantity" min="1" :value="$product['quantity']"
-                                                        wire:change="onChangeQuantity({{ $product['id'] }}, $event.target.value)" />
+                                                    @if ($canEdit)
+                                                        <x-forms.number name="quantity" min="1"
+                                                            :value="$product['quantity']"
+                                                            wire:change="onChangeQuantity({{ $product['id'] }}, $event.target.value)" />
+                                                    @else
+                                                        <x-forms.number name="quantity" min="1"
+                                                            :value="$product['quantity']" disabled />
+                                                    @endif
                                                 </td>
                                                 <td class="whitespace-nowrap">
                                                     {{ number_format($product['quantity'] * $product['price'] * $days, 2, ',', '.') }}
                                                 </td>
                                                 <td class="whitespace-nowrap" wire:ignore>
-                                                    <button
-                                                        class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                        data-action="{{ route('budgets.room.product.destroy', $product['id']) }}"
-                                                        data-tw-toggle="modal"
-                                                        data-tw-target="#delete-confirmation-modal" type="button">
-                                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                    </button>
+                                                    @if ($canEdit)
+                                                        <button
+                                                            class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
+                                                            data-action="{{ route('budgets.room.product.destroy', $product['id']) }}"
+                                                            data-tw-toggle="modal"
+                                                            data-tw-target="#delete-confirmation-modal"
+                                                            type="button">
+                                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                                        </button>
+                                                    @else
+                                                        <button
+                                                            class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"type="button"
+                                                            disabled>
+                                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                                        </button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -184,9 +228,14 @@
                                                 <td class="whitespace-nowrap">{{ $labor['labor']['name'] }}</td>
                                                 <td class="whitespace-nowrap" colspan="{{ count($room['days']) }}">
                                                     <div class="flex items-center justify-end">
-                                                        <x-forms.number name="days" min="1"
-                                                            :value="$labor['days']" class="form-control"
-                                                            wire:change="onChangeLaborDays({{ $labor['id'] }}, $event.target.value)" />
+                                                        @if ($canEdit)
+                                                            <x-forms.number name="days" min="1"
+                                                                :value="$labor['days']" class="form-control"
+                                                                wire:change="onChangeLaborDays({{ $labor['id'] }}, $event.target.value)" />
+                                                        @else
+                                                            <x-forms.number name="days" min="1"
+                                                                :value="$labor['days']" class="form-control" disabled />
+                                                        @endif
                                                         &nbsp;&nbsp;diárias
                                                     </div>
                                                 </td>
@@ -194,20 +243,35 @@
                                                     {{ number_format($labor['price'], 2, ',', '.') }}
                                                 </td>
                                                 <td class="whitespace-nowrap">
-                                                    <x-forms.number name="quantity" min="1" :value="$labor['quantity']"
-                                                        wire:change="onChangeLaborQuantity({{ $labor['id'] }}, $event.target.value)" />
+                                                    @if ($canEdit)
+                                                        <x-forms.number name="quantity" min="1"
+                                                            :value="$labor['quantity']"
+                                                            wire:change="onChangeLaborQuantity({{ $labor['id'] }}, $event.target.value)" />
+                                                    @else
+                                                        <x-forms.number name="quantity" min="1"
+                                                            :value="$labor['quantity']" disabled />
+                                                    @endif
                                                 </td>
                                                 <td class="whitespace-nowrap">
                                                     {{ number_format($labor['quantity'] * $labor['price'] * $days, 2, ',', '.') }}
                                                 </td>
                                                 <td class="whitespace-nowrap" wire:ignore>
-                                                    <button
-                                                        class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                        data-action="{{ route('budgets.room.labor.destroy', $labor['id']) }}"
-                                                        data-tw-toggle="modal"
-                                                        data-tw-target="#delete-confirmation-modal" type="button">
-                                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                    </button>
+                                                    @if ($canEdit)
+                                                        <button
+                                                            class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
+                                                            data-action="{{ route('budgets.room.labor.destroy', $labor['id']) }}"
+                                                            data-tw-toggle="modal"
+                                                            data-tw-target="#delete-confirmation-modal"
+                                                            type="button">
+                                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                                        </button>
+                                                    @else
+                                                        <button
+                                                            class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
+                                                            disabled>
+                                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                                        </button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -285,30 +349,76 @@
                         <span>TOTAL: R$ {{ number_format($total, 2, ',', '.') }}</span>
                     </div>
                     <div class="flex justify-end mt-3">
-                        @if (empty($budget['fee']))
-                            <button type="button" class="btn btn-primary shadow-md" wire:click="addFee">
-                                Aplicar taxa do cartão
-                            </button>
+                        @if ($canEdit)
+                            @if (empty($budget['fee']))
+                                <button type="button" class="btn btn-primary shadow-md" wire:click="addFee">
+                                    Aplicar taxa do cartão
+                                </button>
+                            @else
+                                <button type="button" class="btn btn-primary shadow-md" wire:click="removeFee">
+                                    Remover taxa do cartão
+                                </button>
+                            @endif
+                            @if (empty($budget['discount']))
+                                <button type="button" class="btn btn-primary shadow-md ml-2"
+                                    wire:click="addDiscount">
+                                    Aplicar desconto
+                                </button>
+                            @else
+                                <button type="button" class="btn btn-primary shadow-md ml-2"
+                                    wire:click="removeDiscount">
+                                    Remover desconto
+                                </button>
+                            @endif
                         @else
-                            <button type="button" class="btn btn-primary shadow-md" wire:click="removeFee">
-                                Remover taxa do cartão
-                            </button>
-                        @endif
-                        @if (empty($budget['discount']))
-                            <button type="button" class="btn btn-primary shadow-md ml-2" wire:click="addDiscount">
-                                Aplicar desconto
-                            </button>
-                        @else
-                            <button type="button" class="btn btn-primary shadow-md ml-2"
-                                wire:click="removeDiscount">
-                                Remover desconto
-                            </button>
+                            @if (empty($budget['fee']))
+                                <button type="button" class="btn btn-primary shadow-md" disabled>
+                                    Aplicar taxa do cartão
+                                </button>
+                            @else
+                                <button type="button" class="btn btn-primary shadow-md" disabled>
+                                    Remover taxa do cartão
+                                </button>
+                            @endif
+                            @if (empty($budget['discount']))
+                                <button type="button" class="btn btn-primary shadow-md ml-2" disabled>
+                                    Aplicar desconto
+                                </button>
+                            @else
+                                <button type="button" class="btn btn-primary shadow-md ml-2" disabled>
+                                    Remover desconto
+                                </button>
+                            @endif
                         @endif
                     </div>
                 </div>
             </div>
         @endif
     </div>
+
+    <!-- BEGIN: Budget New Version Modal -->
+    <div id="budget-new-version-modal" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="p-5 text-center">
+                        <i data-lucide="copy-plus" class="w-16 h-16 text-danger mx-auto mt-3"></i>
+                        <div class="text-3xl mt-5">Gerar nova versão?</div>
+                        <div class="text-slate-500 mt-2">
+                            Tem certeza que gerar uma nova versão desse orçamento?
+                        </div>
+                    </div>
+                    <div class="px-5 pb-8 text-center">
+                        <button type="button" data-tw-dismiss="modal"
+                            class="btn btn-outline-secondary w-24 mr-1">Não</button>
+                        <button type="submit" class="btn btn-primary w-24"
+                            wire:click="generateNewVersion">Sim</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Budget New Version Modal -->
 
     @include('budgets.partials.modal-product')
     @include('budgets.partials.modal-labor')

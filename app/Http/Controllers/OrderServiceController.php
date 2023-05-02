@@ -370,7 +370,38 @@ class OrderServiceController extends Controller
             }
         }
 
-        $data = $provider->toArray();
+        $data = $orderService->toArray();
+        $data['name'] = $orderService->budget->name;
+        $data['request_date'] = $orderService->budget->request_date->format('d/m/Y');
+        $data['observation'] = $orderService->observation;
+        $data['customer'] = $orderService->budget->customer->fantasy_name;
+        $data['customer_name'] = '';
+        $data['customer_phone'] = '';
+        $data['customer_email'] = '';
+
+        if (!empty($orderService->budget->customer_contact_id)) {
+            $customerContact = CustomerContact::find($orderService->budget->customer_contact_id);
+            $data['customer_name'] = $customerContact->name;
+            $data['customer_phone'] = $customerContact->phone;
+            $data['customer_email'] = $customerContact->email;
+        }
+
+        $data['agency'] = $orderService->budget->agency ? $orderService->budget->agency->fantasy_name : null;
+        $data['place'] = $orderService->budget->place->name;
+        $data['city'] = $orderService->budget->city;
+
+        $budgetDays = explode('-', $orderService->budget->budget_days);
+
+        $data['start_date'] = trim($budgetDays[0]);
+        $data['end_date'] = trim($budgetDays[1]);
+        $data['mount_date'] = $orderService->budget->mount_date ? $orderService->budget->mount_date->format('d/m/Y') : null;
+        $data['unmount_date'] = $orderService->budget->unmount_date ? $orderService->budget->unmount_date->format('d/m/Y') : null;
+        $data['public'] = $orderService->budget->public;
+        $data['situation'] = $orderService->budget->situation;
+        $data['commercial_conditions'] = $orderService->budget->commercial_conditions;
+
+
+        $data['fantasy_name'] = $provider->fantasy_name;
         $data['os_number'] = $orderService->os_number;
         $data['products'] = $arProducts;
 
