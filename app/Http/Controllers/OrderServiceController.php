@@ -44,7 +44,8 @@ class OrderServiceController extends Controller
     {
         $orderService = new OrderService();
         $osStatuses = OsStatus::pluck('name', 'id')->prepend('Selecione', '');
-        $budgets = Budget::pluck('name', 'id')->prepend('Selecione', '');
+        $budgetIds = OrderService::pluck('budget_id')->toArray();
+        $budgets = Budget::whereNotIn('id', $budgetIds)->pluck('name', 'id')->prepend('Selecione', '');
 
         return view('orderServices.form', compact('orderService', 'budgets', 'osStatuses'));
     }

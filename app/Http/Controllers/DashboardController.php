@@ -27,8 +27,8 @@ class DashboardController extends Controller
                 return [
                     "id" => $budget->id,
                     "title" => $budget->name,
-                    "start" => $budget->mount_date,
-                    "end" => $budget->unmount_date,
+                    "start" => $budget->mount_date->format('Y-m-d'),
+                    "end" => $budget->unmount_date->addDay()->format('Y-m-d'),
                     "color" => $budget->status->color,
                     "place" => $budget->place->name,
                     "dates" => $budget->budget_days,

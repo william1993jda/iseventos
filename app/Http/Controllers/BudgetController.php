@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\CustomerContact;
 use App\Models\Labor;
+use App\Models\OrderService;
 use App\Models\Place;
 use App\Models\PlaceRoom;
 use App\Models\Product;
@@ -80,6 +81,7 @@ class BudgetController extends Controller
 
     public function destroy(Budget $budget)
     {
+        OrderService::where('budget_id', $budget->id)->delete();
         $budget->delete();
 
         return redirect()->route('budgets.index');
