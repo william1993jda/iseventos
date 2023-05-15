@@ -18,7 +18,7 @@
             ]) !!}
             <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
                 <table class="table table-report -mt-2">
-                    <thead>
+                    {{-- <thead>
                         <tr>
                             <th class="whitespace-nowrap">NOME</th>
                             <th class="text-center whitespace-nowrap">LISTAR</th>
@@ -26,13 +26,14 @@
                             <th class="text-center whitespace-nowrap">EDITAR</th>
                             <th class="text-center whitespace-nowrap">DELETAR</th>
                         </tr>
-                    </thead>
+                    </thead> --}}
                     <tbody>
                         @foreach ($permissions as $module => $permission)
                             <tr class="intro-x">
-                                <td class="font-medium whitespace-nowrap">{{ $module }}</td>
+                                {{-- <td class="font-medium whitespace-nowrap">{{ $module }}</td> --}}
                                 @foreach ($permission as $key => $value)
                                     <td class="text-center">
+                                        {{ $value->name }}
                                         <x-forms.checkbox name="permission_id[]" value="{{ $value->id }}"
                                             :checked="in_array(
                                                 $value->id,

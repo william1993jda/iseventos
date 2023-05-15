@@ -268,5 +268,12 @@ class RolePermissionSeeder extends Seeder
 
         Permission::firstOrCreate(['name' => 'recoveries.index']);
         Permission::firstOrCreate(['name' => 'recoveries.recovery']);
+
+        Permission::firstOrCreate(['name' => 'subleases.index']);
+
+        Permission::firstOrCreate(['name' => 'briefings.index']);
+        Permission::firstOrCreate(['name' => 'briefings.create.type']);
+        Permission::firstOrCreate(['name' => 'briefings.edit']);
+        Permission::firstOrCreate(['name' => 'briefings.destroy']);
     }
 }

@@ -27,7 +27,7 @@ class RoleController extends Controller
 
     public function create(Role $role)
     {
-        $permissions = Permission::all();
+        $permissions = Permission::orderBy('name')->get();
 
         $arPermissions = [];
 
@@ -60,8 +60,6 @@ class RoleController extends Controller
         }
 
         $permissions = collect($arPermissions);
-
-        // dd($permissions);
 
         return view('roles.form', compact('role', 'permissions'));
     }
