@@ -227,7 +227,7 @@
                                             <tr>
                                                 <td class="whitespace-nowrap">{{ $labor['labor']['name'] }}</td>
                                                 <td class="whitespace-nowrap" colspan="{{ count($room['days']) }}">
-                                                    <div class="flex items-center justify-end">
+                                                    <div class="flex items-center justify-end w-32">
                                                         @if ($canEdit)
                                                             <x-forms.number name="days" min="1"
                                                                 :value="$labor['days']" class="form-control"

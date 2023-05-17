@@ -88,8 +88,6 @@ class BudgetMountLivewire extends Component
                     }
                 }
 
-                // dd($categoryProducts);
-
                 $obCategory = [
                     'id' => $category->id,
                     'name' => $category->name,
