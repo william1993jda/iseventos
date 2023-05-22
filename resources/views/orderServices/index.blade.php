@@ -41,7 +41,7 @@
                             <td class="text-center">{{ $orderService->budget->budget_days }}</td>
                             <td class="text-center">{{ $orderService->budget->place->name }}</td>
                             <td class="text-center">{{ $orderService->os_number }}</td>
-                            <td class="text-center">{{ $orderService->budget->status->name }}</td>
+                            <td class="text-center">{{ $orderService->osStatus->name }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
                                     <x-forms.buttons.icon route="orderServices.mount" :id="$orderService->id"

@@ -264,7 +264,7 @@
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tr>
         <td style="text-align:right;"><strong>SUBTOTAL</strong></td>
-        <td style="text-align:right; width: 80px;"><strong>R$ {{ number_format($total, 2, ',', '.') }}</strong></td>
+        <td style="text-align:right; width: 150px;"><strong>R$ {{ number_format($total, 2, ',', '.') }}</strong></td>
     </tr>
 </table>
 
@@ -283,7 +283,7 @@
                     $totalFee = $totalFeePercentage;
                 @endphp
                 <td style="text-align:right;"><span class="text-fee">TAXA ({{ $fee }}%):</span></td>
-                <td style="text-align:right; width: 80px;">
+                <td style="text-align:right; width: 150px;">
                     <span class="text-fee">R$ {{ number_format($totalFeePercentage, 2, ',', '.') }}</span>
                 </td>
             @else
@@ -292,7 +292,7 @@
                 @endphp
                 <td style="text-align:right;"><span class="text-fee">TAXA (R$
                         {{ number_format($fee, 2, ',', '.') }}):</span></td>
-                <td style="text-align:right; width: 80px;">
+                <td style="text-align:right; width: 150px;">
                     <span class="text-fee">R$ {{ number_format($fee, 2, ',', '.') }}</span>
                 </td>
             @endif
@@ -311,7 +311,7 @@
                 @endphp
                 <td style="text-align:right;"><span class="text-discount">DESCONTO ({{ $discount }}%):</span>
                 </td>
-                <td style="text-align:right; width: 80px;">
+                <td style="text-align:right; width: 150px;">
                     <span class="text-discount">R$ {{ number_format($totalDiscountPercentage, 2, ',', '.') }}</span>
                 </td>
             @else
@@ -320,7 +320,7 @@
                 @endphp
                 <td style="text-align:right;"><span class="text-discount">DESCONTO (R$
                         {{ number_format($discount, 2, ',', '.') }}):</span></td>
-                <td style="text-align:right; width: 80px;">
+                <td style="text-align:right; width: 150px;">
                     <span class="text-discount">R$ {{ number_format($discount, 2, ',', '.') }}</span>
                 </td>
             @endif
@@ -335,7 +335,7 @@
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tr>
         <td style="text-align:right;"><span class="text-total">TOTAL:</span></td>
-        <td style="text-align:right; width: 80px;">
+        <td style="text-align:right; width: 150px;">
             <span class="text-total">R$ {{ number_format($total, 2, ',', '.') }}</span>
         </td>
     </tr>

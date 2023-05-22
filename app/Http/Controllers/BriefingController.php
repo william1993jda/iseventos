@@ -6,6 +6,7 @@ use App\Http\Requests\BriefingHybridRequest;
 use App\Http\Requests\BriefingOnlineRequest;
 use App\Http\Requests\BriefingPersonRequest;
 use App\Http\Requests\BriefingRequest;
+use App\Mail\NewBriefing;
 use App\Models\Category;
 use App\Models\Briefing;
 use App\Models\BriefingHybrid;
@@ -15,6 +16,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class BriefingController extends Controller
 {
@@ -157,6 +159,8 @@ class BriefingController extends Controller
             DB::commit();
 
             if ($front) {
+                Mail::to('rgazeredo@gmail.com')->send(new NewBriefing($briefing));
+
                 return redirect()->route('front.briefings.index')->with('success', 'Briefing enviado com sucesso!');
             }
 
