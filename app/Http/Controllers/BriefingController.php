@@ -159,7 +159,11 @@ class BriefingController extends Controller
             DB::commit();
 
             if ($front) {
-                Mail::to('rgazeredo@gmail.com')->send(new NewBriefing($briefing));
+                Mail::to('contato@iseventos.com.br')
+                    ->cc('alessandra@iseventos.com.br')
+                    ->cc('luana@iseventos.com.br')
+                    ->cc('igor@iseventos.com.br')
+                    ->send(new NewBriefing($briefing));
 
                 return redirect()->route('front.briefings.index')->with('success', 'Briefing enviado com sucesso!');
             }
@@ -290,6 +294,12 @@ class BriefingController extends Controller
             DB::commit();
 
             if ($front) {
+                Mail::to('contato@iseventos.com.br')
+                    ->cc('alessandra@iseventos.com.br')
+                    ->cc('luana@iseventos.com.br')
+                    ->cc('igor@iseventos.com.br')
+                    ->send(new NewBriefing($briefing));
+
                 return redirect()->route('front.briefings.index')->with('success', 'Briefing enviado com sucesso!');
             }
 
@@ -447,6 +457,12 @@ class BriefingController extends Controller
             DB::commit();
 
             if ($front) {
+                Mail::to('contato@iseventos.com.br')
+                    ->cc('alessandra@iseventos.com.br')
+                    ->cc('luana@iseventos.com.br')
+                    ->cc('igor@iseventos.com.br')
+                    ->send(new NewBriefing($briefing));
+
                 return redirect()->route('front.briefings.index')->with('success', 'Briefing enviado com sucesso!');
             }
 
