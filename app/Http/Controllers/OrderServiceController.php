@@ -8,6 +8,7 @@ use App\Models\Budget;
 use App\Models\CustomerContact;
 use App\Models\OsStatus;
 use App\Models\OrderService;
+use App\Models\OrderServiceRoomFreelancer;
 use App\Models\OrderServiceRoomGroup;
 use App\Models\OrderServiceRoomProduct;
 use App\Models\OrderServiceRoomProvider;
@@ -121,6 +122,14 @@ class OrderServiceController extends Controller
     {
         $orderService = $orderServiceRoomGroup->orderService;
         $orderServiceRoomGroup->delete();
+
+        return redirect()->route('orderServices.mount', $orderService->id);
+    }
+
+    public function roomFreelancerDestroy(OrderServiceRoomFreelancer $orderServiceRoomFreelancer)
+    {
+        $orderService = $orderServiceRoomFreelancer->orderService;
+        $orderServiceRoomFreelancer->delete();
 
         return redirect()->route('orderServices.mount', $orderService->id);
     }
@@ -255,6 +264,9 @@ class OrderServiceController extends Controller
             $groupsId = $groups->pluck('group_id')->toArray();
             $groupsList = $groups->get();
 
+            $freelancers = OrderServiceRoomFreelancer::where('order_service_id', $orderService->id)->where('place_room_id', $placeRoom->id);
+            $freelancersList = $freelancers->get();
+
             $categoryProductsId = OsProduct::whereIn('id', $productsId)->groupBy('os_category_id')->pluck('os_category_id')->toArray();
             $categoryProvidersId = OsProduct::whereIn('id', $providersId)->groupBy('os_category_id')->pluck('os_category_id')->toArray();
             $categoriesId = array_unique(array_merge($categoryProductsId, $categoryProvidersId));
@@ -289,6 +301,7 @@ class OrderServiceController extends Controller
                     'products' => $categoryProducts,
                     'providers' => $categoryProviders,
                     'groups' => [],
+                    'freelancers' => [],
                 ];
 
                 array_push($arCategories, $obCategory);
@@ -317,6 +330,24 @@ class OrderServiceController extends Controller
                     'products' => [],
                     'providers' => [],
                     'groups' => $arGroups,
+                    'freelancers' => [],
+                ]);
+            }
+
+            if (count($freelancersList) > 0) {
+                $freelancers = $freelancersList->map(function ($freelancer) {
+                    $arFreelancer = $freelancer->toArray();
+                    $arFreelancer['freelancer'] = $freelancer->freelancer->toArray();
+                    return $arFreelancer;
+                })->toArray();
+
+                array_push($arCategories, [
+                    'id' => 0,
+                    'name' => 'FREELANCER',
+                    'products' => [],
+                    'providers' => [],
+                    'groups' => [],
+                    'freelancers' => $freelancers,
                 ]);
             }
 

@@ -5,8 +5,10 @@ namespace App\Http\Livewire;
 use App\Models\BudgetRoomLabor;
 use App\Models\BudgetRoomProduct;
 use App\Models\Category;
+use App\Models\Freelancer;
 use App\Models\Group;
 use App\Models\Labor;
+use App\Models\OrderServiceRoomFreelancer;
 use App\Models\OrderServiceRoomGroup;
 use App\Models\OrderServiceRoomLabor;
 use App\Models\OrderServiceRoomProduct;
@@ -36,6 +38,7 @@ class OrderServiceMountLivewire extends Component
     public $dataOrderService = [];
     public $dataProduct = [];
     public $dataLabor = [];
+    public $dataFreelancer = [];
     public $dataProvider = [];
     public $dataGroup = [];
     public $dataStatus = [];
@@ -75,6 +78,9 @@ class OrderServiceMountLivewire extends Component
             $groups = OrderServiceRoomGroup::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
             $groupsList = $groups->get();
 
+            $freelancers = OrderServiceRoomFreelancer::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
+            $freelancersList = $freelancers->get();
+
             $categoryProductsId = OsProduct::whereIn('id', $productsId)->groupBy('os_category_id')->pluck('os_category_id')->toArray();
             $categoryProvidersId = OsProduct::whereIn('id', $providersId)->groupBy('os_category_id')->pluck('os_category_id')->toArray();
             $categoriesId = array_unique(array_merge($categoryProductsId, $categoryProvidersId));
@@ -109,6 +115,7 @@ class OrderServiceMountLivewire extends Component
                     'products' => $categoryProducts,
                     'providers' => $categoryProviders,
                     'groups' => [],
+                    'freelancers' => [],
                 ];
 
                 array_push($arCategories, $obCategory);
@@ -137,6 +144,24 @@ class OrderServiceMountLivewire extends Component
                     'products' => [],
                     'providers' => [],
                     'groups' => $arGroups,
+                    'freelancers' => [],
+                ]);
+            }
+
+            if (count($freelancersList) > 0) {
+                $freelancers = $freelancersList->map(function ($freelancer) {
+                    $arFreelancer = $freelancer->toArray();
+                    $arFreelancer['freelancer'] = $freelancer->freelancer->toArray();
+                    return $arFreelancer;
+                })->toArray();
+
+                array_push($arCategories, [
+                    'id' => 0,
+                    'name' => 'FREELANCER',
+                    'products' => [],
+                    'providers' => [],
+                    'groups' => [],
+                    'freelancers' => $freelancers,
                 ]);
             }
 
@@ -187,6 +212,13 @@ class OrderServiceMountLivewire extends Component
         $categories = category::pluck('name', 'id')->prepend('Selecione', '');
 
         $this->emit('addLabor', $categories);
+    }
+
+    public function addFreelancer()
+    {
+        $freelancers = Freelancer::pluck('name', 'id')->prepend('Selecione', '');
+
+        $this->emit('addFreelancer', $freelancers);
     }
 
     public function addProvider()
@@ -359,6 +391,51 @@ class OrderServiceMountLivewire extends Component
         ]);
 
         $this->dataLabor = [];
+
+        return $this->emit('saved');
+    }
+
+    public function saveFreelancer()
+    {
+        // $this->validate([
+        //     'dataFreelancer.freelancer_id' => 'required',
+        //     'dataFreelancer.place_room_id' => 'required',
+        //     'dataFreelancer.quantity' => 'required',
+        // ], [], [
+        //     'dataFreelancer.freelancer_id' => 'equipamento',
+        //     'dataFreelancer.place_room_id' => 'sala',
+        //     'dataFreelancer.quantity' => 'quantidade',
+        // ]);
+
+
+        if (empty($this->dataFreelancer['freelancer_id'])) {
+            return $this->emit('freelancerError', true);
+        }
+
+        if (empty($this->dataFreelancer['place_room_id'])) {
+            return $this->emit('freelancerError', true);
+        }
+
+
+        if (empty($this->dataFreelancer['quantity'])) {
+            return $this->emit('freelancerError', true);
+        }
+
+        if (empty($this->dataFreelancer['days'])) {
+            return $this->emit('freelancerError', true);
+        }
+
+        $this->emit('laborError', false);
+
+        OrderServiceRoomFreelancer::create([
+            'order_service_id' => $this->orderService->id,
+            'place_room_id' => $this->dataFreelancer['place_room_id'],
+            'freelancer_id' => $this->dataFreelancer['freelancer_id'],
+            'days' => $this->dataFreelancer['days'],
+            'quantity' => $this->dataFreelancer['quantity'],
+        ]);
+
+        $this->dataFreelancer = [];
 
         return $this->emit('saved');
     }
@@ -607,6 +684,26 @@ class OrderServiceMountLivewire extends Component
 
             // $this->dataLabor = [];
             // $this->getRooms();
+            return $this->emit('saved');
+        }
+    }
+
+    public function onChangeFreelancerQuantity(OrderServiceRoomFreelancer $orderServiceRoomFreelancer, $quantity)
+    {
+        if ($quantity > 0) {
+            $orderServiceRoomFreelancer->quantity = $quantity;
+            $orderServiceRoomFreelancer->save();
+
+            return $this->emit('saved');
+        }
+    }
+
+    public function onChangeFreelancerDays(OrderServiceRoomFreelancer $orderServiceRoomFreelancer, $days)
+    {
+        if ($days > 0) {
+            $orderServiceRoomFreelancer->days = $days;
+            $orderServiceRoomFreelancer->save();
+
             return $this->emit('saved');
         }
     }

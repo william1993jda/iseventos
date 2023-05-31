@@ -112,6 +112,9 @@
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addLabor">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Mão de obra
             </button>
+            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addFreelancer">
+                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Freelancer
+            </button>
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProvider">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Fornecedor
             </button>
@@ -260,6 +263,39 @@
                                                 </td>
                                             </tr>
                                         @endforeach
+                                        @foreach ($category['freelancers'] as $freelancer)
+                                            @php
+                                                $days = count(explode(',', $freelancer['days']));
+                                            @endphp
+                                            <tr>
+                                                <td class="whitespace-nowrap">
+                                                    <div class="font-medium">
+                                                        {{ $freelancer['freelancer']['name'] }}
+                                                    </div>
+                                                </td>
+                                                <td class="whitespace-nowrap" colspan="{{ count($room['days']) }}">
+                                                    <div class="flex items-center justify-end">
+                                                        <x-forms.number name="days" min="1"
+                                                            :value="$freelancer['days']" class="form-control"
+                                                            wire:change="onChangeFreelancerDays({{ $freelancer['id'] }}, $event.target.value)" />
+                                                        &nbsp;&nbsp;diárias
+                                                    </div>
+                                                </td>
+                                                <td class="whitespace-nowrap">
+                                                    <x-forms.number name="quantity" min="1" :value="$freelancer['quantity']"
+                                                        wire:change="onChangeFreelancerQuantity({{ $freelancer['id'] }}, $event.target.value)" />
+                                                </td>
+                                                <td class="whitespace-nowrap" wire:ignore>
+                                                    <button
+                                                        class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
+                                                        data-action="{{ route('orderServices.room.freelancer.destroy', $freelancer['id']) }}"
+                                                        data-tw-toggle="modal"
+                                                        data-tw-target="#delete-confirmation-modal" type="button">
+                                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                         {{-- @foreach ($category['labors'] as $labor)
                                             @php
                                                 $days = $labor['days'];
@@ -308,6 +344,7 @@
 
     @include('orderServices.partials.modal-product')
     @include('orderServices.partials.modal-labor')
+    @include('orderServices.partials.modal-freelancer')
     @include('orderServices.partials.modal-provider')
     @include('orderServices.partials.modal-kit')
     @include('orderServices.partials.modal-status')
@@ -318,6 +355,7 @@
         <script type="text/javascript">
             var modalOrderServiceProduct = null;
             var modalOrderServiceLabor = null;
+            var modalOrderServiceFreelancer = null;
             var modalOrderServiceProvider = null;
             var modalOrderServiceKit = null;
             var modalOrderServiceStatus = null;
@@ -327,12 +365,14 @@
             var selectCategoryId = null;
             var selectProductId = null;
             var selectLaborId = null;
+            var selectFreelancerId = null;
             var selectProviderId = null;
             var selectProviderCategoryId = null;
             var selectProviderProductId = null;
             var selectGroupId = null;
             var alertProductError = null;
             var alertLaborError = null;
+            var alertFreelancerError = null;
             var alertProviderError = null;
             var alertKitError = null;
             var alertStatusError = null;
@@ -342,11 +382,14 @@
                 selectCategoryId = document.getElementById('category_id').tomselect;
                 selectProductId = document.getElementById('product_id').tomselect;
                 selectLaborId = document.getElementById('labor_id').tomselect;
+                selectFreelancerId = document.getElementById('freelancer_id').tomselect;
                 selectProviderId = document.getElementById('provider_id').tomselect;
                 selectProviderCategoryId = document.getElementById('provider_category_id').tomselect;
                 selectProviderProductId = document.getElementById('provider_product_id').tomselect;
                 selectGroupId = document.getElementById('group_id').tomselect;
                 alertProductError = document.getElementById('alert-product-error');
+                alertLaborError = document.getElementById('alert-labor-error');
+                alertFreelancerError = document.getElementById('alert-freelancer-error');
                 alertProviderError = document.getElementById('alert-provider-error');
                 alertKitError = document.getElementById('alert-kit-error');
                 alertStatusError = document.getElementById('alert-status-error');
@@ -354,6 +397,8 @@
                     "#modal-orderservice-product"));
                 modalOrderServiceLabor = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-orderservice-labor"));
+                modalOrderServiceFreelancer = tailwind.Modal.getInstance(document.querySelector(
+                    "#modal-orderservice-freelancer"));
                 modalOrderServiceProvider = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-orderservice-provider"));
                 modalOrderServiceKit = tailwind.Modal.getInstance(document.querySelector(
@@ -390,6 +435,19 @@
                 });
 
                 modalOrderServiceLabor.show();
+            });
+
+            window.livewire.on('addFreelancer', (data) => {
+                selectFreelancerId.clear();
+                selectFreelancerId.clearOptions();
+                Object.keys(data).forEach(function(key) {
+                    selectFreelancerId.addOption({
+                        value: key,
+                        text: data[key]
+                    });
+                });
+
+                modalOrderServiceFreelancer.show();
             });
 
             window.livewire.on('addProvider', (data) => {

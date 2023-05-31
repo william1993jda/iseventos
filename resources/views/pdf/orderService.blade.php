@@ -256,8 +256,7 @@
         <tbody>
             @foreach ($room['categories'] as $category)
                 <tr>
-                    <td><strong>{{ $category['name'] }}</strong></td>
-                    <td colspan="2">&nbsp;</td>
+                    <td colspan="3"><strong>{{ $category['name'] }}</strong></td>
                 </tr>
                 @foreach ($category['products'] as $product)
                     <tr>
@@ -303,6 +302,21 @@
                         </td>
                         <td style="text-align:center;">
                             {{ count(explode(',', $group['days'])) }}
+                        </td>
+                    </tr>
+                @endforeach
+                @foreach ($category['freelancers'] as $freelancer)
+                    <tr>
+                        <td>
+                            <div class="font-medium">
+                                {{ $freelancer['freelancer']['name'] }}
+                            </div>
+                        </td>
+                        <td style="text-align:center;">
+                            {{ $freelancer['quantity'] }}
+                        </td>
+                        <td style="text-align:center;">
+                            {{ count(explode(',', $freelancer['days'])) }}
                         </td>
                     </tr>
                 @endforeach

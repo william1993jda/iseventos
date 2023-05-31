@@ -174,6 +174,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('orderServices/room/product/{orderServiceRoomProduct}', [OrderServiceController::class, 'roomProductDestroy'])->name('orderServices.room.product.destroy');
     Route::delete('orderServices/room/provider/{orderServiceRoomProvider}', [OrderServiceController::class, 'roomProviderDestroy'])->name('orderServices.room.provider.destroy');
     Route::delete('orderServices/room/provider/{orderServiceRoomGroup}', [OrderServiceController::class, 'roomGroupDestroy'])->name('orderServices.room.group.destroy');
+    Route::delete('orderServices/room/freelancer/{orderServiceRoomFreelancer}', [OrderServiceController::class, 'roomFreelancerDestroy'])->name('orderServices.room.freelancer.destroy');
     Route::resource('orderServices', OrderServiceController::class)->names('orderServices');
     Route::resource('orderServices.documents', OrderServiceDocumentController::class)->names('orderServices.documents');
 
