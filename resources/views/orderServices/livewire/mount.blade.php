@@ -109,9 +109,9 @@
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProduct">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Equipamento
             </button>
-            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addLabor">
+            {{-- <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addLabor">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Mão de obra
-            </button>
+            </button> --}}
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addFreelancer">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Freelancer
             </button>
