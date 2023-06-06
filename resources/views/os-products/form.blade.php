@@ -8,6 +8,10 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('os-products.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
+            @if (!empty($osProduct->id))
+                <a href="{{ route('os-products.stocks.index', $osProduct->id) }}"
+                    class="btn btn-primary shadow-md mr-2">Estoque</a>
+            @endif
         </div>
         <div class="intro-y col-span-12">
             @if (empty($osProduct->id))

@@ -37,6 +37,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OsCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OsProductController;
+use App\Http\Controllers\OsProductStockController;
 use App\Http\Controllers\PlaceDocumentController;
 use App\Http\Controllers\PlaceRoomController;
 use App\Http\Controllers\PlaceRoomDocumentController;
@@ -153,6 +154,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class)->names('products');
 
     Route::resource('os-products', OsProductController::class)->names('os-products');
+    Route::resource('os-products.stocks', OsProductStockController::class)->names('os-products.stocks');
 
     Route::resource('groups', GroupController::class)->names('groups');
 
