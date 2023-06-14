@@ -58,9 +58,9 @@ class BudgetController extends Controller
         $params['status_id'] = 1;
         $params['budget_number'] = (int) Budget::max('budget_number') + 1;
 
-        Budget::create($params);
+        $budget = Budget::create($params);
 
-        return redirect()->route('budgets.index');
+        return redirect()->route('budgets.mount', $budget->id);
     }
 
     public function edit(Budget $budget, $showMode = false)

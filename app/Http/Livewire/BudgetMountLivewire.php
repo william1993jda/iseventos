@@ -41,7 +41,7 @@ class BudgetMountLivewire extends Component
         ];
         $this->status = Status::pluck('name', 'id')->prepend('Selecione', '');
 
-        if ($this->budget->status->slug == 'aberto' || $this->budget->status->slug == 'revisao') {
+        if ($this->budget->status->slug == 'aberto' || $this->budget->status->slug == 'revisao' || $this->budget->status->slug == 'enviado') {
             $this->canEdit = true;
         }
 
