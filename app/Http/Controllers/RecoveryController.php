@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Budget;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,8 @@ class RecoveryController extends Controller
         $query = $request->get('query');
         $modules = [
             '' => 'Selecione',
-            'employees' => 'Funcionários'
+            'employees' => 'Funcionários',
+            'budgets' => 'Orçamentos'
         ];
 
         $records = [];
@@ -29,6 +31,15 @@ class RecoveryController extends Controller
                         ];
                     });
                     break;
+                case 'budgets':
+                    $records = Budget::onlyTrashed()->get()->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'name' => $item->name,
+                            'module' => 'budgets'
+                        ];
+                    });
+                    break;
             }
         }
 
@@ -40,6 +51,9 @@ class RecoveryController extends Controller
         switch ($request->get('recovery_module')) {
             case 'employees':
                 Employee::withTrashed()->find($id)->restore();
+                break;
+            case 'budgets':
+                Budget::withTrashed()->find($id)->restore();
                 break;
         }
 

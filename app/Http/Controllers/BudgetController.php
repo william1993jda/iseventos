@@ -16,6 +16,7 @@ use App\Models\Place;
 use App\Models\PlaceRoom;
 use App\Models\Product;
 use App\Models\Settings;
+use App\Models\Status;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -25,19 +26,55 @@ class BudgetController extends Controller
 {
     public function index(Request $request)
     {
+        $places = Place::pluck('name', 'id')->prepend('Selecione', '');
+        $customers = Customer::pluck('fantasy_name', 'id')->prepend('Selecione', '');
+        $statuses = Status::pluck('name', 'id')->prepend('Selecione', '');
+
         $params = $request->all();
-        $query = $request->get('query');
+        $query = [
+            'name' => '',
+            'budget_days' => '',
+            'place_id' => '',
+            'customer_id' => '',
+            'status_id' => '',
+        ];
 
-        if ($query) {
-            $budgets = Budget::where('name', 'like', '%' . $query . '%')
-                ->paginate(10);
+        if (!empty($params)) {
+            $budgets = Budget::orderBy('id', 'DESC');
 
-            return view('budgets.index', compact('budgets', 'query'));
+            if (!empty($params['name'])) {
+                $query['name'] = $params['name'];
+                $budgets->where('name', 'like', '%' . $params['name'] . '%');
+            }
+
+            if (!empty($params['budget_days'])) {
+                $query['budget_days'] = $params['budget_days'];
+                $budgets->where('budget_days', $params['budget_days']);
+            }
+
+            if (!empty($params['place_id'])) {
+                $query['place_id'] = $params['place_id'];
+                $budgets->where('place_id', $params['place_id']);
+            }
+
+            if (!empty($params['customer_id'])) {
+                $query['customer_id'] = $params['customer_id'];
+                $budgets->where('customer_id', $params['customer_id']);
+            }
+
+            if (!empty($params['status_id'])) {
+                $query['status_id'] = $params['status_id'];
+                $budgets->where('status_id', $params['status_id']);
+            }
+
+            $budgets = $budgets->paginate(30);
+
+            return view('budgets.index', compact('budgets', 'places', 'customers', 'statuses', 'query'));
         }
 
-        $budgets = Budget::paginate(10);
+        $budgets = Budget::orderBy('id', 'DESC')->paginate(30);
 
-        return view('budgets.index', compact('budgets', 'query'));
+        return view('budgets.index', compact('budgets', 'places', 'customers', 'statuses', 'query'));
     }
 
     public function create()
