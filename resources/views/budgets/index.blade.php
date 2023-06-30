@@ -4,7 +4,7 @@
     </h2>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <div class="intro-y col-span-12">
-            <form action="{{ route('budgets.index') }}" method="GET" class="flex">
+            <form action="{{ route('budgets.index') }}" method="GET">
                 <!-- BEGIN: Form Layout -->
                 <div class="intro-y box p-5">
                     <div class="sm:grid grid-cols-5 gap-2">

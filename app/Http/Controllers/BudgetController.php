@@ -21,6 +21,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class BudgetController extends Controller
 {
@@ -49,7 +50,15 @@ class BudgetController extends Controller
 
             if (!empty($params['budget_days'])) {
                 $query['budget_days'] = $params['budget_days'];
-                $budgets->where('budget_days', $params['budget_days']);
+
+                $budgetDays = explode('-', $params['budget_days']);
+                $start = explode('/', trim($budgetDays[0]));
+                $startDay = $start[2] . '-' . $start[1] . '-' . $start[0];
+                $end = explode('/', trim($budgetDays[1]));
+                $endDay = $end[2] . '-' . $end[1] . '-' . $end[0];
+
+                $budgets->whereRaw("STR_TO_DATE(SUBSTRING_INDEX(budget_days, ' - ', 1), '%d/%m/%Y') >= '" . $startDay . "'");
+                $budgets->whereRaw("STR_TO_DATE(SUBSTRING_INDEX(budget_days, ' - ', 1), '%d/%m/%Y') <= '" . $endDay . "'");
             }
 
             if (!empty($params['place_id'])) {
