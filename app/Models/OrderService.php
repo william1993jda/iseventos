@@ -38,4 +38,9 @@ class OrderService extends Model
     {
         return $this->hasMany(OrderServiceRoomProduct::class);
     }
+
+    public function groups()
+    {
+        return $this->hasMany(OrderServiceRoomGroup::class);
+    }
 }

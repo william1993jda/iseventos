@@ -34,6 +34,7 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\OsStatusController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrderServiceCheckController;
 use App\Http\Controllers\OsCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OsProductController;
@@ -179,6 +180,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('orderServices/room/freelancer/{orderServiceRoomFreelancer}', [OrderServiceController::class, 'roomFreelancerDestroy'])->name('orderServices.room.freelancer.destroy');
     Route::resource('orderServices', OrderServiceController::class)->names('orderServices');
     Route::resource('orderServices.documents', OrderServiceDocumentController::class)->names('orderServices.documents');
+    Route::resource('orderServices.checks', OrderServiceCheckController::class)->names('orderServices.checks');
 
     Route::any('/imports/products', [ImportController::class, 'products'])->name('imports.products');
     Route::any('/imports/os-products', [ImportController::class, 'osProducts'])->name('imports.os-products');

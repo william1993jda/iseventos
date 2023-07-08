@@ -66,7 +66,8 @@ class OrderServiceController extends Controller
             return redirect()->route('orderServices.index')->with('warning', 'Já existem 3 ou mais eventos nesta mesma data.');
         }
 
-        return redirect()->route('orderServices.index');
+        // return redirect()->route('orderServices.index');
+        return redirect()->route('orderServices.mount', $orderService->id);
     }
 
     public function edit(OrderService $orderService, $showMode = false)
