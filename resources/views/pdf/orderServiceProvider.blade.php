@@ -147,7 +147,7 @@
     <tbody>
         <tr>
             <td style="text-align:left; border:none;">
-                <strong>Data Inicio</strong>
+                <strong>Data Início</strong>
             </td>
             <td style="text-align:left; border:none;">
                 <strong>Data Fim</strong>

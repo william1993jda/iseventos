@@ -86,26 +86,26 @@
     </tbody>
 </table>
 @if (!empty($agency))
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <tbody>
-            <tr>
-                <td style="text-align:left; border:none;">
-                    <strong>Agência</strong>
-                </td>
-            </tr>
-            <tr>
-                <td style="border:none;">
-                    {{ $agency }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none;">
+                <strong>Agência</strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="border:none;">
+                {{ $agency }}
+            </td>
+        </tr>
+    </tbody>
+</table>
 @endif
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tbody>
         <tr>
             <td style="text-align:left; border:none;">
-                <strong>Data Inicio</strong>
+                <strong>Data Início</strong>
             </td>
             <td style="text-align:left; border:none;">
                 <strong>Data Fim</strong>
@@ -134,26 +134,26 @@
     </tbody>
 </table>
 @if (!empty($public) || !empty($situation))
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <tbody>
-            <tr>
-                <td style="text-align:left; border:none;">
-                    <strong>Público</strong>
-                </td>
-                <td style="text-align:left; border:none;">
-                    <strong>Situação</strong>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align:left; border:none;">
-                    {{ $public }}
-                </td>
-                <td style="text-align:left; border:none;">
-                    {{ $situation }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none;">
+                <strong>Público</strong>
+            </td>
+            <td style="text-align:left; border:none;">
+                <strong>Situação</strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none;">
+                {{ $public }}
+            </td>
+            <td style="text-align:left; border:none;">
+                {{ $situation }}
+            </td>
+        </tr>
+    </tbody>
+</table>
 @endif
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tbody>
@@ -168,9 +168,9 @@
         <tr>
             <td style="text-align:left; border:none;">
                 @if (!empty($place))
-                    {{ $place }}
+                {{ $place }}
                 @else
-                    &nbsp;
+                &nbsp;
                 @endif
             </td>
             <td style="text-align:left; border:none;">
@@ -189,9 +189,9 @@
         <tr>
             <td style="text-align:left; border:none;">
                 @if (!empty($observation))
-                    {!! nl2br($observation) !!}
+                {!! nl2br($observation) !!}
                 @else
-                    &nbsp;
+                &nbsp;
                 @endif
             </td>
         </tr>
@@ -201,58 +201,58 @@
 <br />
 
 @foreach ($rooms as $room)
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <thead>
-            <tr>
-                <th style="text-align:center; background-color: #FFF;">
-                    {{ $room['place_room_name'] }}
-                </th>
-            </tr>
-        </thead>
-    </table>
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <thead>
+        <tr>
+            <th style="text-align:center; background-color: #FFF;">
+                {{ $room['place_room_name'] }}
+            </th>
+        </tr>
+    </thead>
+</table>
 
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <thead>
-            <tr>
-                <th style="text-align:left; width: 100%;">
-                    EQUIPAMENTOS
-                </th>
-                @foreach (explode(',', $room['days']) as $roomDate)
-                    <th style="text-align:center; width: 60px;">
-                        {{ substr($roomDate, 0, 5) }}
-                    </th>
-                @endforeach
-                <th style="text-align:center; width: 60px;">
-                    Quantidade
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($room['categories'] as $category)
-                <tr>
-                    <td><strong>{{ $category['name'] }}</strong></td>
-                    <td colspan="{{ count(explode(',', $room['days'])) + 1 1}}">&nbsp;</td>
-                </tr>
-                @foreach ($category['products'] as $product)
-                    @php
-                        $days = count(explode(',', $product['days']));
-                    @endphp
-                    <tr>
-                        <td style="text-align:left;">{{ $product['product']['name'] }}</td>
-                        @foreach (explode(',', $room['days']) as $roomDate)
-                            <td style="text-align:center;">
-                                @if (in_array($roomDate, explode(',', $product['days'])))
-                                    x
-                                @endif
-                            </td>
-                        @endforeach
-                        <td style="text-align:center;">
-                            {{ $product['quantity'] }}
-                        </td>
-                    </tr>
-                @endforeach
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <thead>
+        <tr>
+            <th style="text-align:left; width: 100%;">
+                EQUIPAMENTOS
+            </th>
+            @foreach (explode(',', $room['days']) as $roomDate)
+            <th style="text-align:center; width: 60px;">
+                {{ substr($roomDate, 0, 5) }}
+            </th>
             @endforeach
-        </tbody>
-    </table>
-    <br />
+            <th style="text-align:center; width: 60px;">
+                Quantidade
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($room['categories'] as $category)
+        <tr>
+            <td><strong>{{ $category['name'] }}</strong></td>
+            <td colspan="{{ count(explode(',', $room['days'])) + 1 1}}">&nbsp;</td>
+        </tr>
+        @foreach ($category['products'] as $product)
+        @php
+        $days = count(explode(',', $product['days']));
+        @endphp
+        <tr>
+            <td style="text-align:left;">{{ $product['product']['name'] }}</td>
+            @foreach (explode(',', $room['days']) as $roomDate)
+            <td style="text-align:center;">
+                @if (in_array($roomDate, explode(',', $product['days'])))
+                x
+                @endif
+            </td>
+            @endforeach
+            <td style="text-align:center;">
+                {{ $product['quantity'] }}
+            </td>
+        </tr>
+        @endforeach
+        @endforeach
+    </tbody>
+</table>
+<br />
 @endforeach

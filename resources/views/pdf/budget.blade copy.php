@@ -86,26 +86,26 @@
     </tbody>
 </table>
 @if (!empty($agency))
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <tbody>
-            <tr>
-                <td style="text-align:left; border:none;">
-                    <strong>Agência</strong>
-                </td>
-            </tr>
-            <tr>
-                <td style="border:none;">
-                    {{ $agency }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none;">
+                <strong>Agência</strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="border:none;">
+                {{ $agency }}
+            </td>
+        </tr>
+    </tbody>
+</table>
 @endif
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tbody>
         <tr>
             <td style="text-align:left; border:none;">
-                <strong>Data Inicio</strong>
+                <strong>Data Início</strong>
             </td>
             <td style="text-align:left; border:none;">
                 <strong>Data Fim</strong>
@@ -134,26 +134,26 @@
     </tbody>
 </table>
 @if (!empty($public) || !empty($situation))
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <tbody>
-            <tr>
-                <td style="text-align:left; border:none;">
-                    <strong>Público</strong>
-                </td>
-                <td style="text-align:left; border:none;">
-                    <strong>Situação</strong>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align:left; border:none;">
-                    {{ $public }}
-                </td>
-                <td style="text-align:left; border:none;">
-                    {{ $situation }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none;">
+                <strong>Público</strong>
+            </td>
+            <td style="text-align:left; border:none;">
+                <strong>Situação</strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none;">
+                {{ $public }}
+            </td>
+            <td style="text-align:left; border:none;">
+                {{ $situation }}
+            </td>
+        </tr>
+    </tbody>
+</table>
 @endif
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tbody>
@@ -168,9 +168,9 @@
         <tr>
             <td style="text-align:left; border:none;">
                 @if (!empty($place))
-                    {{ $place }}
+                {{ $place }}
                 @else
-                    &nbsp;
+                &nbsp;
                 @endif
             </td>
             <td style="text-align:left; border:none;">
@@ -189,9 +189,9 @@
         <tr>
             <td style="text-align:left; border:none;">
                 @if (!empty($observation))
-                    {!! nl2br($observation) !!}
+                {!! nl2br($observation) !!}
                 @else
-                    &nbsp;
+                &nbsp;
                 @endif
             </td>
         </tr>
@@ -207,9 +207,9 @@
         <tr>
             <td style="text-align:left; border:none;">
                 @if (!empty($commercial_conditions))
-                    {!! nl2br($commercial_conditions) !!}
+                {!! nl2br($commercial_conditions) !!}
                 @else
-                    &nbsp;
+                &nbsp;
                 @endif
             </td>
         </tr>
@@ -219,94 +219,94 @@
 <br />
 @php $total = 0; @endphp
 @foreach ($rooms as $room)
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <thead>
-            <tr>
-                <th style="text-align:center; background-color: #FFF;">
-                    {{ $room['place_room_name'] }}
-                </th>
-            </tr>
-        </thead>
-    </table>
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <thead>
+        <tr>
+            <th style="text-align:center; background-color: #FFF;">
+                {{ $room['place_room_name'] }}
+            </th>
+        </tr>
+    </thead>
+</table>
 
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <thead>
-            <tr>
-                <th style="text-align:left; width: 100%;">
-                    EQUIPAMENTOS
-                </th>
-                @foreach ($room['days'] as $roomDate)
-                    <th style="text-align:center; width: 60px;">
-                        {{ substr($roomDate, 0, 5) }}
-                    </th>
-                @endforeach
-                <th style="text-align:center; width: 60px;">
-                    Valor
-                </th>
-                <th style="text-align:center; width: 60px;">
-                    Quantidade
-                </th>
-                <th style="text-align:center; width: 80px;">
-                    Total
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($room['categories'] as $category)
-                <tr>
-                    <td><strong>{{ $category['name'] }}</strong></td>
-                    <td colspan="{{ count($room['days']) + 3 }}">&nbsp;</td>
-                </tr>
-                @foreach ($category['products'] as $product)
-                    @php
-                        $days = count(explode(',', $product['days']));
-                        $total += $product['quantity'] * $product['price'] * $days;
-                    @endphp
-                    <tr>
-                        <td style="text-align:left;">{{ $product['product']['name'] }}</td>
-                        @foreach ($room['days'] as $roomDate)
-                            <td style="text-align:center;">
-                                @if (in_array($roomDate, explode(',', $product['days'])))
-                                    x
-                                @endif
-                            </td>
-                        @endforeach
-                        <td style="text-align:center;">
-                            {{ number_format($product['price'], 2, ',', '.') }}
-                        </td>
-                        <td style="text-align:center;">
-                            {{ $product['quantity'] }}
-                        </td>
-                        <td style="text-align:right;">
-                            {{ number_format($product['quantity'] * $product['price'] * $days, 2, ',', '.') }}
-                        </td>
-                    </tr>
-                @endforeach
-                @foreach ($category['labors'] as $labor)
-                    @php
-                        $days = $labor['days'];
-                        $total += $labor['quantity'] * $labor['price'] * $days;
-                    @endphp
-                    <tr>
-                        <td>{{ $labor['labor']['name'] }}</td>
-                        <td style="text-align:right;" colspan="{{ count($room['days']) }}">
-                            {{ $labor['days'] }}&nbsp;&nbsp;diárias
-                        </td>
-                        <td style="text-align:right;">
-                            {{ number_format($labor['price'], 2, ',', '.') }}
-                        </td>
-                        <td style="text-align:center;">
-                            {{ $labor['quantity'] }}
-                        </td>
-                        <td style="text-align:right;">
-                            {{ number_format($labor['quantity'] * $labor['price'] * $labor['days'], 2, ',', '.') }}
-                        </td>
-                    </tr>
-                @endforeach
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <thead>
+        <tr>
+            <th style="text-align:left; width: 100%;">
+                EQUIPAMENTOS
+            </th>
+            @foreach ($room['days'] as $roomDate)
+            <th style="text-align:center; width: 60px;">
+                {{ substr($roomDate, 0, 5) }}
+            </th>
             @endforeach
-        </tbody>
-    </table>
-    <br />
+            <th style="text-align:center; width: 60px;">
+                Valor
+            </th>
+            <th style="text-align:center; width: 60px;">
+                Quantidade
+            </th>
+            <th style="text-align:center; width: 80px;">
+                Total
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($room['categories'] as $category)
+        <tr>
+            <td><strong>{{ $category['name'] }}</strong></td>
+            <td colspan="{{ count($room['days']) + 3 }}">&nbsp;</td>
+        </tr>
+        @foreach ($category['products'] as $product)
+        @php
+        $days = count(explode(',', $product['days']));
+        $total += $product['quantity'] * $product['price'] * $days;
+        @endphp
+        <tr>
+            <td style="text-align:left;">{{ $product['product']['name'] }}</td>
+            @foreach ($room['days'] as $roomDate)
+            <td style="text-align:center;">
+                @if (in_array($roomDate, explode(',', $product['days'])))
+                x
+                @endif
+            </td>
+            @endforeach
+            <td style="text-align:center;">
+                {{ number_format($product['price'], 2, ',', '.') }}
+            </td>
+            <td style="text-align:center;">
+                {{ $product['quantity'] }}
+            </td>
+            <td style="text-align:right;">
+                {{ number_format($product['quantity'] * $product['price'] * $days, 2, ',', '.') }}
+            </td>
+        </tr>
+        @endforeach
+        @foreach ($category['labors'] as $labor)
+        @php
+        $days = $labor['days'];
+        $total += $labor['quantity'] * $labor['price'] * $days;
+        @endphp
+        <tr>
+            <td>{{ $labor['labor']['name'] }}</td>
+            <td style="text-align:right;" colspan="{{ count($room['days']) }}">
+                {{ $labor['days'] }}&nbsp;&nbsp;diárias
+            </td>
+            <td style="text-align:right;">
+                {{ number_format($labor['price'], 2, ',', '.') }}
+            </td>
+            <td style="text-align:center;">
+                {{ $labor['quantity'] }}
+            </td>
+            <td style="text-align:right;">
+                {{ number_format($labor['quantity'] * $labor['price'] * $labor['days'], 2, ',', '.') }}
+            </td>
+        </tr>
+        @endforeach
+        @endforeach
+    </tbody>
+</table>
+<br />
 @endforeach
 
 <table style="border:none;border-collapse:collapse; width: 100%;">
@@ -317,26 +317,26 @@
 </table>
 
 @if (!empty($discount))
-    <table style="border:none;border-collapse:collapse; width: 100%;">
-        <tr>
-            @if ($discount_type == 'percent')
-                @php
-                    $percentage = $discount;
-                    
-                    $totalPercentage = ($percentage / 100) * $total;
-                @endphp
-                <td style="text-align:right;">TOTAL COM DESCONTO DE {{ $discount }}%:</td>
-                <td style="text-align:right; width: 80px;">
-                    <strong>{{ number_format($total - $totalPercentage, 2, ',', '.') }}</strong>
-                </td>
-            @else
-                <td style="text-align:right;">TOTAL COM DESCONTO DE {{ $discount }}:</td>
-                <td style="text-align:right; width: 80px;">
-                    <strong>{{ number_format($total - $discount, 2, ',', '.') }}</strong>
-                </td>
-            @endif
-        </tr>
-    </table>
+<table style="border:none;border-collapse:collapse; width: 100%;">
+    <tr>
+        @if ($discount_type == 'percent')
+        @php
+        $percentage = $discount;
+
+        $totalPercentage = ($percentage / 100) * $total;
+        @endphp
+        <td style="text-align:right;">TOTAL COM DESCONTO DE {{ $discount }}%:</td>
+        <td style="text-align:right; width: 80px;">
+            <strong>{{ number_format($total - $totalPercentage, 2, ',', '.') }}</strong>
+        </td>
+        @else
+        <td style="text-align:right;">TOTAL COM DESCONTO DE {{ $discount }}:</td>
+        <td style="text-align:right; width: 80px;">
+            <strong>{{ number_format($total - $discount, 2, ',', '.') }}</strong>
+        </td>
+        @endif
+    </tr>
+</table>
 @endif
 
 <br />

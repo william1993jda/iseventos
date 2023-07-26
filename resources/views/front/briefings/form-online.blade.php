@@ -43,19 +43,19 @@
                     <div>
                         <div class="sm:grid grid-cols-3 gap-2 mt-3">
                             <div class="sm:grid grid-cols-2 gap-2 mt-3">
-                                <x-forms.text name="start_date_mount" label="Inicio"
+                                <x-forms.text name="start_date_mount" label="Início"
                                     class="datepicker form-control w-full" data-single-mode="true" />
                                 <x-forms.text name="end_date_mount" label="Fim"
                                     class="datepicker form-control w-full" data-single-mode="true" />
                             </div>
                             <div class="sm:grid grid-cols-2 gap-2 mt-3">
-                                <x-forms.text name="start_date_rehearsal" label="Inicio"
+                                <x-forms.text name="start_date_rehearsal" label="Início"
                                     class="datepicker form-control w-full" data-single-mode="true" />
                                 <x-forms.text name="end_date_rehearsal" label="Fim"
                                     class="datepicker form-control w-full" data-single-mode="true" />
                             </div>
                             <div class="sm:grid grid-cols-2 gap-2 mt-3">
-                                <x-forms.text name="start_date_event" label="Inicio"
+                                <x-forms.text name="start_date_event" label="Início"
                                     class="datepicker form-control w-full" data-single-mode="true" />
                                 <x-forms.text name="end_date_event" label="Fim"
                                     class="datepicker form-control w-full" data-single-mode="true" />
