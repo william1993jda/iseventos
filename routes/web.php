@@ -74,7 +74,6 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
 Route::prefix('front')->group(function () {
     Route::get('briefings', [BriefingController::class, 'indexFront'])->name('front.briefings.index');
     Route::get('briefings/create/{type}', [BriefingController::class, 'createFront'])->name('front.briefings.create.type');
