@@ -16,12 +16,13 @@ class OsProductController extends Controller
 
         if ($query) {
             $osProducts = OsProduct::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('os-products.index', compact('osProducts', 'query'));
         }
 
-        $osProducts = OsProduct::paginate(10);
+        $osProducts = OsProduct::orderBy('name', 'ASC')->paginate(10);
 
         return view('os-products.index', compact('osProducts', 'query'));
     }

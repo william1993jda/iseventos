@@ -16,12 +16,13 @@ class AgencyController extends Controller
         if ($query) {
             $agencies = Agency::where('fantasy_name', 'like', '%' . $query . '%')
                 ->orWhere('email', 'like', '%' . $query . '%')
+                ->orderBy('fantasy_name', 'ASC')
                 ->paginate(10);
 
             return view('agencies.index', compact('agencies', 'query'));
         }
 
-        $agencies = Agency::paginate(10);
+        $agencies = Agency::orderBy('fantasy_name', 'ASC')->paginate(10);
 
         return view('agencies.index', compact('agencies', 'query'));
     }

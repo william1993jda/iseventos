@@ -15,14 +15,15 @@ class ProviderController extends Controller
         $query = $request->get('query');
 
         if ($query) {
-            $providers = Provider::where('name', 'like', '%' . $query . '%')
+            $providers = Provider::where('fantasy_name', 'like', '%' . $query . '%')
                 ->orWhere('email', 'like', '%' . $query . '%')
+                ->orderBy('fantasy_name', 'ASC')
                 ->paginate(10);
 
             return view('providers.index', compact('providers', 'query'));
         }
 
-        $providers = Provider::paginate(10);
+        $providers = Provider::orderBy('fantasy_name', 'ASC')->paginate(10);
 
         return view('providers.index', compact('providers', 'query'));
     }

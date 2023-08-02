@@ -17,12 +17,13 @@ class LaborController extends Controller
 
         if ($query) {
             $labors = Labor::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('labors.index', compact('labors', 'query'));
         }
 
-        $labors = Labor::paginate(10);
+        $labors = Labor::orderBy('name', 'ASC')->paginate(10);
 
         return view('labors.index', compact('labors', 'query'));
     }

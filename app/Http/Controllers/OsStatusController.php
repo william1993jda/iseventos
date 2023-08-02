@@ -16,12 +16,13 @@ class OsStatusController extends Controller
 
         if ($query) {
             $osStatuses = OsStatus::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('os-statuses.index', compact('osStatuses', 'query'));
         }
 
-        $osStatuses = OsStatus::paginate(10);
+        $osStatuses = OsStatus::orderBy('name', 'ASC')->paginate(10);
 
         return view('os-statuses.index', compact('osStatuses', 'query'));
     }
@@ -42,7 +43,7 @@ class OsStatusController extends Controller
 
     public function edit(OsStatus $OsStatus, $showMode = false)
     {
-        return view('os-statuses.form', compact('osStatus', 'showMode'));
+        return view('os-statuses.form', compact('OsStatus', 'showMode'));
     }
 
     public function update(OsStatus $osStatus, OsStatusRequest $request)

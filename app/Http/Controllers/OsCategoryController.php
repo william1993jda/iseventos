@@ -16,12 +16,13 @@ class OsCategoryController extends Controller
 
         if ($query) {
             $osCategories = OsCategory::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('os-categories.index', compact('osCategories', 'query'));
         }
 
-        $osCategories = OsCategory::paginate(10);
+        $osCategories = OsCategory::orderBy('name', 'ASC')->paginate(10);
 
         return view('os-categories.index', compact('osCategories', 'query'));
     }

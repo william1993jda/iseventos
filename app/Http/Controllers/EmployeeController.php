@@ -20,12 +20,13 @@ class EmployeeController extends Controller
                 ->orWhere('email', 'like', '%' . $query . '%')
                 ->whereNull('employees.deleted_at')
                 ->join('employees', 'users.id', '=', 'employees.user_id')
+                ->orderBy('users.name', 'ASC')
                 ->paginate(10);
 
             return view('employees.index', compact('employees', 'query'));
         }
 
-        $employees = User::join('employees', 'users.id', '=', 'employees.user_id')->whereNull('employees.deleted_at')->paginate(10);
+        $employees = User::join('employees', 'users.id', '=', 'employees.user_id')->whereNull('employees.deleted_at')->orderBy('users.name', 'ASC')->paginate(10);
 
         return view('employees.index', compact('employees', 'query'));
     }

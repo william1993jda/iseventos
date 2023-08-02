@@ -10,15 +10,15 @@
             <div class="hidden md:block mx-auto text-slate-500"></div>
         </div>
         <div class="intro-y col-span-12">
-            @if (empty($osStatus->id))
+            @if (empty($OsStatus->id))
                 {!! Form::open([
                     'route' => 'os-statuses.store',
                     'method' => 'post',
                     'class' => 'needs-validation',
                 ]) !!}
             @else
-                {!! Form::model($osStatus, [
-                    'route' => ['os-statuses.update', $osStatus->id],
+                {!! Form::model($OsStatus, [
+                    'route' => ['os-statuses.update', $OsStatus->id],
                     'method' => 'put',
                     'class' => 'needs-validation',
                 ]) !!}
@@ -28,10 +28,10 @@
                 <div class="sm:grid grid-cols-3 gap-2">
                     <x-forms.text name="name" label="Nome" />
                     <x-forms.text name="color" label="Cor" />
-                    <x-forms.checkbox name="active" label="Ativo" :options="$osStatus->getActive()" />
+                    <x-forms.checkbox name="active" label="Ativo" :options="$OsStatus->getActive()" />
                 </div>
 
-                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$osStatus" />
+                <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$OsStatus" />
             </div>
             {!! Form::close() !!}
             <!-- END: Form Layout -->

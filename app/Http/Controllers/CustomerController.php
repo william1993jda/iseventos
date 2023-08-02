@@ -13,16 +13,17 @@ class CustomerController extends Controller
     {
         $params = $request->all();
         $query = $request->get('query');
-
+        
         if ($query) {
-            $customers = Customer::where('name', 'like', '%' . $query . '%')
+            $customers = Customer::where('fantasy_name', 'like', '%' . $query . '%')
                 ->orWhere('email', 'like', '%' . $query . '%')
+                ->orderBy('fantasy_name', 'ASC')
                 ->paginate(10);
-
+                
             return view('customers.index', compact('customers', 'query'));
         }
 
-        $customers = Customer::paginate(10);
+        $customers = Customer::orderBy('fantasy_name', 'ASC')->paginate(10);
 
         return view('customers.index', compact('customers', 'query'));
     }

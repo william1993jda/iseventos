@@ -17,12 +17,13 @@ class ProductController extends Controller
 
         if ($query) {
             $products = Product::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('products.index', compact('products', 'query'));
         }
 
-        $products = Product::paginate(10);
+        $products = Product::orderBy('name', 'ASC')->paginate(10);
 
         return view('products.index', compact('products', 'query'));
     }

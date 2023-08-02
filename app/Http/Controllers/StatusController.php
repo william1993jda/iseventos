@@ -16,12 +16,13 @@ class StatusController extends Controller
 
         if ($query) {
             $statuses = Status::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('statuses.index', compact('statuses', 'query'));
         }
 
-        $statuses = Status::paginate(10);
+        $statuses = Status::orderBy('name', 'ASC')->paginate(10);
 
         return view('statuses.index', compact('statuses', 'query'));
     }

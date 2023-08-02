@@ -27,12 +27,13 @@ class BriefingController extends Controller
 
         if ($query) {
             $briefings = Briefing::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('briefings.index', compact('briefings', 'query'));
         }
 
-        $briefings = Briefing::paginate(10);
+        $briefings = Briefing::orderBy('name', 'ASC')->paginate(10);
 
         return view('briefings.index', compact('briefings', 'query'));
     }

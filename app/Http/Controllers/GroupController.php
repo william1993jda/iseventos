@@ -16,12 +16,13 @@ class GroupController extends Controller
 
         if ($query) {
             $groups = Group::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('groups.index', compact('groups', 'query'));
         }
 
-        $groups = Group::paginate(10);
+        $groups = Group::orderBy('name', 'ASC')->paginate(10);
 
         return view('groups.index', compact('groups', 'query'));
     }

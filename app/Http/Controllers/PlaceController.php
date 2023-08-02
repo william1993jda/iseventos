@@ -16,12 +16,13 @@ class PlaceController extends Controller
 
         if ($query) {
             $places = Place::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('places.index', compact('places', 'query'));
         }
 
-        $places = Place::paginate(10);
+        $places = Place::orderBy('name', 'ASC')->paginate(10);
 
         return view('places.index', compact('places', 'query'));
     }

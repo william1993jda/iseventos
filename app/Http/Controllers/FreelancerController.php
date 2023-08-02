@@ -18,12 +18,14 @@ class FreelancerController extends Controller
         if ($query) {
             $freelancers = Freelancer::where('name', 'like', '%' . $query . '%')
                 ->orWhere('email', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('freelancers.index', compact('freelancers', 'query'));
         }
 
-        $freelancers = Freelancer::paginate(10);
+        $freelancers = Freelancer::orderBy('name', 'ASC')->paginate(10);
+        // dd($freelancers);
 
         return view('freelancers.index', compact('freelancers', 'query'));
     }
