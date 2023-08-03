@@ -38,7 +38,7 @@
                     <x-forms.select name="role" label="Perfil de acesso" :options="$roles" />
                 </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
-                    <x-forms.text name="birthday" label="Data de Nascimento" mask="'99/99/9999'" />
+                    <x-forms.text name="birthday" label="Data de Nascimento" mask="'99/99/9999'" class="datepicker form-control w-full" data-single-mode="true" />
                     <x-forms.text name="identification" label="RG" />
                     <x-forms.text name="social_security" label="CPF" mask="'999.999.999-99'" />
                 </div>
