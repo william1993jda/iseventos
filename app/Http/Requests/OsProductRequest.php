@@ -27,13 +27,13 @@ class OsProductRequest extends FormRequest
             'os_category_id' => 'required|exists:os_categories,id',
             'name' => 'required',
             'customization' => 'boolean',
-            'price' => 'required',
             'active' => 'boolean',
-            'brand' => 'required',
-            'model' => 'required',
-            'serie' => 'required',
-            'dimensions' => 'required',
-            'weight' => 'required',
+            // 'price' => 'required',
+            // 'brand' => 'required',
+            // 'model' => 'required',
+            // 'serie' => 'required',
+            // 'dimensions' => 'required',
+            // 'weight' => 'required',
         ];
     }
 }

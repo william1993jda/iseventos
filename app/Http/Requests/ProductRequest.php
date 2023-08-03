@@ -27,7 +27,7 @@ class ProductRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'name' => 'required',
             'customization' => 'boolean',
-            'price' => 'required',
+            // 'price' => 'required',
             'active' => 'boolean',
         ];
     }
