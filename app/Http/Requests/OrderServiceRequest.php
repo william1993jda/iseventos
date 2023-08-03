@@ -24,7 +24,7 @@ class OrderServiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'os_status_id' => 'required|exists:os_statuses,id',
+            // 'os_status_id' => 'required|exists:os_statuses,id',
             'budget_id' => 'required|exists:budgets,id',
             'observation' => 'nullable',
         ];

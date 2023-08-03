@@ -30,12 +30,12 @@
             <!-- BEGIN: Form Layout -->
             <div class="intro-y box p-5">
                 <div class="sm:grid grid-cols-2 gap-2">
-                    <x-forms.select name="os_status_id" label="Status" :options="$osStatuses" />
+                    {{-- <x-forms.select name="os_status_id" label="Status" :options="$osStatuses" /> --}}
                     <x-forms.select name="budget_id" label="Orçamento" :options="$budgets" />
                 </div>
-                <div class="sm:grid grid-cols-1 gap-2 mt-3">
+                {{-- <div class="sm:grid grid-cols-1 gap-2 mt-3">
                     <x-forms.textarea name="observation" label="Observações" />
-                </div>
+                </div> --}}
                 <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$orderService" />
             </div>
             {!! Form::close() !!}

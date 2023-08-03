@@ -101,6 +101,7 @@ class OrderServiceController extends Controller
     public function store(OrderServiceRequest $request)
     {
         $params = $request->validated();
+        $params['os_status_id'] = 1;
         $params['os_number'] = (int) OrderService::max('os_number') + 1;
 
         $orderService = OrderService::create($params);
