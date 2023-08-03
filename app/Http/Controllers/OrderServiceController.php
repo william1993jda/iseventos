@@ -18,6 +18,9 @@ use App\Models\PlaceRoom;
 use App\Models\Provider;
 use App\Models\Settings;
 use App\Models\User;
+use App\Models\Customer;
+use App\Models\Place;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -26,19 +29,63 @@ class OrderServiceController extends Controller
 {
     public function index(Request $request)
     {
+        $places = Place::pluck('name', 'id')->prepend('Selecione', '');
+        $customers = Customer::pluck('fantasy_name', 'id')->prepend('Selecione', '');
+        $statuses = Status::pluck('name', 'id')->prepend('Selecione', '');
         $params = $request->all();
-        $query = $request->get('query');
+        
+        $query = [
+            'name' => '',
+            'budget_days' => '',
+            'place_id' => '',
+            'customer_id' => '',
+            'status_id' => '',
+        ];
 
-        if ($query) {
-            $orderServices = Budget::where('name', 'like', '%' . $query . '%')
-                ->paginate(10);
+        if (!empty($params)) {
+            $orderServices = Budget::orderBy('id', 'DESC');
 
-            return view('orderServices.index', compact('orderServices', 'query'));
+            if (!empty($params['name'])) {
+                $query['name'] = $params['name'];
+                $orderServices->where('name', 'like', '%' . $params['name'] . '%');
+            }
+
+            if (!empty($params['budget_days'])) {
+                $query['budget_days'] = $params['budget_days'];
+
+                $budgetDays = explode('-', $params['budget_days']);
+                $start = explode('/', trim($budgetDays[0]));
+                $startDay = $start[2] . '-' . $start[1] . '-' . $start[0];
+                $end = explode('/', trim($budgetDays[1]));
+                $endDay = $end[2] . '-' . $end[1] . '-' . $end[0];
+
+                $orderServices->whereRaw("STR_TO_DATE(SUBSTRING_INDEX(budget_days, ' - ', 1), '%d/%m/%Y') >= '" . $startDay . "'");
+                $orderServices->whereRaw("STR_TO_DATE(SUBSTRING_INDEX(budget_days, ' - ', 1), '%d/%m/%Y') <= '" . $endDay . "'");
+            }
+
+            if (!empty($params['place_id'])) {
+                $query['place_id'] = $params['place_id'];
+                $orderServices->where('place_id', $params['place_id']);
+            }
+
+            if (!empty($params['customer_id'])) {
+                $query['customer_id'] = $params['customer_id'];
+                $orderServices->where('customer_id', $params['customer_id']);
+            }
+
+            if (!empty($params['status_id'])) {
+                $query['status_id'] = $params['status_id'];
+                $orderServices->where('status_id', $params['status_id']);
+            }
+
+            $orderServices = $orderServices->paginate(30);
+
+            return view('orderServices.index', compact('orderServices', 'places', 'customers', 'statuses', 'query'));
         }
 
-        $orderServices = OrderService::paginate(10);
+        $orderServices = OrderService::orderBy('id', 'DESC')->paginate(10);
 
-        return view('orderServices.index', compact('orderServices', 'query'));
+        return view('orderServices.index', compact('orderServices', 'places', 'customers', 'statuses', 'query'));
     }
 
     public function create()

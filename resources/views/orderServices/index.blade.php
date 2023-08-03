@@ -3,21 +3,28 @@
         Ordem de Serviço
     </h2>
     <div class="grid grid-cols-12 gap-6 mt-5">
-        <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <form action="{{ route('orderServices.index') }}" method="GET" class="flex">
-                <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
-                    <div class="w-56 relative text-slate-500">
-                        <input type="text" name="query" class="form-control w-56 box pr-10" placeholder="Buscar..."
-                            value="{{ $query }}">
-                        <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-lucide="search"></i>
+        <div class="intro-y col-span-12">
+            <form action="{{ route('budgets.index') }}" method="GET">
+                <!-- BEGIN: Form Layout -->
+                <div class="intro-y box p-5">
+                    <div class="sm:grid grid-cols-5 gap-2">
+                        <x-forms.text name="name" label="Nome do Evento" :value="$query['name']" />
+                        <x-forms.text name="budget_days" label="Dias do evento" class="datepicker form-control w-full" data-daterange="true" :value="$query['budget_days']" />
+                        <x-forms.select name="place_id" label="Local" :options="$places" :selected="$query['place_id']" />
+                        <x-forms.select name="customer_id" label="Cliente" :options="$customers" :selected="$query['customer_id']" />
+                        <x-forms.select name="status_id" label="Status" :options="$statuses" :selected="$query['status_id']" />
+                    </div>
+                    <div class="flex mt-3">
+                        <div><button type="submit" class="btn btn-primary shadow-md">Buscar</button>
+                            <a href="{{ route('orderServices.index') }}" class="btn btn-secondary shadow-md ml-2">Limpar</a>
+                        </div>
+                        <div class="hidden md:block mx-auto text-slate-500"></div>
+                        <a href="{{ route('orderServices.create') }}" class="btn btn-primary shadow-md">Novo</a>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary shadow-md ml-2">Buscar</button>
-                <a href="{{ route('orderServices.index') }}" class="btn btn-secondary shadow-md ml-2">Limpar</a>
             </form>
-            <div class="hidden md:block mx-auto text-slate-500"></div>
-            <a href="{{ route('orderServices.create') }}" class="btn btn-primary shadow-md mr-2">Novo</a>
         </div>
+
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
             <table class="table table-report -mt-2">
@@ -35,8 +42,7 @@
                     @foreach ($orderServices as $orderService)
                         <tr class="intro-x">
                             <td>
-                                <a href="{{ route('orderServices.show', $orderService->id) }}"
-                                    class="font-medium whitespace-nowrap">{{ $orderService->budget->name }}</a>
+                                <a href="{{ route('orderServices.show', $orderService->id) }}" class="font-medium whitespace-nowrap">{{ $orderService->budget->name }}</a>
                             </td>
                             <td class="text-center">{{ $orderService->budget->budget_days }}</td>
                             <td class="text-center">{{ $orderService->budget->place->name }}</td>
@@ -44,8 +50,7 @@
                             <td class="text-center">{{ $orderService->osStatus->name }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <x-forms.buttons.icon route="orderServices.mount" :id="$orderService->id"
-                                        icon="clipboard-check" label="Montar" />
+                                    <x-forms.buttons.icon route="orderServices.mount" :id="$orderService->id" icon="clipboard-check" label="Montar" />
                                     <x-forms.buttons.destroy route="orderServices.destroy" :id="$orderService->id" />
                                 </div>
                             </td>
