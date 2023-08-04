@@ -35,6 +35,7 @@ use App\Http\Controllers\OsStatusController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderServiceCheckController;
+use App\Http\Controllers\OrderServiceExpenseController;
 use App\Http\Controllers\OsCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OsProductController;
@@ -160,7 +161,6 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('groups.products', GroupProductController::class)->names('groups.products');
 
-
     Route::post('budgets/customer-contacts', [BudgetController::class, 'getCustomerContacts'])->name('budgets.getCustomerContacts');
     Route::get('budgets/mount/{budget}', [BudgetController::class, 'mount'])->name('budgets.mount');
     Route::get('budgets/print/{budget}', [BudgetController::class, 'print'])->name('budgets.print');
@@ -180,6 +180,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('orderServices', OrderServiceController::class)->names('orderServices');
     Route::resource('orderServices.documents', OrderServiceDocumentController::class)->names('orderServices.documents');
     Route::resource('orderServices.checks', OrderServiceCheckController::class)->names('orderServices.checks');
+    Route::resource('orderServices.expenses', OrderServiceExpenseController::class)->names('orderServices.expenses');
 
     Route::any('/imports/products', [ImportController::class, 'products'])->name('imports.products');
     Route::any('/imports/os-products', [ImportController::class, 'osProducts'])->name('imports.os-products');

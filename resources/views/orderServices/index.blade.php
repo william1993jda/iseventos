@@ -51,6 +51,7 @@
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
                                     <x-forms.buttons.icon route="orderServices.mount" :id="$orderService->id" icon="clipboard-check" label="Montar" />
+                                    <x-forms.buttons.icon route="orderServices.expenses.index" :id="$orderService->id" icon="dollar-sign" label="Despesas" />
                                     <x-forms.buttons.destroy route="orderServices.destroy" :id="$orderService->id" />
                                 </div>
                             </td>
