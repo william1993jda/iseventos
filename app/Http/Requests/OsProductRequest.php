@@ -28,7 +28,7 @@ class OsProductRequest extends FormRequest
             'name' => 'required',
             'customization' => 'boolean',
             'active' => 'boolean',
-            // 'price' => 'required',
+            'price' => 'required',
             // 'brand' => 'required',
             // 'model' => 'required',
             // 'serie' => 'required',

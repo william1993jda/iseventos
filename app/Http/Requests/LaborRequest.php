@@ -24,7 +24,7 @@ class LaborRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_id' => 'required|exists:categories,id',
+            // 'category_id' => 'required|exists:categories,id',
             'name' => 'required',
             'price' => 'required',
             'active' => 'boolean',

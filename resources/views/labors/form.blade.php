@@ -25,11 +25,11 @@
             @endif
             <!-- BEGIN: Form Layout -->
             <div class="intro-y box p-5">
-                <div class="sm:grid grid-cols-2 gap-2">
-                    <x-forms.select name="category_id" label="Categoria" :options="$categories" />
+                <div class="sm:grid grid-cols-2 gap-1">
+                    {{-- <x-forms.select name="category_id" label="Categoria" :options="$categories" /> --}}
                     <x-forms.text name="name" label="Nome" />
-                </div>
-                <div class="sm:grid grid-cols-2 gap-2 mt-3">
+                    {{-- </div>
+                <div class="sm:grid grid-cols-2 gap-2 mt-3"> --}}
 
                     <x-forms.currency name="price" label="Preço" />
                     <x-forms.checkbox name="active" label="Ativo" :options="$labor->getActive()" />
