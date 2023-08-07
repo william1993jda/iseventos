@@ -30,7 +30,7 @@ class DashboardController extends Controller
                     "start" => $budget->mount_date->format('Y-m-d'),
                     "end" => $budget->unmount_date->addDay()->format('Y-m-d'),
                     "color" => $budget->status->color,
-                    "place" => $budget->place->name,
+                    "place" => !empty($budget->place_id) ? $budget->place->name : null,
                     "dates" => $budget->budget_days,
                     "customer" => $budget->customer->fantasy_name,
                     "status" => $budget->status->name,

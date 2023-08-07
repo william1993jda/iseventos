@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Budget;
 use App\Models\BudgetRoomLabor;
 use App\Models\BudgetRoomProduct;
 use App\Models\Category;
@@ -16,6 +17,7 @@ class BudgetMountLivewire extends Component
 {
     public $budget;
     public $categories = [];
+    public $labors = [];
     public $products = [];
     public $placeRooms = [];
     public $rooms = [];
@@ -30,11 +32,13 @@ class BudgetMountLivewire extends Component
     public $feeDiscountTypes = [];
     public $dataStatus = [];
     public $listProducts = [];
+    public $listLabors = [];
     public $canEdit = false;
 
     public function mount()
     {
         $this->categories = Category::pluck('name', 'id')->prepend('Selecione', '');
+        $this->labors = Labor::pluck('name', 'id')->prepend('Selecione', '');
 
         if (!empty($this->budget->place_id)) {
             $this->placeRooms = $this->budget->place->rooms->pluck('name', 'id')->prepend('Selecione', '');
@@ -57,8 +61,11 @@ class BudgetMountLivewire extends Component
     public function mountBudget()
     {
         $this->dataProduct = [];
+        $this->dataLabor = [];
 
         $budgetRoomProducts = BudgetRoomProduct::where('budget_id', $this->budget->id)->get();
+        $budgetRoomLabors = BudgetRoomLabor::where('budget_id', $this->budget->id)->get();
+
         $categories = Product::whereIn('id', $budgetRoomProducts->pluck('product_id')->toArray())->groupBy('category_id')->pluck('category_id')->toArray();
 
         $arCategories = [];
@@ -80,6 +87,20 @@ class BudgetMountLivewire extends Component
             ];
 
             array_push($arCategories, $obCategory);
+        }
+
+        $arLabors = [];
+
+        foreach ($budgetRoomLabors as $labor) {
+            $obLabor = [
+                'id' => $labor->labor->id,
+                'name' => $labor->labor->name,
+                'quantity' => $labor->quantity,
+                'days' => $labor->days,
+                'price' => $labor->price,
+            ];
+
+            array_push($arLabors, $obLabor);
         }
 
         $budgetDays = explode('-', $this->budget->budget_days);
@@ -106,6 +127,11 @@ class BudgetMountLivewire extends Component
         $this->listProducts = [
             'days' => $days,
             'categories' => $arCategories,
+        ];
+
+        $this->listLabors = [
+            'days' => $days,
+            'labors' => $arLabors,
         ];
 
         // dd($this->listProducts);
@@ -224,9 +250,9 @@ class BudgetMountLivewire extends Component
         $this->emit('addDiscount');
     }
 
-    public function addStatus()
+    public function editStatus()
     {
-        $this->emit('addStatus');
+        $this->emit('editStatus');
     }
 
     public function editObservation()
@@ -266,8 +292,10 @@ class BudgetMountLivewire extends Component
     public function saveObservation()
     {
         $this->budget->update($this->dataBudget);
+        $this->budget->refresh();
 
-        return $this->emit('saved');
+        $this->dataBudget = [];
+        $this->emit('observationUpdated');
     }
 
     public function saveProduct()
@@ -334,49 +362,33 @@ class BudgetMountLivewire extends Component
 
     public function saveLabor()
     {
-        // $this->validate([
-        //     'dataLabor.category_id' => 'required',
-        //     'dataLabor.labor_id' => 'required',
-        //     'dataLabor.place_room_id' => 'required',
-        //     'dataLabor.price' => 'required',
-        //     'dataLabor.quantity' => 'required',
-        // ], [], [
-        //     'dataLabor.category_id' => 'categoria',
-        //     'dataLabor.labor_id' => 'equipamento',
-        //     'dataLabor.place_room_id' => 'sala',
-        //     'dataLabor.price' => 'preço',
-        //     'dataLabor.quantity' => 'quantidade',
-        // ]);
-
-        if (empty($this->dataLabor['category_id'])) {
-            return $this->emit('laborError', true);
-        }
+        $errors = [];
 
         if (empty($this->dataLabor['labor_id'])) {
-            return $this->emit('laborError', true);
-        }
-
-        if (empty($this->dataLabor['place_room_id'])) {
-            return $this->emit('laborError', true);
+            $errors['labor_id'] = 'o campo mão de obra é obrigatório';
         }
 
         if (empty($this->dataLabor['price'])) {
-            return $this->emit('laborError', true);
+            $errors['price'] = 'o campo preço é obrigatório';
         }
 
         if (empty($this->dataLabor['quantity'])) {
-            return $this->emit('laborError', true);
+            $errors['quantity'] = 'o campo quantidade é obrigatório';
         }
 
         if (empty($this->dataLabor['days'])) {
-            return $this->emit('laborError', true);
+            $errors['quantity'] = 'o campo dias é obrigatório';
         }
 
-        $this->emit('laborError', false);
+        if (count($errors) > 0) {
+            return $this->emit('laborError', $errors);
+        } else {
+            $this->emit('laborError', null);
+        }
 
         BudgetRoomLabor::create([
             'budget_id' => $this->budget->id,
-            'place_room_id' => $this->dataLabor['place_room_id'],
+            'place_room_id' => !empty($this->dataLabor['place_room_id']) ? $this->dataLabor['place_room_id'] : null,
             'labor_id' => $this->dataLabor['labor_id'],
             'days' => $this->dataLabor['days'],
             'quantity' => $this->dataLabor['quantity'],
@@ -384,8 +396,9 @@ class BudgetMountLivewire extends Component
         ]);
 
         $this->dataLabor = [];
+        $this->emit('laborSaved');
 
-        return $this->emit('saved');
+        return $this->mountBudget();
     }
 
     public function saveFee()
@@ -459,12 +472,6 @@ class BudgetMountLivewire extends Component
 
     public function saveStatus()
     {
-        // $this->validate([
-        //     'dataStatus.status_id' => 'required',
-        // ], [], [
-        //     'dataStatus.status_id' => 'status',
-        // ]);
-
         if (empty($this->dataStatus['status_id'])) {
             return $this->emit('statusError', true);
         }
@@ -475,7 +482,8 @@ class BudgetMountLivewire extends Component
             'status_id' => $this->dataStatus['status_id']
         ]);
 
-        return $this->emit('saved');
+        $this->dataStatus = [];
+        $this->emit('statusUpdated');
     }
 
     public function confirmProductRemove(BudgetRoomProduct $budgetRoomProduct)
