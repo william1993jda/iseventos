@@ -36,6 +36,10 @@
                     <x-forms.text name="name" label="Nome" />
                     <x-forms.email name="email" label="E-mail" />
                 </div>
+                <div class="sm:grid grid-cols-2 gap-2 mt-3">
+                    <x-forms.select name="labor_id" label="Mão de obra" :options="$labors" />
+                    <x-forms.currency name="price" label="Preço" />
+                </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
                     <x-forms.text name="birthday" label="Data de Nascimento" mask="'99/99/9999'" />
                     <x-forms.text name="identification" label="RG" />

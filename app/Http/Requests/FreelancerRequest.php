@@ -49,7 +49,9 @@ class FreelancerRequest extends FormRequest
             'spouse_identification' => 'nullable|string|max:255',
             'spouse_social_security' => 'nullable|string|max:255',
             'spouse_birth_date' => 'nullable|string',
-            'contract' => 'nullable|string|max:255'
+            'contract' => 'nullable|string|max:255',
+            'labor_id' => 'required',
+            'price' => 'required'
         ];
     }
 
@@ -82,7 +84,9 @@ class FreelancerRequest extends FormRequest
             'spouse_identification' => 'rg do cônjuge',
             'spouse_social_security' => 'cpf do cônjuge',
             'spouse_birth_date' => 'data de nascimento do cônjuge',
-            'contract' => 'contrato'
+            'contract' => 'contrato',
+            'labor_id' => 'mão de obra',
+            'price' => 'preço',
         ];
     }
 }
