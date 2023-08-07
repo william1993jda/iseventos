@@ -57,7 +57,7 @@ class Budget extends Model
 
         static::updated(function ($model) {
             $model->last_user_id = auth()->user()->id;
-            $model->save();
+            $model->saveQuietly();
         });
     }
 

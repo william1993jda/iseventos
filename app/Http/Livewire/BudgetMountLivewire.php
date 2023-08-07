@@ -25,7 +25,8 @@ class BudgetMountLivewire extends Component
     public $status = [];
     public $dataBudget = [];
     public $dataProduct = [];
-    public $dataRoom = [];
+    public $dataRoomProduct = [];
+    public $dataRoomLabor = [];
     public $dataLabor = [];
     public $dataFee = [];
     public $dataDiscount = [];
@@ -76,7 +77,16 @@ class BudgetMountLivewire extends Component
 
             foreach ($budgetRoomProducts as $product) {
                 if ($product->product->category_id == $categoryId) {
-                    array_push($categoryProducts, $product->toArray());
+                    $obProduct = [
+                        'id' => $product->id,
+                        'name' => $product->product->name,
+                        'quantity' => $product->quantity,
+                        'days' => $product->days,
+                        'price' => $product->price,
+                        'place_room_id' => $product->place_room_id,
+                    ];
+
+                    array_push($categoryProducts, $obProduct);
                 }
             }
 
@@ -98,6 +108,7 @@ class BudgetMountLivewire extends Component
                 'quantity' => $labor->quantity,
                 'days' => $labor->days,
                 'price' => $labor->price,
+                'place_room_id' => $labor->place_room_id,
             ];
 
             array_push($arLabors, $obLabor);
@@ -488,6 +499,13 @@ class BudgetMountLivewire extends Component
         $this->emit('statusUpdated');
     }
 
+    public function updatePlaceRooms()
+    {
+        if (!empty($this->budget->place_id)) {
+            $this->placeRooms = $this->budget->place->rooms->pluck('name', 'id')->prepend('Selecione', '');
+        }
+    }
+
     public function confirmProductRemove(BudgetRoomProduct $budgetRoomProduct)
     {
         return $this->emit('confirmProductRemove', $budgetRoomProduct->id);
@@ -517,13 +535,48 @@ class BudgetMountLivewire extends Component
         $this->budget->refresh();
     }
 
-    public function saveChangeRoom($products)
+    public function saveChangeRoomProduct($products)
     {
+        $errors = [];
+
+        if (empty($this->dataRoomProduct['place_room_id'])) {
+            $errors['place_room_id'] = 'o campo sala é obrigatório';
+        }
+
+        if (count($errors) > 0) {
+            return $this->emit('roomChangeProductError', $errors);
+        } else {
+            $this->emit('roomChangeProductError', null);
+        }
+
         BudgetRoomProduct::whereIn('id', $products)->update([
-            'place_room_id' => $this->dataRoom['place_room_id'],
+            'place_room_id' => $this->dataRoomProduct['place_room_id'],
         ]);
 
-        $this->emit('roomChanged');
+        $this->emit('roomChangedProduct');
+
+        return $this->mountBudget();
+    }
+
+    public function saveChangeRoomLabor($labors)
+    {
+        $errors = [];
+
+        if (empty($this->dataRoomLabor['place_room_id'])) {
+            $errors['place_room_id'] = 'o campo sala é obrigatório';
+        }
+
+        if (count($errors) > 0) {
+            return $this->emit('roomChangeLaborError', $errors);
+        } else {
+            $this->emit('roomChangeLaborError', null);
+        }
+
+        BudgetRoomLabor::whereIn('id', $labors)->update([
+            'place_room_id' => $this->dataRoomLabor['place_room_id'],
+        ]);
+
+        $this->emit('roomChangedLabor');
 
         return $this->mountBudget();
     }

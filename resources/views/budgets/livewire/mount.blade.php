@@ -179,7 +179,8 @@
                     <h2 class="font-medium text-base mr-auto">EQUIPAMENTOS</h2>
                     <div class="hidden md:block mx-auto text-slate-500"></div>
                     @if ($canEdit)
-                        <button class="btn btn-primary shadow-md mr-2" onclick="changeRoom()">Trocar sala</button>
+                        <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomProduct()">Trocar
+                            sala</button>
                     @else
                         <button class="btn btn-primary shadow-md mr-2" disabled>Trocar sala</button>
                     @endif
@@ -222,7 +223,7 @@
                                             <input type="checkbox" class="checkbox_product"
                                                 value="{{ $product['id'] }}">
                                         </td>
-                                        <td class="whitespace">{{ $product['product']['name'] }}</td>
+                                        <td class="whitespace">{{ $product['name'] }}</td>
                                         @foreach ($listProducts['days'] as $day)
                                             <td class="whitespace-nowrap">
                                                 @if ($canEdit)
@@ -324,7 +325,7 @@
                     <h2 class="font-medium text-base mr-auto">MÃO DE OBRA</h2>
                     <div class="hidden md:block mx-auto text-slate-500"></div>
                     @if ($canEdit)
-                        <button class="btn btn-primary shadow-md mr-2" onclick="changeLaborRoom()">Trocar
+                        <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomLabor()">Trocar
                             sala</button>
                     @else
                         <button class="btn btn-primary shadow-md mr-2" disabled>Trocar sala</button>
@@ -566,7 +567,9 @@
     @endcomponent
     @component('budgets.partials.modal-labor', ['labors' => $labors, 'placeRooms' => $placeRooms])
     @endcomponent
-    @component('budgets.partials.modal-change-room', ['placeRooms' => $placeRooms])
+    @component('budgets.partials.modal-change-room-product', ['placeRooms' => $placeRooms])
+    @endcomponent
+    @component('budgets.partials.modal-change-room-labor', ['placeRooms' => $placeRooms])
     @endcomponent
     @component('budgets.partials.modal-fee', ['feeDiscountTypes' => $feeDiscountTypes])
     @endcomponent

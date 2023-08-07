@@ -22,7 +22,7 @@
                             wire:model="dataLabor.place_room_id" />
                         <x-forms.text name="labor_price" label="Preço" wire:model="dataLabor.price" />
                         <x-forms.number name="days" label="Diárias" wire:model="dataLabor.days" />
-                        <x-forms.number name="quantity" label="Quantidade" wire:model="dataLabor.quantity" />
+                        <x-forms.number name="labor_quantity" label="Quantidade" wire:model="dataLabor.quantity" />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -53,7 +53,7 @@
                 selectLaborPlaceRoomId = document.getElementById('place_room_id').tomselect;
                 inputLaborPrice = document.getElementById('labor_price');
                 inputLaborDays = document.getElementById('days');
-                inputLaborQuantity = document.getElementById('quantity');
+                inputLaborQuantity = document.getElementById('labor_quantity');
                 alertLaborError = document.getElementById('alert-labor-error');
                 alertLaborBodyError = document.getElementById('alert-labor-body-error');
             });
