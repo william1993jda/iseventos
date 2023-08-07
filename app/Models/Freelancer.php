@@ -22,6 +22,8 @@ class Freelancer extends Model
         'admission_date',
         'name',
         'email',
+        'labor_id',
+        'price',
         'birthday',
         'phone',
         'cellphone',
@@ -66,6 +68,14 @@ class Freelancer extends Model
     public function setEinAttribute($value)
     {
         $this->attributes['ein'] = preg_replace('/\D/', '', $value);
+    }
+
+    public function setPriceAttribute($value)
+    {
+        $price = str_replace('.', '', $value);
+        $price = str_replace(',', '.', $price);
+
+        $this->attributes['price'] = $price;
     }
 
     public function setEmergencyPhoneAttribute($value)

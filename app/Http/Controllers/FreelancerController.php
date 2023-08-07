@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FreelancerRequest;
 use App\Models\Freelancer;
 use App\Models\User;
+use App\Models\Labor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -34,8 +35,9 @@ class FreelancerController extends Controller
     {
         $freelancer = new Freelancer();
         $roles = Freelancer::ROLES;
+        $labors = Labor::pluck('name', 'id')->prepend('Selecione', '');
 
-        return view('freelancers.form', compact('freelancer', 'roles'));
+        return view('freelancers.form', compact('freelancer', 'roles', 'labors'));
     }
 
     public function store(FreelancerRequest $request)
@@ -49,8 +51,8 @@ class FreelancerController extends Controller
 
     public function edit(Freelancer $freelancer, $showMode = false)
     {
-
-        return view('freelancers.form', compact('freelancer', 'showMode'));
+        $labors = Labor::pluck('name', 'id')->prepend('Selecione', '');
+        return view('freelancers.form', compact('freelancer', 'showMode', 'labors'));
     }
 
     public function update(Freelancer $freelancer, FreelancerRequest $request)
