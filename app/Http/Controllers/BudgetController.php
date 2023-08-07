@@ -190,10 +190,10 @@ class BudgetController extends Controller
         }
 
         $data['agency'] = $budget->agency ? $budget->agency->fantasy_name : null;
-        $data['place'] = $budget->place->name;
+        $data['place'] = $budget->place ? $budget->place->name : null;
         $data['place_address'] = '';
 
-        if ($budget->place->street) {
+        if ($budget->place && $budget->place->street) {
             $data['place_address'] = $budget->place->street;
 
             if ($budget->place->number) {
@@ -238,80 +238,158 @@ class BudgetController extends Controller
         $data['situation'] = $budget->situation;
         $data['commercial_conditions'] = $budget->commercial_conditions;
 
-        $budgetRoomProducts = BudgetRoomProduct::where('budget_id', $budget->id)->pluck('place_room_id')->toArray();
-        $budgetRoomLabors = BudgetRoomLabor::where('budget_id', $budget->id)->pluck('place_room_id')->toArray();
-        $placeRoomIds = array_unique(array_merge($budgetRoomProducts, $budgetRoomLabors));
+        $budgetRoomProducts = BudgetRoomProduct::where('budget_id', $budget->id)->get();
+        $budgetRoomLabors = BudgetRoomLabor::where('budget_id', $budget->id)->get();
 
-        $arRoom = [];
+        $categories = Product::whereIn('id', $budgetRoomProducts->pluck('product_id')->toArray())->groupBy('category_id')->pluck('category_id')->toArray();
 
-        foreach ($placeRoomIds as $placeRoomId) {
-            $placeRoom = PlaceRoom::find($placeRoomId);
+        $arCategories = [];
 
-            $products = BudgetRoomProduct::where('budget_id', $budget->id)->where('place_room_id', $placeRoom->id);
-            $productsId = $products->pluck('product_id')->toArray();
-            $productsList = $products->get();
-            $labors = BudgetRoomLabor::where('budget_id', $budget->id)->where('place_room_id', $placeRoom->id);
-            $laborsId = $labors->pluck('labor_id')->toArray();
-            $laborsList = $labors->get();
-            $categoryProductsId = Product::whereIn('id', $productsId)->groupBy('category_id')->pluck('category_id')->toArray();
-            $categoryLaborsId = Labor::whereIn('id', $laborsId)->groupBy('category_id')->pluck('category_id')->toArray();
-            $categoriesId = array_unique(array_merge($categoryProductsId, $categoryLaborsId));
+        foreach ($categories as $categoryId) {
+            $category = Category::find($categoryId);
+            $categoryProducts = [];
 
-            $arCategories = [];
+            foreach ($budgetRoomProducts as $product) {
+                if ($product->product->category_id == $categoryId) {
+                    $obProduct = [
+                        'id' => $product->id,
+                        'name' => $product->product->name,
+                        'quantity' => $product->quantity,
+                        'days' => $product->days,
+                        'price' => $product->price,
+                        'place_room_name' => $product->placeRoom ? $product->placeRoom->name : null,
+                    ];
 
-            foreach ($categoriesId as $categoryId) {
-                $category = Category::find($categoryId);
-                $categoryProducts = [];
-                $categoryLabors = [];
-
-                foreach ($productsList as $product) {
-                    if ($product->product->category_id == $categoryId) {
-                        array_push($categoryProducts, $product->toArray());
-                    }
+                    array_push($categoryProducts, $obProduct);
                 }
-
-                foreach ($laborsList as $labor) {
-                    if ($labor->labor->category_id == $categoryId) {
-                        array_push($categoryLabors, $labor->toArray());
-                    }
-                }
-
-                $obCategory = [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'products' => $categoryProducts,
-                    'labors' => $categoryLabors,
-                ];
-
-                array_push($arCategories, $obCategory);
             }
 
-            $budgetDays = explode('-', $budget->budget_days);
-            $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
-            $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
+            $obCategory = [
+                'id' => $category->id,
+                'name' => $category->name,
+                'products' => $categoryProducts,
+            ];
 
-            $diifDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
+            array_push($arCategories, $obCategory);
+        }
+
+        $arLabors = [];
+
+        foreach ($budgetRoomLabors as $labor) {
+            $obLabor = [
+                'id' => $labor->id,
+                'name' => $labor->labor->name,
+                'quantity' => $labor->quantity,
+                'days' => $labor->days,
+                'price' => $labor->price,
+                'place_room_name' => $labor->placeRoom ? $labor->placeRoom->name : null,
+            ];
+
+            array_push($arLabors, $obLabor);
+        }
+
+        $budgetDays = explode('-', $budget->budget_days);
+        $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
+        $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
+
+        if ($startDay == $endDay) {
+            $days = [Carbon::parse($startDay)->format('d/m')];
+        } else {
+            $difDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
 
             $days = [];
 
             array_push($days, Carbon::parse($startDay)->format('d/m'));
 
-            for ($i = 0; $i < $diifDays; $i++) {
+            for ($i = 0; $i < $difDays; $i++) {
                 $date = Carbon::parse($startDay)->addDays($i + 1);
                 array_push($days, $date->format('d/m'));
             }
 
             array_push($days, Carbon::parse($endDay)->format('d/m'));
-
-            $arRoom[] = [
-                'place_room_name' => $placeRoom->name,
-                'place_room_id' => $placeRoom->id,
-                'days' => $days,
-                'categories' => $arCategories,
-            ];
         }
 
-        $data['rooms'] = $arRoom;
+        $data['products'] = [
+            'days' => $days,
+            'categories' => $arCategories,
+        ];
+
+        $data['labors'] = $arLabors;
+
+        // $placeRoomIds = array_unique(array_merge($budgetRoomProducts, $budgetRoomLabors));
+
+        // $arRoom = [];
+
+        // foreach ($placeRoomIds as $placeRoomId) {
+        //     $placeRoom = PlaceRoom::find($placeRoomId);
+
+        //     $products = BudgetRoomProduct::where('budget_id', $budget->id)->where('place_room_id', $placeRoom->id);
+        //     $productsId = $products->pluck('product_id')->toArray();
+        //     $productsList = $products->get();
+        //     $labors = BudgetRoomLabor::where('budget_id', $budget->id)->where('place_room_id', $placeRoom->id);
+        //     $laborsId = $labors->pluck('labor_id')->toArray();
+        //     $laborsList = $labors->get();
+        //     $categoryProductsId = Product::whereIn('id', $productsId)->groupBy('category_id')->pluck('category_id')->toArray();
+        //     $categoryLaborsId = Labor::whereIn('id', $laborsId)->groupBy('category_id')->pluck('category_id')->toArray();
+        //     $categoriesId = array_unique(array_merge($categoryProductsId, $categoryLaborsId));
+
+        //     $arCategories = [];
+
+        //     foreach ($categoriesId as $categoryId) {
+        //         $category = Category::find($categoryId);
+        //         $categoryProducts = [];
+        //         $categoryLabors = [];
+
+        //         foreach ($productsList as $product) {
+        //             if ($product->product->category_id == $categoryId) {
+        //                 array_push($categoryProducts, $product->toArray());
+        //             }
+        //         }
+
+        //         foreach ($laborsList as $labor) {
+        //             if ($labor->labor->category_id == $categoryId) {
+        //                 array_push($categoryLabors, $labor->toArray());
+        //             }
+        //         }
+
+        //         $obCategory = [
+        //             'id' => $category->id,
+        //             'name' => $category->name,
+        //             'products' => $categoryProducts,
+        //             'labors' => $categoryLabors,
+        //         ];
+
+        //         array_push($arCategories, $obCategory);
+        //     }
+
+        //     $budgetDays = explode('-', $budget->budget_days);
+        //     $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
+        //     $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
+
+        //     $diifDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
+
+        //     $days = [];
+
+        //     array_push($days, Carbon::parse($startDay)->format('d/m'));
+
+        //     for ($i = 0; $i < $diifDays; $i++) {
+        //         $date = Carbon::parse($startDay)->addDays($i + 1);
+        //         array_push($days, $date->format('d/m'));
+        //     }
+
+        //     array_push($days, Carbon::parse($endDay)->format('d/m'));
+
+        //     $arRoom[] = [
+        //         'place_room_name' => $placeRoom->name,
+        //         'place_room_id' => $placeRoom->id,
+        //         'days' => $days,
+        //         'categories' => $arCategories,
+        //     ];
+        // }
+
+        // $data['rooms'] = $arRoom;
+
+        // dd($data);
 
         $pdf = PDF::loadView('pdf.budget', $data);
         return $pdf->stream();

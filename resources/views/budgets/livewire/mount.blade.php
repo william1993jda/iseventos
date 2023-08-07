@@ -15,6 +15,7 @@
             <a href="{{ route('budgets.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
             @if ($canEdit)
+                <a href="{{ route('budgets.edit', $budget->id) }}" class="btn btn-primary shadow-md mr-2">Editar</a>
                 <button class="btn btn-primary shadow-md mr-2" wire:click="editObservation">Observações</button>
                 <button class="btn btn-primary shadow-md mr-2" wire:click="editStatus">Status</button>
             @else
@@ -318,8 +319,8 @@
                 </div>
             @endif
 
-            @if (!empty($listLabors['labors']))
-                <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+            @if (!empty($listLabors))
+                <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-10">
                     <h2 class="font-medium text-base mr-auto">MÃO DE OBRA</h2>
                     <div class="hidden md:block mx-auto text-slate-500"></div>
                     @if ($canEdit)
@@ -346,10 +347,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($listLabors['labors'] as $labor)
+                            @foreach ($listLabors as $labor)
                                 @php
-                                    $days = count(explode(',', $labor['days']));
-                                    $total += $labor['quantity'] * $labor['price'] * $days;
+                                    $total += $labor['quantity'] * $labor['price'] * $labor['days'];
                                 @endphp
                                 <tr>
                                     <td class="whitespace-nowrap w-4">
@@ -377,7 +377,7 @@
                                         @if ($canEdit)
                                             <x-forms.number name="days_labor_{{ $labor['id'] }}" min="1"
                                                 :value="$labor['days']"
-                                                wire:change="onChangeDay({{ $labor['id'] }}, $event.target.value)" />
+                                                wire:change="onChangeLaborDays({{ $labor['id'] }}, $event.target.value)" />
                                         @else
                                             <x-forms.number name="days_labor_{{ $labor['id'] }}" min="1"
                                                 :value="$product['days']" disabled />
@@ -387,7 +387,7 @@
                                         @if ($canEdit)
                                             <x-forms.number name="quantity_labor_{{ $labor['id'] }}" min="1"
                                                 :value="$labor['quantity']"
-                                                wire:change="onChangeQuantity({{ $labor['id'] }}, $event.target.value)" />
+                                                wire:change="onChangeLaborQuantity({{ $labor['id'] }}, $event.target.value)" />
                                         @else
                                             <x-forms.number name="quantity_labor_{{ $labor['id'] }}" min="1"
                                                 :value="$product['quantity']" disabled />
@@ -397,7 +397,7 @@
                                         {{ number_format($labor['price'], 2, ',', '.') }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ number_format($labor['quantity'] * $labor['price'] * $days, 2, ',', '.') }}
+                                        {{ number_format($labor['quantity'] * $labor['price'] * $labor['days'], 2, ',', '.') }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         @if ($canEdit)
@@ -441,56 +441,124 @@
                     </table>
                 </div>
             @endif
-        </div>
 
-    </div>
-
-    <div id="modal-budget-change-room" class="modal" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="font-medium text-base mr-auto">Seleciona a sala abaixo</h2>
+            <div class="intro-y col-span-12 box px-5 py-5 my-3">
+                <div class="text-l font-medium text-right">
+                    SUBTOTAL: R$ {{ number_format($total, 2, ',', '.') }}
                 </div>
-                <div class="modal-body" wire:ignore>
-                    <div class="sm:grid grid-cols-1 gap-2">
-                        <x-forms.select name="place_room_id" label="Sala" :options="$placeRooms"
-                            wire:model="dataRoom.place_room_id" />
+
+                @php
+                    $subtotal = $total;
+                    $totalFee = 0;
+                    $totalDiscount = 0;
+                @endphp
+
+                @if (!empty($budget['fee']))
+                    <div>
+                        @if ($budget['fee_type'] == 'percent')
+                            @php
+                                $feePercentage = $budget['fee'];
+                                $totalFeePercentage = ($feePercentage / 100) * $total;
+                                $totalFee = $totalFeePercentage;
+                            @endphp
+                            <div class="text-l font-medium text-right">
+                                <span class="text-green-500">TAXA DO CARTÃO ({{ $budget['fee'] }}%): R$
+                                    {{ number_format($totalFeePercentage, 2, ',', '.') }}</span>
+                            </div>
+                        @else
+                            @php
+                                $totalFee = $budget['fee'];
+                            @endphp
+                            <div class="text-l font-medium text-right">
+                                <span class="text-green-500">TAXA DO CARTÃO (R$
+                                    {{ number_format($budget['fee'], 2, ',', '.') }}): R$
+                                    {{ number_format($budget['fee'], 2, ',', '.') }}</span>
+                            </div>
+                        @endif
                     </div>
+                @endif
+                @if (!empty($budget['discount']))
+                    <div>
+                        @if ($budget['discount_type'] == 'percent')
+                            @php
+                                $discountPercentage = $budget['discount'];
+                                $totalDiscountPercentage = ($discountPercentage / 100) * $total;
+                                $totalDiscount = $totalDiscountPercentage;
+                            @endphp
+                            <div class="text-l font-medium text-right">
+                                <span class="text-red-500">DESCONTO ({{ $budget['discount'] }}%): R$
+                                    {{ number_format($totalDiscountPercentage, 2, ',', '.') }}</span>
+                            </div>
+                        @else
+                            @php
+                                $totalDiscount = $budget['discount'];
+                            @endphp
+                            <div class="text-l font-medium text-right">
+                                <span class="text-red-500">DESCONTO (R$
+                                    {{ number_format($budget['discount'], 2, ',', '.') }}): R$
+                                    {{ number_format($budget['discount'], 2, ',', '.') }}</span>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+
+                @php
+                    $total = $subtotal - $totalDiscount + $totalFee;
+                @endphp
+                <hr class="my-2">
+                <div class="text-lg font-medium text-right">
+                    <span>TOTAL: R$ {{ number_format($total, 2, ',', '.') }}</span>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 mr-1">Cancelar</button>
-                    <button type="button" class="btn btn-primary w-20" onclick="saveChangeRoom()">Salvar</button>
+                <div class="flex justify-end mt-3">
+                    @if ($canEdit)
+                        @if (empty($budget['fee']))
+                            <button type="button" class="btn btn-primary shadow-md" wire:click="addFee">
+                                Aplicar taxa do cartão
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-primary shadow-md" wire:click="removeFee">
+                                Remover taxa do cartão
+                            </button>
+                        @endif
+                        @if (empty($budget['discount']))
+                            <button type="button" class="btn btn-primary shadow-md ml-2" wire:click="addDiscount">
+                                Aplicar desconto
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-primary shadow-md ml-2"
+                                wire:click="removeDiscount">
+                                Remover desconto
+                            </button>
+                        @endif
+                    @else
+                        @if (empty($budget['fee']))
+                            <button type="button" class="btn btn-primary shadow-md" disabled>
+                                Aplicar taxa do cartão
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-primary shadow-md" disabled>
+                                Remover taxa do cartão
+                            </button>
+                        @endif
+                        @if (empty($budget['discount']))
+                            <button type="button" class="btn btn-primary shadow-md ml-2" disabled>
+                                Aplicar desconto
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-primary shadow-md ml-2" disabled>
+                                Remover desconto
+                            </button>
+                        @endif
+                    @endif
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- BEGIN: Budget New Version Modal -->
-    <div id="budget-new-version-modal" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="p-5 text-center">
-                        <i data-lucide="copy-plus" class="w-16 h-16 text-danger mx-auto mt-3"></i>
-                        <div class="text-3xl mt-5">Gerar nova versão?</div>
-                        <div class="text-slate-500 mt-2">
-                            Tem certeza que gerar uma nova versão desse orçamento?
-                        </div>
-                    </div>
-                    <div class="px-5 pb-8 text-center">
-                        <button type="button" data-tw-dismiss="modal"
-                            class="btn btn-outline-secondary w-24 mr-1">Não</button>
-                        <button type="submit" class="btn btn-primary w-24"
-                            wire:click="generateNewVersion">Sim</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-    <!-- END: Budget New Version Modal -->
 
     @component('budgets.partials.modal-observation')
+    @endcomponent
+    @component('budgets.partials.modal-new-version')
     @endcomponent
     @component('budgets.partials.modal-status', ['status' => $status])
     @endcomponent
@@ -498,121 +566,10 @@
     @endcomponent
     @component('budgets.partials.modal-labor', ['labors' => $labors, 'placeRooms' => $placeRooms])
     @endcomponent
-
-    {{--
-    @include('budgets.partials.modal-fee')
-    @include('budgets.partials.modal-discount')
-    --}}
-
-    @push('custom-scripts')
-        <script type="text/javascript">
-            var modalChangeRoom = null;
-            // var modalBudgetFee = null;
-            // var modalBudgetDiscount = null;
-            // var alertFeeError = null;
-            // var alertDiscountError = null;
-            // var alertStatusError = null;
-
-            function checkAllProduct() {
-                if ($('input[name="checkbox_product"]').is(':checked')) {
-                    for (var i = 0; i < $('input[class="checkbox_product"]').length; i++) {
-                        $('input[class="checkbox_product"]')[i].checked = true;
-                    }
-                } else {
-                    for (var i = 0; i < $('input[class="checkbox_product"]').length; i++) {
-                        $('input[class="checkbox_product"]')[i].checked = false;
-                    }
-                }
-            }
-
-            function changeRoom() {
-                var products = [];
-                for (var i = 0; i < $('input[class="checkbox_product"]').length; i++) {
-                    if ($('input[class="checkbox_product"]')[i].checked) {
-                        products.push($('input[class="checkbox_product"]')[i].value);
-                    }
-                }
-                if (products.length > 0) {
-                    modalChangeRoom.show();
-                } else {
-                    document.getElementById('error-notification-title').innerHTML = "Atenção!";
-                    document.getElementById('error-notification-message').innerHTML = "Selecione pelo menos um equipamento!";
-
-                    Toastify({
-                        node: $("#error-notification").clone().removeClass("hidden")[0],
-                        duration: 5000,
-                        newWindow: true,
-                        close: true,
-                        gravity: "top",
-                        position: "right",
-                        backgroundColor: "transparent",
-                        stopOnFocus: true,
-                    }).showToast();
-                }
-            }
-
-            function saveChangeRoom() {
-                var products = [];
-                for (var i = 0; i < $('input[class="checkbox_product"]').length; i++) {
-                    if ($('input[class="checkbox_product"]')[i].checked) {
-                        products.push($('input[class="checkbox_product"]')[i].value);
-                    }
-                }
-                if (products.length > 0) {
-                    @this.saveChangeRoom(products);
-                } else {
-                    document.getElementById('error-notification-title').innerHTML = "Atenção!";
-                    document.getElementById('error-notification-message').innerHTML = "Selecione pelo menos um equipamento!";
-
-                    Toastify({
-                        node: $("#error-notification").clone().removeClass("hidden")[0],
-                        duration: 5000,
-                        newWindow: true,
-                        close: true,
-                        gravity: "top",
-                        position: "right",
-                        backgroundColor: "transparent",
-                        stopOnFocus: true,
-                    }).showToast();
-                }
-            }
-
-            document.addEventListener("DOMContentLoaded", function(e) {
-                modalChangeRoom = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-budget-change-room"));
-
-                // alertFeeError = document.getElementById('alert-fee-error');
-                // alertDiscountError = document.getElementById('alert-discount-error');
-
-                // modalBudgetFee = tailwind.Modal.getInstance(document.querySelector(
-                //     "#modal-budget-fee"));
-                // modalBudgetDiscount = tailwind.Modal.getInstance(document.querySelector(
-                //     "#modal-budget-discount"));
-            });
-
-            // window.livewire.on('addFee', () => {
-            //     modalBudgetFee.show();
-            // });
-
-            // window.livewire.on('addDiscount', () => {
-            //     modalBudgetDiscount.show();
-            // });
-
-            // window.livewire.on('discountError', (show) => {
-            //     if (show) {
-            //         alertDiscountError.classList.remove('hidden');
-            //     } else {
-            //         alertDiscountError.classList.add('hidden');
-            //     }
-            // });
-
-            window.livewire.on('roomChanged', () => {
-                modalChangeRoom.hide();
-
-                for (var i = 0; i < $('input[class="checkbox_product"]').length; i++) {
-                    $('input[class="checkbox_product"]')[i].checked = false;
-                }
-            });
-        </script>
-    @endpush
+    @component('budgets.partials.modal-change-room', ['placeRooms' => $placeRooms])
+    @endcomponent
+    @component('budgets.partials.modal-fee', ['feeDiscountTypes' => $feeDiscountTypes])
+    @endcomponent
+    @component('budgets.partials.modal-discount', ['feeDiscountTypes' => $feeDiscountTypes])
+    @endcomponent
 </div>

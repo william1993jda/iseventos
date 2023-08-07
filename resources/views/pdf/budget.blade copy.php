@@ -20,324 +20,326 @@
     .text-center {
         text-align: center;
     }
+
+    .text-fee {
+        color: #22C55E;
+        font-weight: bold;
+    }
+
+    .text-discount {
+        color: #EF4444;
+        font-weight: bold;
+    }
+
+    .text-total {
+        font-weight: bold;
+        font-size: 14px;
+    }
 </style>
-<table style="border:none;border-collapse:collapse; width: 100%;">
+<table style="border:none;border-collapse:collapse; width: 100%; background-color: lightgrey; padding: 20px;">
+    <tbody>
+        <tr>
+            <td style="text-align:center; border:none; width: 100%;">
+                <span style="font-size: 22px; font-weight: bold;">PROPOSTA</span>
+            </td>
+            <td style="text-align:right; border:none;">
+                <img src="{{ public_path('dist/images/logo_is_vermelho_preto_squad.png') }}" width="100">
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table style="border:none;border-collapse:collapse; width: 100%; background-color: lightgrey; padding: 5px;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none; width: 70%;">
+                <strong>Data da solicitação</strong>:&nbsp;{{ $request_date }}
+            </td>
+            <td style="text-align:left; border:none; width: 30%;">
+                <strong>Status</strong>:&nbsp;{{ $status }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none; width: 70%;">
+                <strong>Orçamento N&deg;</strong>:&nbsp;{{ $budget_number }}
+            </td>
+            <td style="text-align:left; border:none; width: 30%;">
+                &nbsp;
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table style="border:none;border-collapse:collapse; width: 100%; background-color: #F4F4F4; padding: 5px;">
     <tbody>
         <tr>
             <td style="text-align:center; border:none;">
-                <img src="{{ public_path('dist/images/logo-horizontal.png') }}" width="300">
+                <strong>Dados do Cliente</strong>
             </td>
         </tr>
     </tbody>
 </table>
-
-<br />
-
-<table style="border:none;border-collapse:collapse; width: 100%;">
+<table style="border:none; border-collapse:collapse; width: 100%; padding: 5px 0px;">
     <tbody>
         <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Nome do Evento</strong>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Cliente</strong>:&nbsp;{{ $customer }}
             </td>
-            <td style="text-align:center; width: 120px; border:none;">
-                <strong>Data da solicitação</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="border:none">
-                {{ $name }}
-            </td>
-            <td style="text-align:center; width: 120px; border:none;">
-                {{ $request_date }}
-            </td>
-        </tr>
-    </tbody>
-</table>
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Cliente</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Contato</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Telefone</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>E-mail</strong>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>CNPJ</strong>:&nbsp;{{ $customer_ein }}
             </td>
         </tr>
         <tr>
-            <td style="border:none;">
-                {{ $customer }}
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Contato</strong>:&nbsp;{{ $customer_name }}
             </td>
-            <td style="border:none;">
-                {{ $customer_name }}
-            </td>
-            <td style="border:none;">
-                {{ $customer_phone }}
-            </td>
-            <td style="border:none;">
-                {{ $customer_email }}
-            </td>
-        </tr>
-    </tbody>
-</table>
-@if (!empty($agency))
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Agência</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="border:none;">
-                {{ $agency }}
-            </td>
-        </tr>
-    </tbody>
-</table>
-@endif
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Data Início</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Data Fim</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Data Montagem</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Data Desmontagem</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left; border:none;">
-                {{ $start_date }}
-            </td>
-            <td style="text-align:left; border:none;">
-                {{ $end_date }}
-            </td>
-            <td style="text-align:left; border:none;">
-                {{ $mount_date }}
-            </td>
-            <td style="text-align:left; border:none;">
-                {{ $unmount_date }}
-            </td>
-        </tr>
-    </tbody>
-</table>
-@if (!empty($public) || !empty($situation))
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Público</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Situação</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left; border:none;">
-                {{ $public }}
-            </td>
-            <td style="text-align:left; border:none;">
-                {{ $situation }}
-            </td>
-        </tr>
-    </tbody>
-</table>
-@endif
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Local</strong>
-            </td>
-            <td style="text-align:left; border:none;">
-                <strong>Cidade</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left; border:none;">
-                @if (!empty($place))
-                {{ $place }}
-                @else
+            <td style="text-align:left; border:none; width: 50%;">
                 &nbsp;
-                @endif
             </td>
-            <td style="text-align:left; border:none;">
-                {{ $city }}
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>E-mail</strong>:&nbsp;{{ $customer_email }}
+            </td>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Telefone</strong>:&nbsp;{{ $customer_phone }}
             </td>
         </tr>
     </tbody>
 </table>
-<table style="border:none;border-collapse:collapse; width: 100%;">
+<table style="border:none;border-collapse:collapse; width: 100%; background-color: #F4F4F4; padding: 5px;">
     <tbody>
         <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Observações</strong>
+            <td style="text-align:center; border:none;">
+                <strong>Dados do Evento</strong>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table style="border:none; border-collapse:collapse; width: 100%; padding: 5px 0px;">
+    <tbody>
+        <tr>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Evento</strong>:&nbsp;{{ $name }}
+            </td>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Quantidade de participantes</strong>:&nbsp;{{ $public }}
             </td>
         </tr>
         <tr>
-            <td style="text-align:left; border:none;">
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Local</strong>:&nbsp;{{ $place }}
+            </td>
+            <td style="text-align:left; border:none; width: 50%;">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none; width: 50%;" colspan="2">
+                <strong>Endereço</strong>:&nbsp;{{ $place_address }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Data de início</strong>:&nbsp;{{ $start_date }}
+            </td>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Data de término</strong>:&nbsp;{{ $end_date }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Data de montagem</strong>:&nbsp;{{ $mount_date }}
+            </td>
+            <td style="text-align:left; border:none; width: 50%;">
+                <strong>Data de desmontagem</strong>:&nbsp;{{ $unmount_date }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; border:none; width: 50%;" colspan="2">
+                <strong>Observações</strong>:&nbsp;<br />
                 @if (!empty($observation))
-                {!! nl2br($observation) !!}
+                    {!! nl2br($observation) !!}
                 @else
-                &nbsp;
+                    &nbsp;
                 @endif
             </td>
         </tr>
     </tbody>
 </table>
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Condições Comerciais</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left; border:none;">
-                @if (!empty($commercial_conditions))
-                {!! nl2br($commercial_conditions) !!}
-                @else
-                &nbsp;
-                @endif
-            </td>
-        </tr>
-    </tbody>
-</table>
+
 
 <br />
 @php $total = 0; @endphp
 @foreach ($rooms as $room)
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <thead>
-        <tr>
-            <th style="text-align:center; background-color: #FFF;">
-                {{ $room['place_room_name'] }}
-            </th>
-        </tr>
-    </thead>
-</table>
+    <table style="border:none;border-collapse:collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th style="text-align:center; background-color: #FFF;">
+                    {{ $room['place_room_name'] }}
+                </th>
+            </tr>
+        </thead>
+    </table>
 
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <thead>
-        <tr>
-            <th style="text-align:left; width: 100%;">
-                EQUIPAMENTOS
-            </th>
-            @foreach ($room['days'] as $roomDate)
-            <th style="text-align:center; width: 60px;">
-                {{ substr($roomDate, 0, 5) }}
-            </th>
+    <table style="border:none;border-collapse:collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th style="text-align:left; width: 100%;">
+                    EQUIPAMENTOS
+                </th>
+                <th style="text-align:center; width: 60px;">
+                    VALOR
+                </th>
+                <th style="text-align:center; width: 60px;">
+                    QUANTIDADE
+                </th>
+                <th style="text-align:center; width: 60px;">
+                    DIAS
+                </th>
+                <th style="text-align:center; width: 80px;">
+                    TOTAL
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($room['categories'] as $category)
+                <tr>
+                    <td><strong>{{ $category['name'] }}</strong></td>
+                    <td colspan="4">&nbsp;</td>
+                </tr>
+                @foreach ($category['products'] as $product)
+                    @php
+                        $days = count(explode(',', $product['days']));
+                        $total += $product['quantity'] * $product['price'] * $days;
+                    @endphp
+                    <tr>
+                        <td style="text-align:left;">{{ $product['product']['name'] }}</td>
+                        {{-- @foreach ($room['days'] as $roomDate)
+                            <td style="text-align:center;">
+                                @if (in_array($roomDate, explode(',', $product['days'])))
+                                    x
+                                @endif
+                            </td>
+                        @endforeach --}}
+                        <td style="text-align:center;">
+                            {{ number_format($product['price'], 2, ',', '.') }}
+                        </td>
+                        <td style="text-align:center;">
+                            {{ $product['quantity'] }}
+                        </td>
+                        <td style="text-align:center;">
+                            {{ count(explode(',', $product['days'])) }}
+                        </td>
+                        <td style="text-align:right;">
+                            {{ number_format($product['quantity'] * $product['price'] * $days, 2, ',', '.') }}
+                        </td>
+                    </tr>
+                @endforeach
+                @foreach ($category['labors'] as $labor)
+                    @php
+                        $days = $labor['days'];
+                        $total += $labor['quantity'] * $labor['price'] * $days;
+                    @endphp
+                    <tr>
+                        <td>{{ $labor['labor']['name'] }}</td>
+                        <td style="text-align:right;">
+                            {{ number_format($labor['price'], 2, ',', '.') }}
+                        </td>
+                        <td style="text-align:center;">
+                            {{ $labor['quantity'] }}
+                        </td>
+                        <td style="text-align:center;">
+                            {{ $labor['days'] }}
+                        </td>
+                        <td style="text-align:right;">
+                            {{ number_format($labor['quantity'] * $labor['price'] * $labor['days'], 2, ',', '.') }}
+                        </td>
+                    </tr>
+                @endforeach
             @endforeach
-            <th style="text-align:center; width: 60px;">
-                Valor
-            </th>
-            <th style="text-align:center; width: 60px;">
-                Quantidade
-            </th>
-            <th style="text-align:center; width: 80px;">
-                Total
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($room['categories'] as $category)
-        <tr>
-            <td><strong>{{ $category['name'] }}</strong></td>
-            <td colspan="{{ count($room['days']) + 3 }}">&nbsp;</td>
-        </tr>
-        @foreach ($category['products'] as $product)
-        @php
-        $days = count(explode(',', $product['days']));
-        $total += $product['quantity'] * $product['price'] * $days;
-        @endphp
-        <tr>
-            <td style="text-align:left;">{{ $product['product']['name'] }}</td>
-            @foreach ($room['days'] as $roomDate)
-            <td style="text-align:center;">
-                @if (in_array($roomDate, explode(',', $product['days'])))
-                x
-                @endif
-            </td>
-            @endforeach
-            <td style="text-align:center;">
-                {{ number_format($product['price'], 2, ',', '.') }}
-            </td>
-            <td style="text-align:center;">
-                {{ $product['quantity'] }}
-            </td>
-            <td style="text-align:right;">
-                {{ number_format($product['quantity'] * $product['price'] * $days, 2, ',', '.') }}
-            </td>
-        </tr>
-        @endforeach
-        @foreach ($category['labors'] as $labor)
-        @php
-        $days = $labor['days'];
-        $total += $labor['quantity'] * $labor['price'] * $days;
-        @endphp
-        <tr>
-            <td>{{ $labor['labor']['name'] }}</td>
-            <td style="text-align:right;" colspan="{{ count($room['days']) }}">
-                {{ $labor['days'] }}&nbsp;&nbsp;diárias
-            </td>
-            <td style="text-align:right;">
-                {{ number_format($labor['price'], 2, ',', '.') }}
-            </td>
-            <td style="text-align:center;">
-                {{ $labor['quantity'] }}
-            </td>
-            <td style="text-align:right;">
-                {{ number_format($labor['quantity'] * $labor['price'] * $labor['days'], 2, ',', '.') }}
-            </td>
-        </tr>
-        @endforeach
-        @endforeach
-    </tbody>
-</table>
-<br />
+        </tbody>
+    </table>
+    <br />
 @endforeach
 
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tr>
-        <td style="text-align:right;"><strong>TOTAL</strong></td>
-        <td style="text-align:right; width: 80px;"><strong>{{ number_format($total, 2, ',', '.') }}</strong></td>
+        <td style="text-align:right;"><strong>SUBTOTAL</strong></td>
+        <td style="text-align:right; width: 150px;"><strong>R$ {{ number_format($total, 2, ',', '.') }}</strong></td>
     </tr>
 </table>
+
+@php
+    $subtotal = $total;
+    $totalFee = 0;
+    $totalDiscount = 0;
+@endphp
+@if (!empty($fee))
+    <table style="border:none;border-collapse:collapse; width: 100%;">
+        <tr>
+            @if ($fee_type == 'percent')
+                @php
+                    $feePercentage = $fee;
+                    $totalFeePercentage = ($feePercentage / 100) * $subtotal;
+                    $totalFee = $totalFeePercentage;
+                @endphp
+                <td style="text-align:right;"><span class="text-fee">TAXA ({{ $fee }}%):</span></td>
+                <td style="text-align:right; width: 150px;">
+                    <span class="text-fee">R$ {{ number_format($totalFeePercentage, 2, ',', '.') }}</span>
+                </td>
+            @else
+                @php
+                    $totalFee = $fee;
+                @endphp
+                <td style="text-align:right;"><span class="text-fee">TAXA (R$
+                        {{ number_format($fee, 2, ',', '.') }}):</span></td>
+                <td style="text-align:right; width: 150px;">
+                    <span class="text-fee">R$ {{ number_format($fee, 2, ',', '.') }}</span>
+                </td>
+            @endif
+        </tr>
+    </table>
+@endif
 
 @if (!empty($discount))
+    <table style="border:none;border-collapse:collapse; width: 100%;">
+        <tr>
+            @if ($discount_type == 'percent')
+                @php
+                    $discountPercentage = $discount;
+                    $totalDiscountPercentage = ($discountPercentage / 100) * $subtotal;
+                    $totalDiscount = $totalDiscountPercentage;
+                @endphp
+                <td style="text-align:right;"><span class="text-discount">DESCONTO ({{ $discount }}%):</span>
+                </td>
+                <td style="text-align:right; width: 150px;">
+                    <span class="text-discount">R$ {{ number_format($totalDiscountPercentage, 2, ',', '.') }}</span>
+                </td>
+            @else
+                @php
+                    $totalDiscount = $discount;
+                @endphp
+                <td style="text-align:right;"><span class="text-discount">DESCONTO (R$
+                        {{ number_format($discount, 2, ',', '.') }}):</span></td>
+                <td style="text-align:right; width: 150px;">
+                    <span class="text-discount">R$ {{ number_format($discount, 2, ',', '.') }}</span>
+                </td>
+            @endif
+        </tr>
+    </table>
+@endif
+
+@php
+    $total = $subtotal - $totalDiscount + $totalFee;
+@endphp
+
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tr>
-        @if ($discount_type == 'percent')
-        @php
-        $percentage = $discount;
-
-        $totalPercentage = ($percentage / 100) * $total;
-        @endphp
-        <td style="text-align:right;">TOTAL COM DESCONTO DE {{ $discount }}%:</td>
-        <td style="text-align:right; width: 80px;">
-            <strong>{{ number_format($total - $totalPercentage, 2, ',', '.') }}</strong>
+        <td style="text-align:right;"><span class="text-total">TOTAL:</span></td>
+        <td style="text-align:right; width: 150px;">
+            <span class="text-total">R$ {{ number_format($total, 2, ',', '.') }}</span>
         </td>
-        @else
-        <td style="text-align:right;">TOTAL COM DESCONTO DE {{ $discount }}:</td>
-        <td style="text-align:right; width: 80px;">
-            <strong>{{ number_format($total - $discount, 2, ',', '.') }}</strong>
-        </td>
-        @endif
     </tr>
 </table>
-@endif
 
 <br />
 
@@ -369,10 +371,12 @@
     Até 2 dias antes do evento, cobrança de 100% do orçamento aprovado.
 </p>
 
-<p style="font-weight: bold;">CONDIÇÕES DE PAGAMENTO:</p>
-<p>
-    * Faturado diretamente pela IS após o evento com vencimento para 15 dias corridos, após aprovação de cadastro
-    por
-    nosso financeiro, o envio da P.O deve ser realizado até o término do evento, e o pagamento se dará através de
-    deposito em conta, conforme prazo previamente acordado.
-</p>
+@if (!empty($payment_conditions))
+    <p style="font-weight: bold;">CONDIÇÕES DE PAGAMENTO:</p>
+    <p>{!! nl2br($payment_conditions) !!}</p>
+@endif
+
+@if (!empty($commercial_conditions))
+    <p style="font-weight: bold;">CONDIÇÕES COMERCIAIS:</p>
+    <p>{!! nl2br($commercial_conditions) !!}</p>
+@endif

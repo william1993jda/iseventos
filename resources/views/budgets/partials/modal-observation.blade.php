@@ -33,7 +33,6 @@
             });
 
             window.livewire.on('observationUpdated', () => {
-                console.log('observationUpdated');
                 modalBudgetObservation.hide();
             });
         </script>

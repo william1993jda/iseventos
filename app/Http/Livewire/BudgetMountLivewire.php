@@ -93,7 +93,7 @@ class BudgetMountLivewire extends Component
 
         foreach ($budgetRoomLabors as $labor) {
             $obLabor = [
-                'id' => $labor->labor->id,
+                'id' => $labor->id,
                 'name' => $labor->labor->name,
                 'quantity' => $labor->quantity,
                 'days' => $labor->days,
@@ -129,12 +129,9 @@ class BudgetMountLivewire extends Component
             'categories' => $arCategories,
         ];
 
-        $this->listLabors = [
-            'days' => $days,
-            'labors' => $arLabors,
-        ];
+        $this->listLabors = $arLabors;
 
-        // dd($this->listProducts);
+        // dd($this->listLabors);
     }
 
     public function getRooms()
@@ -291,10 +288,12 @@ class BudgetMountLivewire extends Component
 
     public function saveObservation()
     {
-        $this->budget->update($this->dataBudget);
+        $this->budget->observation = $this->dataBudget['observation'];
+        $this->budget->saveQuietly();
         $this->budget->refresh();
 
         $this->dataBudget = [];
+
         $this->emit('observationUpdated');
     }
 
@@ -403,84 +402,87 @@ class BudgetMountLivewire extends Component
 
     public function saveFee()
     {
-        // $this->validate([
-        //     'dataFee.fee_type' => 'required',
-        //     'dataFee.fee' => 'required',
-        // ], [], [
-        //     'dataFee.fee_type' => 'tipo de taxa',
-        //     'dataFee.fee' => 'taxa',
-        // ]);
+        $errors = [];
 
         if (empty($this->dataFee['fee_type'])) {
-            return $this->emit('feeError', true);
+            $errors['fee_type'] = 'o campo tipo de taxa do cartão é obrigatório';
         }
 
         if (empty($this->dataFee['fee'])) {
-            return $this->emit('feeError', true);
+            $errors['fee'] = 'o campo taxa do cartão é obrigatório';
         }
 
-        $this->emit('feeError', false);
+        if (count($errors) > 0) {
+            return $this->emit('feeError', $errors);
+        } else {
+            $this->emit('feeError', null);
+        }
 
         $fee = str_replace('.', '', $this->dataFee['fee']);
         $fee = str_replace(',', '.', $fee);
 
-        $this->budget->update([
-            'fee_type' => $this->dataFee['fee_type'],
-            'fee' => $fee,
-        ]);
+        $this->budget->fee_type = $this->dataFee['fee_type'];
+        $this->budget->fee = $fee;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
 
-        return $this->emit('saved');
+        $this->dataFee = [];
+        $this->emit('feeUpdated');
     }
 
     public function saveDiscount()
     {
-        // $this->validate([
-        //     'dataDiscount.discount_type' => 'required',
-        //     'dataDiscount.discount' => 'required',
-        // ], [], [
-        //     'dataDiscount.discount_type' => 'tipo de desconto',
-        //     'dataDiscount.discount' => 'desconto',
-        // ]);
+        $errors = [];
 
         if (empty($this->dataDiscount['discount_type'])) {
-            return $this->emit('discountError', true);
+            $errors['discount_type'] = 'o campo tipo de desconto é obrigatório';
         }
 
         if (empty($this->dataDiscount['discount'])) {
-            return $this->emit('discountError', true);
+            $errors['discount'] = 'o campo desconto é obrigatório';
         }
 
-        $this->emit('discountError', false);
+        if (count($errors) > 0) {
+            return $this->emit('discountError', $errors);
+        } else {
+            $this->emit('discountError', null);
+        }
 
         if ($this->dataDiscount['discount_type'] == 'percent') {
-            $this->budget->update([
-                'discount_type' => $this->dataDiscount['discount_type'],
-                'discount' => intval($this->dataDiscount['discount']),
-            ]);
+            $this->budget->discount_type = $this->dataDiscount['discount_type'];
+            $this->budget->discount = intval($this->dataDiscount['discount']);
         } else {
             $discount = str_replace('.', '', $this->dataDiscount['discount']);
             $discount = str_replace(',', '.', $discount);
 
-            $this->budget->update([
-                'discount_type' => $this->dataDiscount['discount_type'],
-                'discount' => $discount,
-            ]);
+            $this->budget->discount_type = $this->dataDiscount['discount_type'];
+            $this->budget->discount = $discount;
         }
 
-        return $this->emit('saved');
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
+
+        $this->dataDiscount = [];
+        $this->emit('discountUpdated');
     }
 
     public function saveStatus()
     {
+        $errors = [];
+
         if (empty($this->dataStatus['status_id'])) {
-            return $this->emit('statusError', true);
+            $errors['status_id'] = 'o campo status é obrigatório';
         }
 
-        $this->emit('statusError', false);
+        if (count($errors) > 0) {
+            return $this->emit('statusError', $errors);
+        } else {
+            $this->emit('statusError', null);
+        }
 
-        $this->budget->update([
-            'status_id' => $this->dataStatus['status_id']
-        ]);
+        $this->budget->status_id = $this->dataStatus['status_id'];
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
 
         $this->dataStatus = [];
         $this->emit('statusUpdated');
@@ -501,22 +503,18 @@ class BudgetMountLivewire extends Component
 
     public function removeFee()
     {
-        $this->budget->update([
-            'fee_type' => null,
-            'fee' => null,
-        ]);
-
-        return $this->emit('saved');
+        $this->budget->fee_type = null;
+        $this->budget->fee = null;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
     }
 
     public function removeDiscount()
     {
-        $this->budget->update([
-            'discount_type' => null,
-            'discount' => null,
-        ]);
-
-        return $this->emit('saved');
+        $this->budget->discount_type = null;
+        $this->budget->discount = null;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
     }
 
     public function saveChangeRoom($products)
@@ -543,7 +541,7 @@ class BudgetMountLivewire extends Component
         $budgetRoomProduct->days = implode(',', $days);
         $budgetRoomProduct->save();
 
-        return $this->emit('saved');
+        return $this->mountBudget();
     }
 
     public function onChangeQuantity(BudgetRoomProduct $budgetRoomProduct, $quantity)
@@ -552,9 +550,7 @@ class BudgetMountLivewire extends Component
             $budgetRoomProduct->quantity = $quantity;
             $budgetRoomProduct->save();
 
-            // $this->dataProduct = [];
-            // $this->getRooms();
-            return $this->emit('saved');
+            return $this->mountBudget();
         }
     }
 
@@ -564,9 +560,7 @@ class BudgetMountLivewire extends Component
             $budgetRoomLabor->quantity = $quantity;
             $budgetRoomLabor->save();
 
-            // $this->dataLabor = [];
-            // $this->getRooms();
-            return $this->emit('saved');
+            return $this->mountBudget();
         }
     }
 
@@ -576,9 +570,7 @@ class BudgetMountLivewire extends Component
             $budgetRoomLabor->days = $days;
             $budgetRoomLabor->save();
 
-            // $this->dataLabor = [];
-            // $this->getRooms();
-            return $this->emit('saved');
+            return $this->mountBudget();
         }
     }
 
@@ -594,11 +586,11 @@ class BudgetMountLivewire extends Component
     {
         $status = Status::where('slug', 'revisao')->first();
 
-        $this->budget->update([
-            'budget_version' => $this->budget->budget_version + 1,
-            'status_id' => $status->id,
-        ]);
+        $this->budget->budget_version = $this->budget->budget_version + 1;
+        $this->budget->status_id = $status->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
 
-        return $this->emit('saved');
+        $this->emit('newVersionGenerated');
     }
 }
