@@ -170,17 +170,18 @@ Route::middleware('auth')->group(function () {
     Route::resource('budgets.expenses', BudgetExpenseController::class)->names('budgets.expenses');
     Route::resource('budgets.documents', BudgetDocumentController::class)->names('budgets.documents');
 
-    Route::get('orderServices/mount/{orderService}', [OrderServiceController::class, 'mount'])->name('orderServices.mount');
-    Route::get('orderServices/print/{orderService}', [OrderServiceController::class, 'print'])->name('orderServices.print');
-    Route::get('orderServices/print/provider/{orderService}/{provider}', [OrderServiceController::class, 'printProvider'])->name('orderServices.print.provider');
-    Route::delete('orderServices/room/product/{orderServiceRoomProduct}', [OrderServiceController::class, 'roomProductDestroy'])->name('orderServices.room.product.destroy');
-    Route::delete('orderServices/room/provider/{orderServiceRoomProvider}', [OrderServiceController::class, 'roomProviderDestroy'])->name('orderServices.room.provider.destroy');
-    Route::delete('orderServices/room/provider/{orderServiceRoomGroup}', [OrderServiceController::class, 'roomGroupDestroy'])->name('orderServices.room.group.destroy');
-    Route::delete('orderServices/room/freelancer/{orderServiceRoomFreelancer}', [OrderServiceController::class, 'roomFreelancerDestroy'])->name('orderServices.room.freelancer.destroy');
-    Route::resource('orderServices', OrderServiceController::class)->names('orderServices');
-    Route::resource('orderServices.documents', OrderServiceDocumentController::class)->names('orderServices.documents');
-    Route::resource('orderServices.checks', OrderServiceCheckController::class)->names('orderServices.checks');
-    Route::resource('orderServices.expenses', OrderServiceExpenseController::class)->names('orderServices.expenses');
+    Route::get('order-services/mount/{orderService}', [OrderServiceController::class, 'mount'])->name('orderServices.mount');
+    Route::get('order-services/print/{orderService}', [OrderServiceController::class, 'print'])->name('orderServices.print');
+    Route::get('order-services/print/provider/{orderService}/{provider}', [OrderServiceController::class, 'printProvider'])->name('orderServices.print.provider');
+    Route::delete('order-services/room/product/{orderServiceRoomProduct}', [OrderServiceController::class, 'roomProductDestroy'])->name('orderServices.room.product.destroy');
+    Route::delete('order-services/room/provider/{orderServiceRoomProvider}', [OrderServiceController::class, 'roomProviderDestroy'])->name('orderServices.room.provider.destroy');
+    Route::delete('order-services/room/provider/{orderServiceRoomGroup}', [OrderServiceController::class, 'roomGroupDestroy'])->name('orderServices.room.group.destroy');
+    Route::delete('order-services/room/freelancer/{orderServiceRoomFreelancer}', [OrderServiceController::class, 'roomFreelancerDestroy'])->name('orderServices.room.freelancer.destroy');
+    Route::resource('order-services', OrderServiceController::class)->names('orderServices');
+    Route::get('order-services/create/{budget}', [OrderServiceController::class, 'create'])->name('orderServices.create.budget');
+    Route::resource('order-services.documents', OrderServiceDocumentController::class)->names('orderServices.documents');
+    Route::resource('order-services.checks', OrderServiceCheckController::class)->names('orderServices.checks');
+    Route::resource('order-services.expenses', OrderServiceExpenseController::class)->names('orderServices.expenses');
 
     Route::any('/imports/products', [ImportController::class, 'products'])->name('imports.products');
     Route::any('/imports/os-products', [ImportController::class, 'osProducts'])->name('imports.os-products');

@@ -197,7 +197,7 @@ class OrderServiceMountLivewire extends Component
 
     public function render()
     {
-        return view('orderServices.livewire.mount');
+        return view('order-services.livewire.mount');
     }
 
     public function addProduct()

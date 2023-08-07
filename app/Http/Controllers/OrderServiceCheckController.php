@@ -49,14 +49,14 @@ class OrderServiceCheckController extends Controller
 
         $budget = $orderService->budget;
 
-        return view('orderServices.check', compact('budget', 'orderService', 'orderServiceCheck'));
+        return view('order-services.check', compact('budget', 'orderService', 'orderServiceCheck'));
     }
 
     public function create(OrderService $orderService)
     {
         $document = new OrderServiceDocument();
 
-        return view('orderServices.documents.form', compact('orderService', 'document'));
+        return view('order-services.documents.form', compact('orderService', 'document'));
     }
 
     public function store(OrderService $orderService, OrderServiceDocumentRequest $request)
@@ -80,7 +80,7 @@ class OrderServiceCheckController extends Controller
 
     public function edit(OrderService $orderService, OrderServiceDocument $document, $showMode = false)
     {
-        return view('orderServices.documents.form', compact('orderService', 'document', 'showMode'));
+        return view('order-services.documents.form', compact('orderService', 'document', 'showMode'));
     }
 
     public function update(OrderService $orderService, OrderServiceDocument $document, OrderServiceDocumentRequest $request)

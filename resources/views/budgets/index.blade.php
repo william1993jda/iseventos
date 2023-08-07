@@ -34,6 +34,7 @@
                         <th class="text-center whitespace-nowrap">DIAS DO EVENTO</th>
                         <th class="text-center whitespace-nowrap">LOCAL</th>
                         <th class="text-center whitespace-nowrap">CLIENTE</th>
+                        <th class="text-center whitespace-nowrap">ALTERADO POR</th>
                         <th class="text-center whitespace-nowrap">STATUS</th>
                         <th class="text-center whitespace-nowrap">AÇÕES</th>
                     </tr>
@@ -46,8 +47,9 @@
                                     class="font-medium whitespace-nowrap">{{ $budget->name }}</a>
                             </td>
                             <td class="text-center">{{ $budget->budget_days }}</td>
-                            <td class="text-center">{{ $budget->place->name }}</td>
+                            <td class="text-center">{{ $budget->place_id ? $budget->place->name : null }}</td>
                             <td class="text-center">{{ $budget->customer->fantasy_name }}</td>
+                            <td class="text-center">{{ $budget->last_user_id ? $budget->lastUser->name : null }}</td>
                             <td class="text-center">{{ $budget->status->name }}</td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">

@@ -1,4 +1,10 @@
 <div>
+    <style>
+        .table th,
+        .table td {
+            padding: 0.75rem;
+        }
+    </style>
     <div class="intro-y flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Montar orçamento
@@ -19,7 +25,7 @@
             @endif
             <x-forms.buttons.primary route="budgets.documents.index" :id="$budget->id" label="Documentos" />
             <a href="{{ route('budgets.print', $budget->id) }}" target="_blank"
-                class="btn btn-primary shadow-md mr-2">Imprimir</a>
+                class="btn btn-primary shadow-md">Imprimir</a>
         </div>
         <div class="intro-y col-span-12 box px-5 pt-5">
             <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
@@ -37,20 +43,21 @@
                             <span class="font-semibold">Nome do Evento:</span>&nbsp;{{ $budget->name }}
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
-                            <span class="font-semibold">Local do Evento:</span>&nbsp;{{ $budget->place->name }}
-                        </div>
-                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
-                            <span class="font-semibold">Endereço do
-                                Local:</span>&nbsp;{{ $budget->place->getfullAddress() }}
-                        </div>
-                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Status:</span>&nbsp;{{ $budget->status->name }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                            <span class="font-semibold">Criado
+                                por:</span>&nbsp;{{ $budget->user_id ? $budget->user->name : null }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                            <span class="font-semibold">Alterado
+                                por:</span>&nbsp;{{ $budget->last_user_id ? $budget->lastUser->name : null }}
                         </div>
                     </div>
                 </div>
                 <div
                     class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 dark:border-darkmode-400 border-t lg:border-t-0 pt-5 lg:pt-0">
-                    <div class="font-medium text-center lg:text-left lg:mt-3">DATAS</div>
+                    <div class="font-medium text-center lg:text-left lg:mt-3">DATAS E LOCAL</div>
                     <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                         <div class="truncate sm:whitespace-normal flex items-center">
                             <span class="font-semibold">Data da
@@ -66,6 +73,15 @@
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Data
                                 Desmontagem:</span>&nbsp;{{ $budget->unmount_date->format('d/m/Y') }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                            <span class="font-semibold">
+                                Local do Evento:</span>&nbsp;{{ $budget->place_id ? $budget->place->name : null }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                            <span class="font-semibold">
+                                Endereço do
+                                Local:</span>&nbsp;{{ $budget->place_id ? $budget->place->getfullAddress() : null }}
                         </div>
                     </div>
                 </div>
@@ -107,293 +123,223 @@
                 <div class="my-3">{!! nl2br($budget->observation) !!}</div>
             </div>
         </div>
-        <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2" wire:ignore>
+        <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             @if ($canEdit)
                 <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProduct">
-                    <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Equipamento
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="lucide lucide-plus-square w-4 h-4 text-white mr-2">
+                        <rect width="18" height="18" x="3" y="3" rx="2" />
+                        <path d="M8 12h8" />
+                        <path d="M12 8v8" />
+                    </svg>
+                    Equipamento
                 </button>
                 <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addLabor">
-                    <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Mão de obra
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="lucide lucide-plus-square w-4 h-4 text-white mr-2">
+                        <rect width="18" height="18" x="3" y="3" rx="2" />
+                        <path d="M8 12h8" />
+                        <path d="M12 8v8" />
+                    </svg>
+                    Mão de obra
                 </button>
             @else
                 <button type="button" class="btn btn-primary shadow-md mr-2" disabled>
-                    <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Equipamento
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="lucide lucide-plus-square w-4 h-4 text-white mr-2">
+                        <rect width="18" height="18" x="3" y="3" rx="2" />
+                        <path d="M8 12h8" />
+                        <path d="M12 8v8" />
+                    </svg>
+                    Equipamento
                 </button>
                 <button type="button" class="btn btn-primary shadow-md mr-2" disabled>
-                    <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Mão de obra
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="lucide lucide-plus-square w-4 h-4 text-white mr-2">
+                        <rect width="18" height="18" x="3" y="3" rx="2" />
+                        <path d="M8 12h8" />
+                        <path d="M12 8v8" />
+                    </svg>
+                    Mão de obra
                 </button>
             @endif
         </div>
-        @if (count($rooms) > 0)
+
+        <div class="intro-x col-span-12">
             @php
                 $total = 0;
             @endphp
-            <div class="intro-x col-span-12">
-                @foreach ($rooms as $index => $room)
-                    <h3 class="text-lg font-medium mr-auto">
-                        {{ $room['place_room_name'] }}
-                    </h3>
-                    <div class="intro-y col-span-12 box px-5 pt-5 my-3">
-                        <div class="overflow-x-auto">
-                            <table class="table">
-                                <thead>
+            @if (!empty($listProducts['categories']))
+                <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+                    <h2 class="font-medium text-base mr-auto">EQUIPAMENTOS</h2>
+                    <div class="hidden md:block mx-auto text-slate-500"></div>
+                    @if ($canEdit)
+                        <button class="btn btn-primary shadow-md mr-2" onclick="changeRoom()">Trocar sala</button>
+                    @else
+                        <button class="btn btn-primary shadow-md mr-2" disabled>Trocar sala</button>
+                    @endif
+                </div>
+                <div class="intro-y col-span-12 box px-5 pt-5 my-3">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="whitespace-nowrap">
+                                    <input type="checkbox" name="checkbox_product" onclick="checkAllProduct()">
+                                </th>
+                                <th class="whitespace-nowrap">EQUIPAMENTO</th>
+                                @foreach ($listProducts['days'] as $day)
+                                    <th class="whitespace-nowrap w-10">{{ $day }}</th>
+                                @endforeach
+                                <th class="whitespace-nowrap text-center w-10">SALA</th>
+                                <th class="whitespace-nowrap text-center w-10">QUANTIDADE</th>
+                                <th class="whitespace-nowrap text-center w-10">VALOR</th>
+                                <th class="whitespace-nowrap text-center w-10">TOTAL</th>
+                                <th class="whitespace-nowrap w-10">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($listProducts['categories'] as $category)
+                                <tr class="bg-red-100">
+                                    <td class="whitespace-nowrap">&nbsp;</td>
+                                    <td class="whitespace-nowrap font-medium">
+                                        {{ $category['name'] }}
+                                    </td>
+                                    <td class="whitespace-nowrap" colspan="{{ count($listProducts['days']) + 5 }}">
+                                        &nbsp;</td>
+                                </tr>
+                                @foreach ($category['products'] as $product)
+                                    @php
+                                        $days = count(explode(',', $product['days']));
+                                        $total += $product['quantity'] * $product['price'] * $days;
+                                    @endphp
                                     <tr>
-                                        <th class="whitespace-nowrap">EQUIPAMENTO</th>
-                                        @foreach ($room['days'] as $roomDate)
-                                            <th class="whitespace-nowrap w-10">{{ $roomDate }}</th>
+                                        <td class="whitespace-nowrap w-4">
+                                            <input type="checkbox" class="checkbox_product"
+                                                value="{{ $product['id'] }}">
+                                        </td>
+                                        <td class="whitespace">{{ $product['product']['name'] }}</td>
+                                        @foreach ($listProducts['days'] as $day)
+                                            <td class="whitespace-nowrap">
+                                                @if ($canEdit)
+                                                    @if (in_array($day, explode(',', $product['days'])))
+                                                        <x-forms.checkbox name="active" :checked="true"
+                                                            wire:click="checkDayRoom({{ $product['id'] }}, '{{ $day }}')" />
+                                                    @else
+                                                        <x-forms.checkbox name="active" :checked="false"
+                                                            wire:click="checkDayRoom({{ $product['id'] }}, '{{ $day }}')" />
+                                                    @endif
+                                                @else
+                                                    @if (in_array($day, explode(',', $product['days'])))
+                                                        <x-forms.checkbox name="active" :checked="true" disabled />
+                                                    @else
+                                                        <x-forms.checkbox name="active" :checked="false" disabled />
+                                                    @endif
+                                                @endif
+                                            </td>
                                         @endforeach
-                                        <th class="whitespace-nowrap w-10">VALOR</th>
-                                        <th class="whitespace-nowrap w-10">QUANTIDADE</th>
-                                        <th class="whitespace-nowrap w-10">TOTAL</th>
-                                        <th class="whitespace-nowrap w-10">&nbsp;</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($room['categories'] as $category)
-                                        <tr class="bg-red-100">
-                                            <td class="whitespace-nowrap font-medium">{{ $category['name'] }}</td>
-                                            <td class="whitespace-nowrap" colspan="{{ count($room['days']) + 4 }}">
-                                                &nbsp;</td>
-                                        </tr>
-                                        @foreach ($category['products'] as $product)
-                                            @php
-                                                $days = count(explode(',', $product['days']));
-                                                $total += $product['quantity'] * $product['price'] * $days;
-                                            @endphp
-                                            <tr>
-                                                <td class="whitespace-nowrap">{{ $product['product']['name'] }}</td>
-                                                @foreach ($room['days'] as $roomDate)
-                                                    <td class="whitespace-nowrap">
-                                                        @if ($canEdit)
-                                                            @if (in_array($roomDate, explode(',', $product['days'])))
-                                                                <x-forms.checkbox name="active" :checked="true"
-                                                                    wire:click="checkDayRoom({{ $product['id'] }}, '{{ $roomDate }}')" />
-                                                            @else
-                                                                <x-forms.checkbox name="active" :checked="false"
-                                                                    wire:click="checkDayRoom({{ $product['id'] }}, '{{ $roomDate }}')" />
-                                                            @endif
-                                                        @else
-                                                            @if (in_array($roomDate, explode(',', $product['days'])))
-                                                                <x-forms.checkbox name="active" :checked="true"
-                                                                    disabled />
-                                                            @else
-                                                                <x-forms.checkbox name="active" :checked="false"
-                                                                    disabled />
-                                                            @endif
-                                                        @endif
-                                                    </td>
+                                        <td class="whitespace-nowrap w-48">
+                                            <select name="place_room_id" class="form-control w-full"
+                                                wire:change="onChangeRoom({{ $product['id'] }}, $event.target.value)">
+                                                <option value="">Selecione</option>
+                                                @foreach ($placeRooms as $placeRoomId => $placeRoomName)
+                                                    @if ($placeRoomId == $product['place_room_id'])
+                                                        <option value="{{ $placeRoomId }}" selected>
+                                                            {{ $placeRoomName }}
+                                                        </option>
+                                                    @else
+                                                        <option value="{{ $placeRoomId }}">
+                                                            {{ $placeRoomName }}
+                                                        </option>
+                                                    @endif
                                                 @endforeach
-                                                <td class="whitespace-nowrap">
-                                                    {{ number_format($product['price'], 2, ',', '.') }}
-                                                </td>
-                                                <td class="whitespace-nowrap">
-                                                    @if ($canEdit)
-                                                        <x-forms.number name="quantity" min="1"
-                                                            :value="$product['quantity']"
-                                                            wire:change="onChangeQuantity({{ $product['id'] }}, $event.target.value)" />
-                                                    @else
-                                                        <x-forms.number name="quantity" min="1"
-                                                            :value="$product['quantity']" disabled />
-                                                    @endif
-                                                </td>
-                                                <td class="whitespace-nowrap">
-                                                    {{ number_format($product['quantity'] * $product['price'] * $days, 2, ',', '.') }}
-                                                </td>
-                                                <td class="whitespace-nowrap" wire:ignore>
-                                                    @if ($canEdit)
-                                                        <button
-                                                            class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                            data-action="{{ route('budgets.room.product.destroy', $product['id']) }}"
-                                                            data-tw-toggle="modal"
-                                                            data-tw-target="#delete-confirmation-modal"
-                                                            type="button">
-                                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                        </button>
-                                                    @else
-                                                        <button
-                                                            class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"type="button"
-                                                            disabled>
-                                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                        </button>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        @foreach ($category['labors'] as $labor)
-                                            @php
-                                                $days = $labor['days'];
-                                                $total += $labor['quantity'] * $labor['price'] * $days;
-                                            @endphp
-                                            <tr>
-                                                <td class="whitespace-nowrap">{{ $labor['labor']['name'] }}</td>
-                                                <td class="whitespace-nowrap" colspan="{{ count($room['days']) }}">
-                                                    <div class="flex items-center justify-end w-32">
-                                                        @if ($canEdit)
-                                                            <x-forms.number name="days" min="1"
-                                                                :value="$labor['days']" class="form-control"
-                                                                wire:change="onChangeLaborDays({{ $labor['id'] }}, $event.target.value)" />
-                                                        @else
-                                                            <x-forms.number name="days" min="1"
-                                                                :value="$labor['days']" class="form-control" disabled />
-                                                        @endif
-                                                        &nbsp;&nbsp;diárias
-                                                    </div>
-                                                </td>
-                                                <td class="whitespace-nowrap">
-                                                    {{ number_format($labor['price'], 2, ',', '.') }}
-                                                </td>
-                                                <td class="whitespace-nowrap">
-                                                    @if ($canEdit)
-                                                        <x-forms.number name="quantity" min="1"
-                                                            :value="$labor['quantity']"
-                                                            wire:change="onChangeLaborQuantity({{ $labor['id'] }}, $event.target.value)" />
-                                                    @else
-                                                        <x-forms.number name="quantity" min="1"
-                                                            :value="$labor['quantity']" disabled />
-                                                    @endif
-                                                </td>
-                                                <td class="whitespace-nowrap">
-                                                    {{ number_format($labor['quantity'] * $labor['price'] * $days, 2, ',', '.') }}
-                                                </td>
-                                                <td class="whitespace-nowrap" wire:ignore>
-                                                    @if ($canEdit)
-                                                        <button
-                                                            class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                            data-action="{{ route('budgets.room.labor.destroy', $labor['id']) }}"
-                                                            data-tw-toggle="modal"
-                                                            data-tw-target="#delete-confirmation-modal"
-                                                            type="button">
-                                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                        </button>
-                                                    @else
-                                                        <button
-                                                            class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                            disabled>
-                                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                        </button>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                @endforeach
-                <div class="intro-y col-span-12 box px-5 py-5 my-3">
-                    <div class="text-l font-medium text-right">
-                        SUBTOTAL: R$ {{ number_format($total, 2, ',', '.') }}
-                    </div>
+                                            </select>
+                                        </td>
+                                        <td class="whitespace-nowrap">
+                                            @if ($canEdit)
+                                                <x-forms.number name="quantity_product_{{ $product['id'] }}"
+                                                    min="1" :value="$product['quantity']"
+                                                    wire:change="onChangeQuantity({{ $product['id'] }}, $event.target.value)" />
+                                            @else
+                                                <x-forms.number name="quantity_product_{{ $product['id'] }}"
+                                                    min="1" :value="$product['quantity']" disabled />
+                                            @endif
+                                        </td>
+                                        <td class="whitespace-nowrap">
+                                            {{ number_format($product['price'], 2, ',', '.') }}
+                                        </td>
+                                        <td class="whitespace-nowrap">
+                                            {{ number_format($product['quantity'] * $product['price'] * $days, 2, ',', '.') }}
+                                        </td>
+                                        <td class="whitespace-nowrap">
+                                            @if ($canEdit)
+                                                <button class="btn btn-sm btn-primary delete-confirmation-button"
+                                                    type="button"
+                                                    wire:click="confirmProductRemove({{ $product['id'] }})">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" class="lucide lucide-trash-2 w-5 h-5">
+                                                        <path d="M3 6h18" />
+                                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                                        <line x1="10" x2="10" y1="11"
+                                                            y2="17" />
+                                                        <line x1="14" x2="14" y1="11"
+                                                            y2="17" />
+                                                    </svg>
+                                                </button>
+                                            @else
+                                                <button class="btn btn-sm btn-primary delete-confirmation-button"
+                                                    type="button" disabled>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" class="lucide lucide-trash-2 w-5 h-5">
+                                                        <path d="M3 6h18" />
+                                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                                        <line x1="10" x2="10" y1="11"
+                                                            y2="17" />
+                                                        <line x1="14" x2="14" y1="11"
+                                                            y2="17" />
+                                                    </svg>
+                                                </button>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
 
-                    @php
-                        $subtotal = $total;
-                        $totalFee = 0;
-                        $totalDiscount = 0;
-                    @endphp
+    </div>
 
-                    @if (!empty($budget['fee']))
-                        <div>
-                            @if ($budget['fee_type'] == 'percent')
-                                @php
-                                    $feePercentage = $budget['fee'];
-                                    $totalFeePercentage = ($feePercentage / 100) * $total;
-                                    $totalFee = $totalFeePercentage;
-                                @endphp
-                                <div class="text-l font-medium text-right">
-                                    <span class="text-green-500">TAXA DO CARTÃO ({{ $budget['fee'] }}%): R$
-                                        {{ number_format($totalFeePercentage, 2, ',', '.') }}</span>
-                                </div>
-                            @else
-                                @php
-                                    $totalFee = $budget['fee'];
-                                @endphp
-                                <div class="text-l font-medium text-right">
-                                    <span class="text-green-500">TAXA DO CARTÃO (R$
-                                        {{ number_format($budget['fee'], 2, ',', '.') }}): R$
-                                        {{ number_format($budget['fee'], 2, ',', '.') }}</span>
-                                </div>
-                            @endif
-                        </div>
-                    @endif
-                    @if (!empty($budget['discount']))
-                        <div>
-                            @if ($budget['discount_type'] == 'percent')
-                                @php
-                                    $discountPercentage = $budget['discount'];
-                                    $totalDiscountPercentage = ($discountPercentage / 100) * $total;
-                                    $totalDiscount = $totalDiscountPercentage;
-                                @endphp
-                                <div class="text-l font-medium text-right">
-                                    <span class="text-red-500">DESCONTO ({{ $budget['discount'] }}%): R$
-                                        {{ number_format($totalDiscountPercentage, 2, ',', '.') }}</span>
-                                </div>
-                            @else
-                                @php
-                                    $totalDiscount = $budget['discount'];
-                                @endphp
-                                <div class="text-l font-medium text-right">
-                                    <span class="text-red-500">DESCONTO (R$
-                                        {{ number_format($budget['discount'], 2, ',', '.') }}): R$
-                                        {{ number_format($budget['discount'], 2, ',', '.') }}</span>
-                                </div>
-                            @endif
-                        </div>
-                    @endif
-
-                    @php
-                        $total = $subtotal - $totalDiscount + $totalFee;
-                    @endphp
-                    <hr class="my-2">
-                    <div class="text-lg font-medium text-right">
-                        <span>TOTAL: R$ {{ number_format($total, 2, ',', '.') }}</span>
-                    </div>
-                    <div class="flex justify-end mt-3">
-                        @if ($canEdit)
-                            @if (empty($budget['fee']))
-                                <button type="button" class="btn btn-primary shadow-md" wire:click="addFee">
-                                    Aplicar taxa do cartão
-                                </button>
-                            @else
-                                <button type="button" class="btn btn-primary shadow-md" wire:click="removeFee">
-                                    Remover taxa do cartão
-                                </button>
-                            @endif
-                            @if (empty($budget['discount']))
-                                <button type="button" class="btn btn-primary shadow-md ml-2"
-                                    wire:click="addDiscount">
-                                    Aplicar desconto
-                                </button>
-                            @else
-                                <button type="button" class="btn btn-primary shadow-md ml-2"
-                                    wire:click="removeDiscount">
-                                    Remover desconto
-                                </button>
-                            @endif
-                        @else
-                            @if (empty($budget['fee']))
-                                <button type="button" class="btn btn-primary shadow-md" disabled>
-                                    Aplicar taxa do cartão
-                                </button>
-                            @else
-                                <button type="button" class="btn btn-primary shadow-md" disabled>
-                                    Remover taxa do cartão
-                                </button>
-                            @endif
-                            @if (empty($budget['discount']))
-                                <button type="button" class="btn btn-primary shadow-md ml-2" disabled>
-                                    Aplicar desconto
-                                </button>
-                            @else
-                                <button type="button" class="btn btn-primary shadow-md ml-2" disabled>
-                                    Remover desconto
-                                </button>
-                            @endif
-                        @endif
+    <div id="modal-budget-change-room" class="modal" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="font-medium text-base mr-auto">Seleciona a sala abaixo</h2>
+                </div>
+                <div class="modal-body" wire:ignore>
+                    <div class="sm:grid grid-cols-1 gap-2">
+                        <x-forms.select name="place_room_id" label="Sala" :options="$placeRooms"
+                            wire:model="dataRoom.place_room_id" />
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 mr-1">Cancelar</button>
+                    <button type="button" class="btn btn-primary w-20" onclick="saveChangeRoom()">Salvar</button>
+                </div>
             </div>
-        @endif
+        </div>
     </div>
 
     <!-- BEGIN: Budget New Version Modal -->
@@ -420,57 +366,118 @@
     </div>
     <!-- END: Budget New Version Modal -->
 
-    @include('budgets.partials.modal-product')
+    @component('budgets.partials.modal-product', ['categories' => $categories, 'placeRooms' => $placeRooms])
+    @endcomponent
+
+    {{-- @include('budgets.partials.modal-product')
     @include('budgets.partials.modal-labor')
     @include('budgets.partials.modal-fee')
     @include('budgets.partials.modal-discount')
     @include('budgets.partials.modal-status')
-    @include('budgets.partials.modal-observation')
+    @include('budgets.partials.modal-observation') --}}
 
     @push('custom-scripts')
         <script type="text/javascript">
-            var modalBudgetProduct = null;
+            var modalChangeRoom = null;
             var modalBudgetLabor = null;
             var modalBudgetFee = null;
             var modalBudgetDiscount = null;
             var modalBudgetStatus = null;
             var modalBudgetObservation = null;
-            var selectProductId = null;
             var selectLaborId = null;
-            var inputPrice = null;
             var inputLaborPrice = null;
-            var alertProductError = null;
             var alertLaborError = null;
             var alertFeeError = null;
             var alertDiscountError = null;
             var alertStatusError = null;
 
-            document.addEventListener("DOMContentLoaded", function(e) {
-                selectProductId = document.getElementById('product_id').tomselect;
-                selectLaborId = document.getElementById('labor_id').tomselect;
-                inputPrice = document.getElementById('price');
-                inputLaborPrice = document.getElementById('labor_price');
-                alertProductError = document.getElementById('alert-product-error');
-                alertLaborError = document.getElementById('alert-labor-error');
-                alertFeeError = document.getElementById('alert-fee-error');
-                alertDiscountError = document.getElementById('alert-discount-error');
-                alertStatusError = document.getElementById('alert-status-error');
-                modalBudgetProduct = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-budget-product"));
-                modalBudgetLabor = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-budget-labor"));
-                modalBudgetFee = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-budget-fee"));
-                modalBudgetDiscount = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-budget-discount"));
-                modalBudgetStatus = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-budget-status"));
-                modalBudgetObservation = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-budget-observation"));
-            });
+            function checkAllProduct() {
+                if ($('input[name="checkbox_product"]').is(':checked')) {
+                    for (var i = 0; i < $('input[class="checkbox_product"]').length; i++) {
+                        $('input[class="checkbox_product"]')[i].checked = true;
+                    }
+                } else {
+                    for (var i = 0; i < $('input[class="checkbox_product"]').length; i++) {
+                        $('input[class="checkbox_product"]')[i].checked = false;
+                    }
+                }
+            }
 
-            window.livewire.on('addProduct', () => {
-                modalBudgetProduct.show();
+            function changeRoom() {
+                var products = [];
+                for (var i = 0; i < $('input[class="checkbox_product"]').length; i++) {
+                    if ($('input[class="checkbox_product"]')[i].checked) {
+                        products.push($('input[class="checkbox_product"]')[i].value);
+                    }
+                }
+                if (products.length > 0) {
+                    modalChangeRoom.show();
+                } else {
+                    document.getElementById('error-notification-title').innerHTML = "Atenção!";
+                    document.getElementById('error-notification-message').innerHTML = "Selecione pelo menos um equipamento!";
+
+                    Toastify({
+                        node: $("#error-notification").clone().removeClass("hidden")[0],
+                        duration: 5000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "transparent",
+                        stopOnFocus: true,
+                    }).showToast();
+                }
+            }
+
+            function saveChangeRoom() {
+                var products = [];
+                for (var i = 0; i < $('input[class="checkbox_product"]').length; i++) {
+                    if ($('input[class="checkbox_product"]')[i].checked) {
+                        products.push($('input[class="checkbox_product"]')[i].value);
+                    }
+                }
+                if (products.length > 0) {
+                    @this.saveChangeRoom(products);
+                } else {
+                    document.getElementById('error-notification-title').innerHTML = "Atenção!";
+                    document.getElementById('error-notification-message').innerHTML = "Selecione pelo menos um equipamento!";
+
+                    Toastify({
+                        node: $("#error-notification").clone().removeClass("hidden")[0],
+                        duration: 5000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "transparent",
+                        stopOnFocus: true,
+                    }).showToast();
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function(e) {
+                modalChangeRoom = tailwind.Modal.getInstance(document.querySelector(
+                    "#modal-budget-change-room"));
+
+
+                // selectLaborId = document.getElementById('labor_id').tomselect;
+                // inputLaborPrice = document.getElementById('labor_price');
+
+                // alertLaborError = document.getElementById('alert-labor-error');
+                // alertFeeError = document.getElementById('alert-fee-error');
+                // alertDiscountError = document.getElementById('alert-discount-error');
+                // alertStatusError = document.getElementById('alert-status-error');
+
+                // modalBudgetLabor = tailwind.Modal.getInstance(document.querySelector(
+                //     "#modal-budget-labor"));
+                // modalBudgetFee = tailwind.Modal.getInstance(document.querySelector(
+                //     "#modal-budget-fee"));
+                // modalBudgetDiscount = tailwind.Modal.getInstance(document.querySelector(
+                //     "#modal-budget-discount"));
+                // modalBudgetStatus = tailwind.Modal.getInstance(document.querySelector(
+                //     "#modal-budget-status"));
+                // modalBudgetObservation = tailwind.Modal.getInstance(document.querySelector(
+                //     "#modal-budget-observation"));
             });
 
             window.livewire.on('addLabor', () => {
@@ -493,17 +500,6 @@
                 modalBudgetObservation.toggle();
             });
 
-            window.livewire.on('updateProductList', (data) => {
-                selectProductId.clear();
-                selectProductId.clearOptions();
-                Object.keys(data).forEach(function(key) {
-                    selectProductId.addOption({
-                        value: key,
-                        text: data[key]
-                    });
-                });
-            });
-
             window.livewire.on('updateLaborList', (data) => {
                 selectLaborId.clear();
                 selectLaborId.clearOptions();
@@ -515,24 +511,8 @@
                 });
             });
 
-            window.livewire.on('updateProductPrice', (data) => {
-                inputPrice.value = data;
-            });
-
             window.livewire.on('updateLaborPrice', (data) => {
                 inputLaborPrice.value = data;
-            });
-
-            window.livewire.on('saved', () => {
-                window.location.reload();
-            });
-
-            window.livewire.on('productError', (show) => {
-                if (show) {
-                    alertProductError.classList.remove('hidden');
-                } else {
-                    alertProductError.classList.add('hidden');
-                }
             });
 
             window.livewire.on('laborError', (show) => {
@@ -556,6 +536,14 @@
                     alertStatusError.classList.remove('hidden');
                 } else {
                     alertStatusError.classList.add('hidden');
+                }
+            });
+
+            window.livewire.on('roomChanged', () => {
+                modalChangeRoom.hide();
+
+                for (var i = 0; i < $('input[class="checkbox_product"]').length; i++) {
+                    $('input[class="checkbox_product"]')[i].checked = false;
                 }
             });
         </script>

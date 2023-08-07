@@ -92,17 +92,17 @@ class BudgetController extends Controller
         $places = Place::pluck('name', 'id')->prepend('Selecione', '');
         $agencies = Agency::pluck('fantasy_name', 'id')->prepend('Selecione', '');
         $customers = Customer::pluck('fantasy_name', 'id')->prepend('Selecione', '');
+        $customerContacts = [];
 
         $settings = Settings::first();
 
-        return view('budgets.form', compact('budget', 'places', 'agencies', 'customers', 'settings'));
+        return view('budgets.form', compact('budget', 'places', 'agencies', 'customers', 'customerContacts', 'settings'));
     }
 
     public function store(BudgetRequest $request)
     {
         $params = $request->validated();
         $params['status_id'] = 1;
-        $params['budget_number'] = (int) Budget::max('budget_number') + 1;
 
         $budget = Budget::create($params);
 
@@ -114,8 +114,9 @@ class BudgetController extends Controller
         $places = Place::pluck('name', 'id')->prepend('Selecione', '');
         $agencies = Agency::pluck('fantasy_name', 'id')->prepend('Selecione', '');
         $customers = Customer::pluck('fantasy_name', 'id')->prepend('Selecione', '');
+        $customerContacts = CustomerContact::where('customer_id', $budget->customer_id)->orderBy('name', 'asc')->pluck('name', 'id')->prepend('Selecione', '');
 
-        return view('budgets.form', compact('budget', 'places', 'agencies', 'customers', 'showMode'));
+        return view('budgets.form', compact('budget', 'places', 'agencies', 'customers', 'customerContacts', 'showMode'));
     }
 
     public function update(Budget $budget, BudgetRequest $request)

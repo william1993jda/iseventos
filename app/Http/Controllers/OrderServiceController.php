@@ -33,7 +33,7 @@ class OrderServiceController extends Controller
         $customers = Customer::pluck('fantasy_name', 'id')->prepend('Selecione', '');
         $statuses = Status::pluck('name', 'id')->prepend('Selecione', '');
         $params = $request->all();
-        
+
         $query = [
             'name' => '',
             'budget_days' => '',
@@ -43,11 +43,12 @@ class OrderServiceController extends Controller
         ];
 
         if (!empty($params)) {
-            $orderServices = Budget::orderBy('id', 'DESC');
+            $orderServices = OrderService::orderBy('order_services.id', 'DESC');
+            $orderServices->join('budgets', 'budgets.id', '=', 'order_services.budget_id');
 
             if (!empty($params['name'])) {
                 $query['name'] = $params['name'];
-                $orderServices->where('name', 'like', '%' . $params['name'] . '%');
+                $orderServices->where('budgets.name', 'like', '%' . $params['name'] . '%');
             }
 
             if (!empty($params['budget_days'])) {
@@ -59,43 +60,61 @@ class OrderServiceController extends Controller
                 $end = explode('/', trim($budgetDays[1]));
                 $endDay = $end[2] . '-' . $end[1] . '-' . $end[0];
 
-                $orderServices->whereRaw("STR_TO_DATE(SUBSTRING_INDEX(budget_days, ' - ', 1), '%d/%m/%Y') >= '" . $startDay . "'");
-                $orderServices->whereRaw("STR_TO_DATE(SUBSTRING_INDEX(budget_days, ' - ', 1), '%d/%m/%Y') <= '" . $endDay . "'");
+                $orderServices->whereRaw("STR_TO_DATE(SUBSTRING_INDEX(budgets.budget_days, ' - ', 1), '%d/%m/%Y') >= '" . $startDay . "'");
+                $orderServices->whereRaw("STR_TO_DATE(SUBSTRING_INDEX(budgets.budget_days, ' - ', 1), '%d/%m/%Y') <= '" . $endDay . "'");
             }
 
             if (!empty($params['place_id'])) {
                 $query['place_id'] = $params['place_id'];
-                $orderServices->where('place_id', $params['place_id']);
+                $orderServices->where('budgets.place_id', $params['place_id']);
             }
 
             if (!empty($params['customer_id'])) {
                 $query['customer_id'] = $params['customer_id'];
-                $orderServices->where('customer_id', $params['customer_id']);
+                $orderServices->where('budgets.customer_id', $params['customer_id']);
             }
 
             if (!empty($params['status_id'])) {
                 $query['status_id'] = $params['status_id'];
-                $orderServices->where('status_id', $params['status_id']);
+                $orderServices->where('os_status_id', $params['status_id']);
             }
 
             $orderServices = $orderServices->paginate(30);
+            $budgets = [];
 
-            return view('orderServices.index', compact('orderServices', 'places', 'customers', 'statuses', 'query'));
+            // dd($orderServices);
+
+            return view('order-services.index', compact('budgets', 'orderServices', 'places', 'customers', 'statuses', 'query'));
         }
 
-        $orderServices = OrderService::orderBy('id', 'DESC')->paginate(10);
+        $orderServices = OrderService::orderBy('id', 'DESC');
 
-        return view('orderServices.index', compact('orderServices', 'places', 'customers', 'statuses', 'query'));
+        $budgetIds = $orderServices->pluck('budget_id')->unique()->toArray();
+        $statusApproved = Status::where('slug', 'aprovado')->first();
+        $budgets = Budget::whereNotIn('id', $budgetIds)->where('status_id', $statusApproved->id)->orderBy('id', 'DESC')->paginate(10);
+
+        $orderServices = $orderServices->paginate(30);
+
+        return view('order-services.index', compact('budgets', 'orderServices', 'places', 'customers', 'statuses', 'query'));
     }
 
-    public function create()
+    public function create(Budget $budget)
     {
-        $orderService = new OrderService();
-        $osStatuses = OsStatus::pluck('name', 'id')->prepend('Selecione', '');
-        $budgetIds = OrderService::pluck('budget_id')->toArray();
-        $budgets = Budget::whereNotIn('id', $budgetIds)->pluck('name', 'id')->prepend('Selecione', '');
+        $orderService = OrderService::create([
+            'os_status_id' => 1,
+            'budget_id' => $budget->id,
+            'os_number' => (int) OrderService::max('os_number') + 1,
+        ]);
 
-        return view('orderServices.form', compact('orderService', 'budgets', 'osStatuses'));
+        $orderServicesToday = OrderService::join('budgets', 'budgets.id', '=', 'order_services.budget_id')
+            ->where('budgets.mount_date', '=', $orderService->budget->mount_date)
+            ->count();
+
+        if ($orderServicesToday > 3) {
+            return redirect()->route('orderServices.mount')->with('warning', 'Já existem 3 ou mais eventos nesta mesma data.');
+        }
+
+        return redirect()->route('orderServices.mount', $orderService->id);
     }
 
     public function store(OrderServiceRequest $request)
@@ -123,7 +142,7 @@ class OrderServiceController extends Controller
         $osStatuses = OsStatus::pluck('name', 'id')->prepend('Selecione', '');
         $budgets = Budget::pluck('name', 'id')->prepend('Selecione', '');
 
-        return view('orderServices.form', compact('orderService', 'osStatuses', 'budgets', 'showMode'));
+        return view('order-services.form', compact('orderService', 'osStatuses', 'budgets', 'showMode'));
     }
 
     public function update(OrderService $orderService, OrderServiceRequest $request)
@@ -147,7 +166,7 @@ class OrderServiceController extends Controller
 
     public function mount(OrderService $orderService)
     {
-        return view('orderServices.mount', compact('orderService'));
+        return view('order-services.mount', compact('orderService'));
     }
 
 

@@ -343,14 +343,14 @@
         @endif
     </div>
 
-    @include('orderServices.partials.modal-product')
-    @include('orderServices.partials.modal-labor')
-    @include('orderServices.partials.modal-freelancer')
-    @include('orderServices.partials.modal-provider')
-    @include('orderServices.partials.modal-kit')
-    @include('orderServices.partials.modal-status')
-    @include('orderServices.partials.modal-observation')
-    @include('orderServices.partials.modal-print-provider')
+    @include('order-services.partials.modal-product')
+    @include('order-services.partials.modal-labor')
+    @include('order-services.partials.modal-freelancer')
+    @include('order-services.partials.modal-provider')
+    @include('order-services.partials.modal-kit')
+    @include('order-services.partials.modal-status')
+    @include('order-services.partials.modal-observation')
+    @include('order-services.partials.modal-print-provider')
 
     @push('custom-scripts')
         <script type="text/javascript">

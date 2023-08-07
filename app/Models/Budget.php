@@ -11,6 +11,8 @@ class Budget extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'user_id',
+        'last_user_id',
         'status_id',
         'customer_id',
         'customer_contact_id',
@@ -40,6 +42,24 @@ class Budget extends Model
         'mount_date' => 'date',
         'unmount_date' => 'date'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            $model->user_id = auth()->user()->id;
+            $model->last_user_id = auth()->user()->id;
+            $model->budget_number = (int) Budget::withTrashed()->max('budget_number') + 1;
+            $model->budget_version = 1;
+            $model->saveQuietly();
+        });
+
+        static::updated(function ($model) {
+            $model->last_user_id = auth()->user()->id;
+            $model->save();
+        });
+    }
 
     public function setRequestDateAttribute($value)
     {
@@ -94,5 +114,15 @@ class Budget extends Model
     public function orderService()
     {
         return $this->hasOne(OrderService::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function lastUser()
+    {
+        return $this->belongsTo(User::class, 'last_user_id');
     }
 }

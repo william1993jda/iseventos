@@ -21,7 +21,7 @@ class OrderServiceCheckLivewire extends Component
 
     public function render()
     {
-        return view('orderServices.livewire.check');
+        return view('order-services.livewire.check');
     }
 
     public function updateItems()

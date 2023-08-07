@@ -14,7 +14,7 @@ class OrderServiceExpenseController extends Controller
     {
         $expenses = $orderService->expenses()->paginate(10);
 
-        return view('orderServices.expenses.index', compact('orderService', 'expenses'));
+        return view('order-services.expenses.index', compact('orderService', 'expenses'));
     }
 
     public function create(OrderService $orderService)
@@ -22,7 +22,7 @@ class OrderServiceExpenseController extends Controller
         $expense = new OrderServiceExpense;
         // dd('XXX', $expense);
 
-        return view('orderServices.expenses.form', compact('orderService', 'expense'));
+        return view('order-services.expenses.form', compact('orderService', 'expense'));
     }
 
     public function store(OrderService $orderService, OrderServiceExpenseRequest $request)
@@ -34,7 +34,7 @@ class OrderServiceExpenseController extends Controller
 
     public function edit(OrderService $orderService, OrderServiceExpense $expense, $showMode = false)
     {
-        return view('orderServices.expenses.form', compact('orderService', 'expense', 'showMode'));
+        return view('order-services.expenses.form', compact('orderService', 'expense', 'showMode'));
     }
 
     public function update(OrderService $orderService, OrderServiceExpense $expense, OrderServiceExpenseRequest $request)

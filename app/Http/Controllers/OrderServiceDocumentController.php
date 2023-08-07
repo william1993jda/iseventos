@@ -15,14 +15,14 @@ class OrderServiceDocumentController extends Controller
     {
         $documents = $orderService->documents()->paginate(10);
 
-        return view('orderServices.documents.index', compact('orderService', 'documents'));
+        return view('order-services.documents.index', compact('orderService', 'documents'));
     }
 
     public function create(OrderService $orderService)
     {
         $document = new OrderServiceDocument();
 
-        return view('orderServices.documents.form', compact('orderService', 'document'));
+        return view('order-services.documents.form', compact('orderService', 'document'));
     }
 
     public function store(OrderService $orderService, OrderServiceDocumentRequest $request)
@@ -46,7 +46,7 @@ class OrderServiceDocumentController extends Controller
 
     public function edit(OrderService $orderService, OrderServiceDocument $document, $showMode = false)
     {
-        return view('orderServices.documents.form', compact('orderService', 'document', 'showMode'));
+        return view('order-services.documents.form', compact('orderService', 'document', 'showMode'));
     }
 
     public function update(OrderService $orderService, OrderServiceDocument $document, OrderServiceDocumentRequest $request)

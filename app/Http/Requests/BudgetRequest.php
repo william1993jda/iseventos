@@ -26,7 +26,7 @@ class BudgetRequest extends FormRequest
         return [
             'customer_id' => 'required|exists:customers,id',
             'customer_contact_id' => 'required|exists:customer_contacts,id',
-            'place_id' => 'required|exists:places,id',
+            'place_id' => 'nullable|exists:places,id',
             'agency_id' => 'nullable|exists:agencies,id',
             'name' => 'required',
             'request_date' => 'required',

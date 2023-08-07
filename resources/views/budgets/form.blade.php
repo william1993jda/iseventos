@@ -50,7 +50,7 @@
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
                     <x-forms.select name="agency_id" label="Agência" :options="$agencies" />
                     <x-forms.select name="customer_id" label="Cliente" :options="$customers" />
-                    <x-forms.select name="customer_contact_id" label="Contato" :options="[]" />
+                    <x-forms.select name="customer_contact_id" label="Contato" :options="$customerContacts" />
                 </div>
                 <div class="sm:grid grid-cols-1 gap-2 mt-3">
                     <x-forms.textarea name="commercial_conditions" label="Condições Comerciais" />
