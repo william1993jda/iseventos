@@ -16,12 +16,13 @@ class CategoryController extends Controller
 
         if ($query) {
             $categories = Category::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->paginate(10);
 
             return view('categories.index', compact('categories', 'query'));
         }
 
-        $categories = Category::paginate(10);
+        $categories = Category::orderBy('name', 'ASC')->paginate(10);
 
         return view('categories.index', compact('categories', 'query'));
     }

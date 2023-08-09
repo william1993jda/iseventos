@@ -41,7 +41,7 @@ class BudgetController extends Controller
         ];
 
         if (!empty($params)) {
-            $budgets = Budget::orderBy('id', 'DESC');
+            $budgets = Budget::orderBy('name', 'ASC');
 
             if (!empty($params['name'])) {
                 $query['name'] = $params['name'];
@@ -81,7 +81,7 @@ class BudgetController extends Controller
             return view('budgets.index', compact('budgets', 'places', 'customers', 'statuses', 'query'));
         }
 
-        $budgets = Budget::orderBy('id', 'DESC')->paginate(30);
+        $budgets = Budget::orderBy('name', 'ASC')->paginate(30);
 
         return view('budgets.index', compact('budgets', 'places', 'customers', 'statuses', 'query'));
     }
