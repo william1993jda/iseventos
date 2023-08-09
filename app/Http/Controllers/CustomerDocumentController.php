@@ -13,7 +13,7 @@ class CustomerDocumentController extends Controller
 {
     public function index(Customer $customer)
     {
-        $documents = $customer->documents()->paginate(10);
+        $documents = $customer->documents()->orderBy('name', 'ASC')->paginate(10);
 
         return view('customers.documents.index', compact('customer', 'documents'));
     }

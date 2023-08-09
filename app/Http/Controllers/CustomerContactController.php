@@ -11,7 +11,7 @@ class CustomerContactController extends Controller
 {
     public function index(Customer $customer, Request $request)
     {
-        $contacts = $customer->contacts()->paginate(10);
+        $contacts = $customer->contacts()->orderBy('name', 'ASC')->paginate(10);
 
         return view('customers.contacts.index', compact('customer', 'contacts'));
     }

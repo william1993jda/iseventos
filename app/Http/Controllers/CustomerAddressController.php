@@ -11,7 +11,7 @@ class CustomerAddressController extends Controller
 {
     public function index(Customer $customer, Request $request)
     {
-        $addresses = $customer->addresses()->paginate(10);
+        $addresses = $customer->addresses()->orderBy('name', 'ASC')->paginate(10);
 
         return view('customers.addresses.index', compact('customer', 'addresses'));
     }
