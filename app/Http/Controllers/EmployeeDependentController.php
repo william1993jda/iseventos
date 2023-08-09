@@ -11,7 +11,7 @@ class EmployeeDependentController extends Controller
 {
     public function index(Employee $employee, Request $request)
     {
-        $dependents = $employee->dependents()->paginate(10);
+        $dependents = $employee->dependents()->orderBy('name', 'ASC')->paginate(10);
 
         return view('employees.dependents.index', compact('employee', 'dependents'));
     }

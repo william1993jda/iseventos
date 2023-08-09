@@ -13,7 +13,7 @@ class EmployeeDocumentController extends Controller
 {
     public function index(Employee $employee)
     {
-        $documents = $employee->documents()->paginate(10);
+        $documents = $employee->documents()->orderBy('name', 'ASC')->paginate(10);
 
         return view('employees.documents.index', compact('employee', 'documents'));
     }

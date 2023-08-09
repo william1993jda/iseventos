@@ -11,7 +11,7 @@ class EmployeeContactController extends Controller
 {
     public function index(Employee $employee, Request $request)
     {
-        $contacts = $employee->contacts()->paginate(10);
+        $contacts = $employee->contacts()->orderBy('name', 'ASC')->paginate(10);
 
         return view('employees.contacts.index', compact('employee', 'contacts'));
     }

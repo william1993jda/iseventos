@@ -11,7 +11,7 @@ class EmployeeAddressController extends Controller
 {
     public function index(Employee $employee, Request $request)
     {
-        $addresses = $employee->addresses()->paginate(10);
+        $addresses = $employee->addresses()->orderBy('name', 'ASC')->paginate(10);
 
         return view('employees.addresses.index', compact('employee', 'addresses'));
     }

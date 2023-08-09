@@ -11,7 +11,7 @@ class EmployeeBankController extends Controller
 {
     public function index(Employee $employee, Request $request)
     {
-        $banks = $employee->banks()->paginate(10);
+        $banks = $employee->banks()->orderBy('name', 'ASC')->paginate(10);
 
         return view('employees.banks.index', compact('employee', 'banks'));
     }
