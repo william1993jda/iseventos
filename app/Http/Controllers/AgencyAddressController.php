@@ -11,7 +11,7 @@ class AgencyAddressController extends Controller
 {
     public function index(Agency $agency, Request $request)
     {
-        $addresses = $agency->addresses()->paginate(10);
+        $addresses = $agency->addresses()->orderBy('name', 'ASC')->paginate(10);
 
         return view('agencies.addresses.index', compact('agency', 'addresses'));
     }

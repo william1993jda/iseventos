@@ -11,7 +11,7 @@ class AgencyContactController extends Controller
 {
     public function index(Agency $agency, Request $request)
     {
-        $contacts = $agency->contacts()->paginate(10);
+        $contacts = $agency->contacts()->orderBy('name', 'ASC')->paginate(10);
 
         return view('agencies.contacts.index', compact('agency', 'contacts'));
     }
