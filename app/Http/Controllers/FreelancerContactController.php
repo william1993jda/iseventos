@@ -11,7 +11,7 @@ class FreelancerContactController extends Controller
 {
     public function index(Freelancer $freelancer, Request $request)
     {
-        $contacts = $freelancer->contacts()->paginate(10);
+        $contacts = $freelancer->contacts()->orderBy('name', 'ASC')->paginate(10);
 
         return view('freelancers.contacts.index', compact('freelancer', 'contacts'));
     }

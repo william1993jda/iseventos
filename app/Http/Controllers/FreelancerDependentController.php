@@ -11,7 +11,7 @@ class FreelancerDependentController extends Controller
 {
     public function index(Freelancer $freelancer, Request $request)
     {
-        $dependents = $freelancer->dependents()->paginate(10);
+        $dependents = $freelancer->dependents()->orderBy('name', 'ASC')->paginate(10);
 
         return view('freelancers.dependents.index', compact('freelancer', 'dependents'));
     }

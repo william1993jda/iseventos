@@ -11,7 +11,7 @@ class FreelancerBankController extends Controller
 {
     public function index(Freelancer $freelancer, Request $request)
     {
-        $banks = $freelancer->banks()->paginate(10);
+        $banks = $freelancer->banks()->orderBy('name', 'ASC')->paginate(10);
 
         return view('freelancers.banks.index', compact('freelancer', 'banks'));
     }

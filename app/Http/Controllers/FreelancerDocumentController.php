@@ -13,7 +13,7 @@ class FreelancerDocumentController extends Controller
 {
     public function index(Freelancer $freelancer)
     {
-        $documents = $freelancer->documents()->paginate(10);
+        $documents = $freelancer->documents()->orderBy('name', 'ASC')->paginate(10);
 
         return view('freelancers.documents.index', compact('freelancer', 'documents'));
     }
