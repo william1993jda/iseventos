@@ -11,7 +11,7 @@ class ProviderContactController extends Controller
 {
     public function index(Provider $provider, Request $request)
     {
-        $contacts = $provider->contacts()->paginate(10);
+        $contacts = $provider->contacts()->orderBy('name', 'ASC')->paginate(10);
 
         return view('providers.contacts.index', compact('provider', 'contacts'));
     }

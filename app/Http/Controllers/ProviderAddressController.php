@@ -11,7 +11,7 @@ class ProviderAddressController extends Controller
 {
     public function index(Provider $provider, Request $request)
     {
-        $addresses = $provider->addresses()->paginate(10);
+        $addresses = $provider->addresses()->orderBy('name', 'ASC')->paginate(10);
 
         return view('providers.addresses.index', compact('provider', 'addresses'));
     }

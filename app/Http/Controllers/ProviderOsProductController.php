@@ -17,13 +17,14 @@ class ProviderOsProductController extends Controller
 
         if ($query) {
             $osProducts = OsProduct::where('name', 'like', '%' . $query . '%')
+                ->orderBy('name', 'ASC')
                 ->where('provider_id', $provider->id)
                 ->paginate(10);
 
             return view('providers.os-products.index', compact('provider', 'osProducts', 'query'));
         }
 
-        $osProducts = OsProduct::where('provider_id', $provider->id)->paginate(10);
+        $osProducts = OsProduct::where('provider_id', $provider->id)->orderBy('name', 'ASC')->paginate(10);
 
         return view('providers.os-products.index', compact('provider', 'osProducts', 'query'));
     }

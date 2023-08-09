@@ -11,7 +11,7 @@ class ProviderBankController extends Controller
 {
     public function index(Provider $provider, Request $request)
     {
-        $banks = $provider->banks()->paginate(10);
+        $banks = $provider->banks()->orderBy('name', 'ASC')->paginate(10);
 
         return view('providers.banks.index', compact('provider', 'banks'));
     }
