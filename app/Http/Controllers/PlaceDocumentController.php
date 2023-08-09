@@ -13,7 +13,7 @@ class PlaceDocumentController extends Controller
 {
     public function index(Place $place)
     {
-        $documents = $place->documents()->paginate(10);
+        $documents = $place->documents()->orderBy('name', 'ASC')->paginate(10);
 
         return view('places.documents.index', compact('place', 'documents'));
     }

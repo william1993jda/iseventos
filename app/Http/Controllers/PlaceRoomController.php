@@ -10,7 +10,7 @@ class PlaceRoomController extends Controller
 {
     public function index(Place $place)
     {
-        $rooms = $place->rooms()->paginate(10);
+        $rooms = $place->rooms()->orderBy('name', 'ASC')->paginate(10);
 
         return view('places.rooms.index', compact('place', 'rooms'));
     }

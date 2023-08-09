@@ -14,7 +14,7 @@ class PlaceRoomDocumentController extends Controller
 {
     public function index(Place $place, PlaceRoom $room)
     {
-        $documents = $room->documents()->paginate(10);
+        $documents = $room->documents()->orderBy('name', 'ASC')->paginate(10);
 
         return view('places.rooms.documents.index', compact('room', 'documents'));
     }
