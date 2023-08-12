@@ -27,6 +27,8 @@ class BudgetMountLivewire extends Component
     public $dataProduct = [];
     public $dataRoomProduct = [];
     public $dataRoomLabor = [];
+    public $dataBvProduct = [];
+    public $dataBvLabor = [];
     public $dataLabor = [];
     public $dataFee = [];
     public $dataDiscount = [];
@@ -77,12 +79,15 @@ class BudgetMountLivewire extends Component
 
             foreach ($budgetRoomProducts as $product) {
                 if ($product->product->category_id == $categoryId) {
+                    $bv = (int) $product->bv;
+
                     $obProduct = [
                         'id' => $product->id,
                         'name' => $product->product->name,
                         'quantity' => $product->quantity,
                         'days' => $product->days,
-                        'price' => $product->price,
+                        'price' => $bv > 0 ? $product->price + ($product->price * ($bv / 100)) : $product->price,
+                        'bv' => $product->bv,
                         'place_room_id' => $product->place_room_id,
                     ];
 
@@ -102,12 +107,15 @@ class BudgetMountLivewire extends Component
         $arLabors = [];
 
         foreach ($budgetRoomLabors as $labor) {
+            $bv = (int) $labor->bv;
+
             $obLabor = [
                 'id' => $labor->id,
                 'name' => $labor->labor->name,
                 'quantity' => $labor->quantity,
                 'days' => $labor->days,
-                'price' => $labor->price,
+                'price' => $bv > 0 ? $labor->price + ($labor->price * ($bv / 100)) : $labor->price,
+                'bv' => $labor->bv,
                 'place_room_id' => $labor->place_room_id,
             ];
 
@@ -591,6 +599,42 @@ class BudgetMountLivewire extends Component
         ]);
 
         $this->emit('roomChangedLabor');
+
+        return $this->mountBudget();
+    }
+
+    public function saveApplyBvProduct($products)
+    {
+        if (!empty($this->dataBvProduct['amount'])) {
+            $bv = str_replace(',', '.', $this->dataBvProduct['amount']);
+        } else {
+            $bv = null;
+        }
+
+        BudgetRoomProduct::whereIn('id', $products)->update([
+            'bv' => $bv,
+        ]);
+
+        $this->dataBvProduct = [];
+        $this->emit('bvAppliedProduct');
+
+        return $this->mountBudget();
+    }
+
+    public function saveApplyBvLabor($labors)
+    {
+        if (!empty($this->dataBvLabor['amount'])) {
+            $bv = str_replace(',', '.', $this->dataBvLabor['amount']);
+        } else {
+            $bv = null;
+        }
+
+        BudgetRoomLabor::whereIn('id', $labors)->update([
+            'bv' => $bv,
+        ]);
+
+        $this->dataBvLabor = [];
+        $this->emit('bvAppliedLabor');
 
         return $this->mountBudget();
     }

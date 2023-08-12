@@ -179,10 +179,14 @@
                     <h2 class="font-medium text-base mr-auto">EQUIPAMENTOS</h2>
                     <div class="hidden md:block mx-auto text-slate-500"></div>
                     @if ($canEdit && !empty($budget->place_id))
+                        <button class="btn btn-primary shadow-md mr-2" onclick="applyBvProduct()">
+                            Aplicar BV
+                        </button>
                         <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomProduct()">
                             Trocar sala
                         </button>
                     @else
+                        <button class="btn btn-primary shadow-md mr-2" disabled>Aplicar BV</button>
                         <button class="btn btn-primary shadow-md mr-2" disabled>Trocar sala</button>
                     @endif
                 </div>
@@ -199,6 +203,7 @@
                                 @endforeach
                                 <th class="whitespace-nowrap text-center w-10">SALA</th>
                                 <th class="whitespace-nowrap text-center w-10">QUANTIDADE</th>
+                                <th class="whitespace-nowrap text-center w-10">BV %</th>
                                 <th class="whitespace-nowrap text-center w-10">VALOR</th>
                                 <th class="whitespace-nowrap text-center w-10">TOTAL</th>
                                 <th class="whitespace-nowrap w-10">&nbsp;</th>
@@ -211,7 +216,7 @@
                                     <td class="whitespace-nowrap font-medium">
                                         {{ $category['name'] }}
                                     </td>
-                                    <td class="whitespace-nowrap" colspan="{{ count($listProducts['days']) + 5 }}">
+                                    <td class="whitespace-nowrap" colspan="{{ count($listProducts['days']) + 6 }}">
                                         &nbsp;</td>
                                 </tr>
                                 @foreach ($category['products'] as $product)
@@ -272,6 +277,9 @@
                                             @endif
                                         </td>
                                         <td class="whitespace-nowrap">
+                                            {{ number_format($product['bv'], 2, ',', '.') }}
+                                        </td>
+                                        <td class="whitespace-nowrap">
                                             {{ number_format($product['price'], 2, ',', '.') }}
                                         </td>
                                         <td class="whitespace-nowrap">
@@ -326,10 +334,14 @@
                     <h2 class="font-medium text-base mr-auto">MÃO DE OBRA</h2>
                     <div class="hidden md:block mx-auto text-slate-500"></div>
                     @if ($canEdit && !empty($budget->place_id))
+                        <button class="btn btn-primary shadow-md mr-2" onclick="applyBvLabor()">
+                            Aplicar BV
+                        </button>
                         <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomLabor()">
                             Trocar sala
                         </button>
                     @else
+                        <button class="btn btn-primary shadow-md mr-2" disabled>Aplicar BV</button>
                         <button class="btn btn-primary shadow-md mr-2" disabled>Trocar sala</button>
                     @endif
                 </div>
@@ -344,6 +356,7 @@
                                 <th class="whitespace-nowrap text-center w-10">SALA</th>
                                 <th class="whitespace-nowrap text-center w-10">DIAS</th>
                                 <th class="whitespace-nowrap text-center w-10">QUANTIDADE</th>
+                                <th class="whitespace-nowrap text-center w-10">BV %</th>
                                 <th class="whitespace-nowrap text-center w-10">VALOR</th>
                                 <th class="whitespace-nowrap text-center w-10">TOTAL</th>
                                 <th class="whitespace-nowrap w-10">&nbsp;</th>
@@ -395,6 +408,9 @@
                                             <x-forms.number name="quantity_labor_{{ $labor['id'] }}" min="1"
                                                 :value="$product['quantity']" disabled />
                                         @endif
+                                    </td>
+                                    <td class="whitespace-nowrap">
+                                        {{ number_format($labor['bv'], 2, ',', '.') }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ number_format($labor['price'], 2, ',', '.') }}
@@ -571,6 +587,10 @@
     @component('budgets.partials.modal-change-room-product', ['placeRooms' => $placeRooms])
     @endcomponent
     @component('budgets.partials.modal-change-room-labor', ['placeRooms' => $placeRooms])
+    @endcomponent
+    @component('budgets.partials.modal-apply-bv-product')
+    @endcomponent
+    @component('budgets.partials.modal-apply-bv-labor')
     @endcomponent
     @component('budgets.partials.modal-fee', ['feeDiscountTypes' => $feeDiscountTypes])
     @endcomponent

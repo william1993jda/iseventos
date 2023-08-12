@@ -16,6 +16,7 @@ class BudgetRoomLabor extends Model
         'labor_id',
         'days',
         'price',
+        'bv',
         'quantity',
     ];
 

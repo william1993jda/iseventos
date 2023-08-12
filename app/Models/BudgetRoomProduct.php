@@ -16,6 +16,7 @@ class BudgetRoomProduct extends Model
         'product_id',
         'days',
         'price',
+        'bv',
         'quantity',
     ];
 

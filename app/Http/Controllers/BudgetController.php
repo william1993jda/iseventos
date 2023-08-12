@@ -299,13 +299,14 @@ class BudgetController extends Controller
                         if ($budgetRoomProduct->product->category_id == $categoryId) {
 
                             $days = count(explode(',', $budgetRoomProduct->days));
+                            $bv = (int) $budgetRoomProduct->bv;
 
                             $obProduct = [
                                 'id' => $budgetRoomProduct->id,
                                 'name' => $budgetRoomProduct->product->name,
                                 'quantity' => $budgetRoomProduct->quantity,
                                 'days' => $days,
-                                'price' => $budgetRoomProduct->price,
+                                'price' => $bv > 0 ? $budgetRoomProduct->price + ($budgetRoomProduct->price * ($bv / 100)) : $budgetRoomProduct->price,
                                 'place_room_name' => $budgetRoomProduct->placeRoom ? $budgetRoomProduct->placeRoom->name : null,
                             ];
 
@@ -323,12 +324,14 @@ class BudgetController extends Controller
                 }
 
                 foreach ($budgetRoomLabors->where('place_room_id', $placeRoomId) as $budgetRoomLabor) {
+                    $bv = (int) $budgetRoomLabor->bv;
+
                     $obLabor = [
                         'id' => $budgetRoomLabor->id,
                         'name' => $budgetRoomLabor->labor->name,
                         'quantity' => $budgetRoomLabor->quantity,
                         'days' => $budgetRoomLabor->days,
-                        'price' => $budgetRoomLabor->price,
+                        'price' => $bv > 0 ? $budgetRoomLabor->price + ($budgetRoomLabor->price * ($bv / 100)) : $budgetRoomLabor->price,
                         'place_room_name' => $budgetRoomLabor->placeRoom ? $budgetRoomLabor->placeRoom->name : null,
                     ];
 
@@ -366,13 +369,14 @@ class BudgetController extends Controller
                     if ($budgetRoomProduct->product->category_id == $categoryId) {
 
                         $days = count(explode(',', $budgetRoomProduct->days));
+                        $bv = (int) $budgetRoomProduct->bv;
 
                         $obProduct = [
                             'id' => $budgetRoomProduct->id,
                             'name' => $budgetRoomProduct->product->name,
                             'quantity' => $budgetRoomProduct->quantity,
                             'days' => $days,
-                            'price' => $budgetRoomProduct->price,
+                            'price' => $bv > 0 ? $budgetRoomProduct->price + ($budgetRoomProduct->price * ($bv / 100)) : $budgetRoomProduct->price,
                             'place_room_name' => $budgetRoomProduct->placeRoom ? $budgetRoomProduct->placeRoom->name : null,
                         ];
 
@@ -390,12 +394,14 @@ class BudgetController extends Controller
             }
 
             foreach ($budgetRoomLabors->whereNull('place_room_id') as $budgetRoomLabor) {
+                $bv = (int) $budgetRoomProduct->bv;
+
                 $obLabor = [
                     'id' => $budgetRoomLabor->id,
                     'name' => $budgetRoomLabor->labor->name,
                     'quantity' => $budgetRoomLabor->quantity,
                     'days' => $budgetRoomLabor->days,
-                    'price' => $budgetRoomLabor->price,
+                    'price' => $bv > 0 ? $budgetRoomLabor->price + ($budgetRoomLabor->price * ($bv / 100)) : $budgetRoomLabor->price,
                     'place_room_name' => $budgetRoomLabor->placeRoom ? $budgetRoomLabor->placeRoom->name : null,
                 ];
 
