@@ -29,10 +29,10 @@
                     <x-forms.select name="category_id" label="Categoria" :options="$categories" />
                     <x-forms.text name="name" label="Nome" />
                 </div>
-                <div class="sm:grid grid-cols-3 gap-2 mt-3">
+                <div class="sm:grid grid-cols-2 gap-2 mt-3">
                     <x-forms.currency name="price" label="Preço" />
-                    <x-forms.checkbox name="customization" label="Customizar" :options="$product->getCustomization()" />
-                    <x-forms.checkbox name="active" label="Ativo" :options="$product->getActive()" />
+                    {{-- <x-forms.checkbox name="customization" label="Customizar" :options="$product->getCustomization()" /> --}}
+                    <x-forms.checkbox name="active" label="Ativo" :checked="$product->getActive()" />
                 </div>
                 <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$product" />
             </div>

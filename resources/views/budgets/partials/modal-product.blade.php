@@ -28,7 +28,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 mr-1">Cancelar</button>
+                        class="btn btn-outline-secondary w-20 mr-1">Fechar</button>
                     <button type="button" class="btn btn-primary w-20" wire:click="saveProduct">Salvar</button>
                 </div>
             </div>
@@ -93,6 +93,12 @@
             }
 
             window.livewire.on('addProduct', () => {
+                selectCategoryId.clear(true);
+                selectProductId.clear(true);
+                selectProductId.clearOptions();
+                selectPlaceRoomId.clear(true);
+                inputPrice.value = '';
+                inputQuantity.value = '';
                 modalBudgetProduct.show();
             });
 

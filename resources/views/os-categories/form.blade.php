@@ -27,7 +27,7 @@
             <div class="intro-y box p-5">
                 <div class="sm:grid grid-cols-3 gap-2">
                     <x-forms.text name="name" label="Nome" />
-                    <x-forms.checkbox name="active" label="Ativo" :options="$osCategory->getActive()" />
+                    <x-forms.checkbox name="active" label="Ativo" :checked="$osCategory->getActive()" />
                 </div>
 
                 <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$osCategory" />

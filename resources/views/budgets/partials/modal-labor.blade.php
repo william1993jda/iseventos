@@ -13,7 +13,7 @@
                         </div>
                     </div>
 
-                    <div class="sm:grid grid-cols-1 gap-2">
+                    <div class="sm:grid grid-cols-1 gap-2" wire:ignore>
                         <x-forms.select name="labor_id" label="Mão de obra" :options="$labors"
                             wire:model="dataLabor.labor_id" wire:change="onSelectLabor($event.target.value)" />
                     </div>
@@ -27,16 +27,41 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 mr-1">Cancelar</button>
+                        class="btn btn-outline-secondary w-20 mr-1">Fechar</button>
                     <button type="button" class="btn btn-primary w-20" wire:click="saveLabor">Salvar</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- BEGIN: Delete Confirmation Modal -->
+    <div id="delete-confirmation-labor-modal" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <input type="hidden" name="labor_id_delete" id="labor_id_delete">
+                <div class="modal-body p-0">
+                    <div class="p-5 text-center">
+                        <i data-lucide="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
+                        <div class="text-3xl mt-5">Deseja remover?</div>
+                        <div class="text-slate-500 mt-2">
+                            Tem certeza que deseja remover esse item?
+                        </div>
+                    </div>
+                    <div class="px-5 pb-8 text-center">
+                        <button type="button" data-tw-dismiss="modal"
+                            class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
+                        <button type="button" class="btn btn-danger w-24" onclick="removeLabor()">Remover</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Delete Confirmation Modal -->
+
     @push('custom-scripts')
         <script type="text/javascript">
             var modalBudgetLabor = null;
+            var deleteConfirmationLaborModal = null;
             var selectLaborId = null;
             var selectLaborPlaceRoomId = null;
             var inputLaborPrice = null;
@@ -48,7 +73,8 @@
             document.addEventListener("DOMContentLoaded", function(e) {
                 modalBudgetLabor = tailwind.Modal.getInstance(document.querySelector(
                     "#modal-budget-labor"));
-
+                deleteConfirmationLaborModal = tailwind.Modal.getInstance(document.querySelector(
+                    "#delete-confirmation-labor-modal"));
                 selectLaborId = document.getElementById('labor_id').tomselect;
                 selectLaborPlaceRoomId = document.getElementById('place_room_id').tomselect;
                 inputLaborPrice = document.getElementById('labor_price');
@@ -58,7 +84,19 @@
                 alertLaborBodyError = document.getElementById('alert-labor-body-error');
             });
 
+            function removeLabor() {
+                const laborId = document.getElementById('labor_id_delete').value;
+                @this.removeLabor(laborId);
+                document.getElementById('labor_id_delete').value = '';
+                deleteConfirmationLaborModal.hide();
+            }
+
             window.livewire.on('addLabor', () => {
+                selectLaborId.clear(true);
+                selectLaborPlaceRoomId.clear(true);
+                inputLaborPrice.value = '';
+                inputLaborDays.value = '';
+                inputLaborQuantity.value = '';
                 modalBudgetLabor.show();
             });
 
@@ -102,6 +140,11 @@
                     alertLaborBodyError.innerHTML = '';
                     alertLaborError.classList.add('hidden');
                 }
+            });
+
+            window.livewire.on('confirmLaborRemove', (id) => {
+                document.getElementById('labor_id_delete').value = id;
+                deleteConfirmationLaborModal.show();
             });
         </script>
     @endpush

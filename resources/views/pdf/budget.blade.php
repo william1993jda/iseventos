@@ -169,119 +169,122 @@
 
 <br />
 @php $total = 0; @endphp
-
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <thead>
-        <tr>
-            <th style="text-align:left; width: 100%;">
-                EQUIPAMENTOS
-            </th>
-            <th style="text-align:center; width: 60px;">
-                SALA
-            </th>
-            <th style="text-align:center; width: 60px;">
-                DIAS
-            </th>
-            <th style="text-align:center; width: 60px;">
-                QTD
-            </th>
-            <th style="text-align:center; width: 60px;">
-                VALOR
-            </th>
-            <th style="text-align:center; width: 80px;">
-                TOTAL
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($products['categories'] as $category)
+@foreach ($rooms as $room)
+    <table style="border:none;border-collapse:collapse; width: 100%;">
+        <thead>
             <tr>
-                <td><strong>{{ $category['name'] }}</strong></td>
-                <td colspan="5">&nbsp;</td>
+                <th style="text-align:center; background-color: #FFF;">
+                    {{ $room['name'] }}
+                </th>
             </tr>
-            @foreach ($category['products'] as $product)
+        </thead>
+    </table>
+    <table style="border:none;border-collapse:collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th style="text-align:left; width: 100%;">
+                    EQUIPAMENTOS
+                </th>
+                <th style="text-align:center; width: 60px;">
+                    DIAS
+                </th>
+                <th style="text-align:center; width: 60px;">
+                    QTD
+                </th>
+                <th style="text-align:center; width: 60px;">
+                    VALOR
+                </th>
+                <th style="text-align:center; width: 80px;">
+                    TOTAL
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($room['categories'] as $category)
+                <tr>
+                    <td colspan="5" style="background-color: #F4F4F4;"><strong>{{ $category['name'] }}</strong></td>
+                </tr>
+                @foreach ($category['products'] as $product)
+                    @php
+                        $total += $product['quantity'] * $product['price'] * $product['days'];
+                    @endphp
+                    <tr>
+                        <td style="text-align:left;">{{ $product['name'] }}</td>
+                        <td style="text-align:center;">
+                            {{ $product['days'] }}
+                        </td>
+                        <td style="text-align:center;">
+                            {{ $product['quantity'] }}
+                        </td>
+                        <td style="text-align:center;">
+                            {{ number_format($product['price'], 2, ',', '.') }}
+                        </td>
+                        <td style="text-align:right;">
+                            {{ number_format($product['quantity'] * $product['price'] * $product['days'], 2, ',', '.') }}
+                        </td>
+                    </tr>
+                @endforeach
+            @endforeach
+        </tbody>
+    </table>
+    <br />
+    {{-- <table style="border:none;border-collapse:collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th style="text-align:left; width: 100%;">
+                    MÃO DE OBRA
+                </th>
+                <th style="text-align:center; width: 60px;">
+                    SALA
+                </th>
+                <th style="text-align:center; width: 60px;">
+                    DIAS
+                </th>
+                <th style="text-align:center; width: 60px;">
+                    QTD
+                </th>
+                <th style="text-align:center; width: 60px;">
+                    VALOR
+                </th>
+                <th style="text-align:center; width: 80px;">
+                    TOTAL
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($labors as $labor)
                 @php
-                    $days = count(explode(',', $product['days']));
-                    $total += $product['quantity'] * $product['price'] * $days;
+                    $total += $labor['quantity'] * $labor['price'] * $labor['days'];
                 @endphp
                 <tr>
-                    <td style="text-align:left;">{{ $product['name'] }}</td>
+                    <td style="text-align:left;">{{ $labor['name'] }}</td>
                     <td style="text-align:center;">
                         {{ $product['place_room_name'] }}
                     </td>
                     <td style="text-align:center;">
-                        {{ count(explode(',', $product['days'])) }}
+                        {{ $labor['days'] }}
                     </td>
                     <td style="text-align:center;">
-                        {{ $product['quantity'] }}
+                        {{ $labor['quantity'] }}
                     </td>
                     <td style="text-align:center;">
-                        {{ number_format($product['price'], 2, ',', '.') }}
+                        {{ number_format($labor['price'], 2, ',', '.') }}
                     </td>
                     <td style="text-align:right;">
-                        {{ number_format($product['quantity'] * $product['price'] * $days, 2, ',', '.') }}
+                        {{ number_format($labor['quantity'] * $labor['price'] * $labor['days'], 2, ',', '.') }}
                     </td>
                 </tr>
             @endforeach
-        @endforeach
-    </tbody>
-</table>
-<br />
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <thead>
-        <tr>
-            <th style="text-align:left; width: 100%;">
-                MÃO DE OBRA
-            </th>
-            <th style="text-align:center; width: 60px;">
-                SALA
-            </th>
-            <th style="text-align:center; width: 60px;">
-                DIAS
-            </th>
-            <th style="text-align:center; width: 60px;">
-                QTD
-            </th>
-            <th style="text-align:center; width: 60px;">
-                VALOR
-            </th>
-            <th style="text-align:center; width: 80px;">
-                TOTAL
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($labors as $labor)
-            @php
-                $total += $labor['quantity'] * $labor['price'] * $labor['days'];
-            @endphp
-            <tr>
-                <td style="text-align:left;">{{ $labor['name'] }}</td>
-                <td style="text-align:center;">
-                    {{ $product['place_room_name'] }}
-                </td>
-                <td style="text-align:center;">
-                    {{ $labor['days'] }}
-                </td>
-                <td style="text-align:center;">
-                    {{ $labor['quantity'] }}
-                </td>
-                <td style="text-align:center;">
-                    {{ number_format($labor['price'], 2, ',', '.') }}
-                </td>
-                <td style="text-align:right;">
-                    {{ number_format($labor['quantity'] * $labor['price'] * $labor['days'], 2, ',', '.') }}
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
-<br />
+        </tbody>
+    </table> --}}
+    <br />
+@endforeach
 
 <table style="border:none;border-collapse:collapse; width: 100%;">
     <tr>
         <td style="text-align:right;"><strong>SUBTOTAL</strong></td>
-        <td style="text-align:right; width: 150px;"><strong>R$ {{ number_format($total, 2, ',', '.') }}</strong></td>
+        <td style="text-align:right; width: 150px;"><strong>R$ {{ number_format($total, 2, ',', '.') }}</strong>
+        </td>
     </tr>
 </table>
 
@@ -329,7 +332,8 @@
                 <td style="text-align:right;"><span class="text-discount">DESCONTO ({{ $discount }}%):</span>
                 </td>
                 <td style="text-align:right; width: 150px;">
-                    <span class="text-discount">R$ {{ number_format($totalDiscountPercentage, 2, ',', '.') }}</span>
+                    <span class="text-discount">R$
+                        {{ number_format($totalDiscountPercentage, 2, ',', '.') }}</span>
                 </td>
             @else
                 @php

@@ -62,7 +62,7 @@ class OsProduct extends Model
             return $this->attributes['active'] ? true : false;
         }
 
-        return $this->attributes['active'] = true;
+        return true;
     }
 
     public function getCustomization()

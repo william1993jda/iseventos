@@ -178,9 +178,10 @@
                 <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
                     <h2 class="font-medium text-base mr-auto">EQUIPAMENTOS</h2>
                     <div class="hidden md:block mx-auto text-slate-500"></div>
-                    @if ($canEdit)
-                        <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomProduct()">Trocar
-                            sala</button>
+                    @if ($canEdit && !empty($budget->place_id))
+                        <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomProduct()">
+                            Trocar sala
+                        </button>
                     @else
                         <button class="btn btn-primary shadow-md mr-2" disabled>Trocar sala</button>
                     @endif
@@ -245,7 +246,7 @@
                                         @endforeach
                                         <td class="whitespace-nowrap w-48">
                                             <select name="place_room_id" class="form-control w-full"
-                                                wire:change="onChangeRoom({{ $product['id'] }}, $event.target.value)">
+                                                wire:change="onChangeProductRoom({{ $product['id'] }}, $event.target.value)">
                                                 <option value="">Selecione</option>
                                                 @foreach ($placeRooms as $placeRoomId => $placeRoomName)
                                                     @if ($placeRoomId == $product['place_room_id'])
@@ -324,9 +325,10 @@
                 <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-10">
                     <h2 class="font-medium text-base mr-auto">MÃO DE OBRA</h2>
                     <div class="hidden md:block mx-auto text-slate-500"></div>
-                    @if ($canEdit)
-                        <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomLabor()">Trocar
-                            sala</button>
+                    @if ($canEdit && !empty($budget->place_id))
+                        <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomLabor()">
+                            Trocar sala
+                        </button>
                     @else
                         <button class="btn btn-primary shadow-md mr-2" disabled>Trocar sala</button>
                     @endif
@@ -359,7 +361,7 @@
                                     <td class="whitespace">{{ $labor['name'] }}</td>
                                     <td class="whitespace-nowrap w-48">
                                         <select name="place_room_id" class="form-control w-full"
-                                            wire:change="onChangeRoom({{ $labor['id'] }}, $event.target.value)">
+                                            wire:change="onChangeLaborRoom({{ $labor['id'] }}, $event.target.value)">
                                             <option value="">Selecione</option>
                                             @foreach ($placeRooms as $placeRoomId => $placeRoomName)
                                                 @if ($placeRoomId == $labor['place_room_id'])
@@ -403,8 +405,7 @@
                                     <td class="whitespace-nowrap">
                                         @if ($canEdit)
                                             <button class="btn btn-sm btn-primary delete-confirmation-button"
-                                                type="button"
-                                                wire:click="confirmProductRemove({{ $labor['id'] }})">
+                                                type="button" wire:click="confirmLaborRemove({{ $labor['id'] }})">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

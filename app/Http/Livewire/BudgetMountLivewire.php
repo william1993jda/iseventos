@@ -240,12 +240,16 @@ class BudgetMountLivewire extends Component
 
     public function addProduct()
     {
-        $this->emit('addProduct');
+        $this->dataProduct = [];
+        $this->emit('productError', null);
+        return $this->emit('addProduct');
     }
 
     public function addLabor()
     {
-        $this->emit('addLabor');
+        $this->dataLabor = [];
+        $this->emit('laborError', null);
+        return $this->emit('addLabor');
     }
 
     public function addFee()
@@ -274,13 +278,6 @@ class BudgetMountLivewire extends Component
         $products = $category->products->pluck('name', 'id');
 
         $this->emit('updateProductList', $products);
-    }
-
-    public function onSelectCategoryLabor(Category $category)
-    {
-        $labors = $category->labors->pluck('name', 'id');
-
-        $this->emit('updateLaborList', $labors);
     }
 
     public function onSelectProduct(Product $product)
@@ -499,16 +496,27 @@ class BudgetMountLivewire extends Component
         $this->emit('statusUpdated');
     }
 
-    public function updatePlaceRooms()
+    public function updatePlaceRooms($type)
     {
         if (!empty($this->budget->place_id)) {
             $this->placeRooms = $this->budget->place->rooms->pluck('name', 'id')->prepend('Selecione', '');
+
+            if ($type == 'product') {
+                return $this->emit('openRoomProduct');
+            }
+
+            return $this->emit('openRoomLabor');
         }
     }
 
     public function confirmProductRemove(BudgetRoomProduct $budgetRoomProduct)
     {
         return $this->emit('confirmProductRemove', $budgetRoomProduct->id);
+    }
+
+    public function confirmLaborRemove(BudgetRoomLabor $budgetRoomLabor)
+    {
+        return $this->emit('confirmLaborRemove', $budgetRoomLabor->id);
     }
 
     public function removeProduct(BudgetRoomProduct $budgetRoomProduct)
@@ -518,6 +526,12 @@ class BudgetMountLivewire extends Component
         return $this->mountBudget();
     }
 
+    public function removeLabor(BudgetRoomLabor $budgetRoomLabor)
+    {
+        $budgetRoomLabor->delete();
+
+        return $this->mountBudget();
+    }
 
     public function removeFee()
     {
@@ -627,12 +641,24 @@ class BudgetMountLivewire extends Component
         }
     }
 
-    public function onChangeRoom(BudgetRoomProduct $budgetRoomProduct, $placeRoomId)
+    public function onChangeProductRoom(BudgetRoomProduct $budgetRoomProduct, $placeRoomId)
     {
-        $budgetRoomProduct->place_room_id = $placeRoomId;
-        $budgetRoomProduct->save();
+        if (!empty($placeRoomId)) {
+            $budgetRoomProduct->place_room_id = $placeRoomId;
+            $budgetRoomProduct->save();
 
-        return $this->mountBudget();
+            return $this->mountBudget();
+        }
+    }
+
+    public function onChangeLaborRoom(BudgetRoomLabor $budgetRoomLabor, $placeRoomId)
+    {
+        if (!empty($placeRoomId)) {
+            $budgetRoomLabor->place_room_id = $placeRoomId;
+            $budgetRoomLabor->save();
+
+            return $this->mountBudget();
+        }
     }
 
     public function generateNewVersion()

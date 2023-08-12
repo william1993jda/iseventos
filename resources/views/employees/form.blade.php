@@ -38,12 +38,14 @@
                     <x-forms.select name="role" label="Perfil de acesso" :options="$roles" />
                 </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
-                    <x-forms.text name="birthday" label="Data de Nascimento" mask="'99/99/9999'" class="datepicker form-control w-full" data-single-mode="true" />
+                    <x-forms.text name="birthday" label="Data de Nascimento" mask="'99/99/9999'"
+                        class="datepicker form-control w-full" data-single-mode="true" />
                     <x-forms.text name="identification" label="RG" />
                     <x-forms.text name="social_security" label="CPF" mask="'999.999.999-99'" />
                 </div>
                 <div class="sm:grid grid-cols-3 gap-2 mt-3">
-                    <x-forms.text name="admission_date" label="Data de Admissão" mask="'99/99/9999'" />
+                    <x-forms.text name="admission_date" label="Data de Admissão" mask="'99/99/9999'"
+                        class="datepicker form-control w-full" data-single-mode="true" />
                     <x-forms.text name="phone" label="Telefone" mask="'(99) 99999-9999'" />
                     <x-forms.text name="cellphone" label="Telefone Celular" mask="'(99) 99999-9999'" />
                 </div>
@@ -65,7 +67,8 @@
                 </div>
                 <div class="sm:grid grid-cols-4 gap-2 mt-3">
                     <x-forms.text name="spouse_name" label="Nome do Conjugê" />
-                    <x-forms.text name="spouse_birth_date" label="Data de Nascimento Conjugê" mask="'99/99/9999'" />
+                    <x-forms.text name="spouse_birth_date" label="Data de Nascimento Conjugê" mask="'99/99/9999'"
+                        class="datepicker form-control w-full" data-single-mode="true" />
                     <x-forms.text name="spouse_identification" label="RG Conjugê" />
                     <x-forms.text name="spouse_social_security" label="CPF Conjugê" mask="'999.999.999-99'" />
                 </div>

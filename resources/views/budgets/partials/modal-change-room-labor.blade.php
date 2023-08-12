@@ -14,7 +14,7 @@
                     </div>
 
                     <div class="sm:grid grid-cols-1 gap-2">
-                        <x-forms.select name="place_room_id" label="Sala" :options="$placeRooms"
+                        <x-forms.select name="labor_place_room_id" label="Sala" :options="$placeRooms"
                             wire:model="dataRoomLabor.place_room_id" />
                     </div>
                 </div>
@@ -53,8 +53,7 @@
                     }
                 }
                 if (labors.length > 0) {
-                    @this.updatePlaceRooms();
-                    modalChangeRoomLabor.show();
+                    @this.updatePlaceRooms('labor');
                 } else {
                     document.getElementById('error-notification-title').innerHTML = "Atenção!";
                     document.getElementById('error-notification-message').innerHTML = "Selecione pelo menos um equipamento!";
@@ -104,6 +103,10 @@
 
                 alertChangeRoomLaborError = document.getElementById('alert-change-room-labor-error');
                 alertChangeRoomLaborBodyError = document.getElementById('alert-change-room-labor-body-error');
+            });
+
+            window.livewire.on('openRoomLabor', () => {
+                modalChangeRoomLabor.show();
             });
 
             window.livewire.on('roomChangedLabor', () => {

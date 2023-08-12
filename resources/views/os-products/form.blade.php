@@ -39,14 +39,14 @@
                     <x-forms.text name="model" label="Modelo" />
                     <x-forms.text name="serie" label="Série" />
                 </div>
-                <div class="sm:grid grid-cols-2 gap-2 mt-3">
+                <div class="sm:grid grid-cols-3 gap-2 mt-3">
                     <x-forms.text name="dimensions" label="Medidas" />
                     <x-forms.text name="weight" label="Peso" />
+                    <x-forms.checkbox name="active" label="Ativo" :checked="$osProduct->getActive()" />
                 </div>
-                <div class="sm:grid grid-cols-2 gap-2 mt-3">
+                {{-- <div class="sm:grid grid-cols-2 gap-2 mt-3">
                     <x-forms.checkbox name="customization" label="Customizar" :options="$osProduct->getCustomization()" />
-                    <x-forms.checkbox name="active" label="Ativo" :options="$osProduct->getActive()" />
-                </div>
+                </div> --}}
                 <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$osProduct" />
             </div>
             {!! Form::close() !!}

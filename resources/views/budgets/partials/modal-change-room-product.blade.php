@@ -14,7 +14,7 @@
                     </div>
 
                     <div class="sm:grid grid-cols-1 gap-2">
-                        <x-forms.select name="place_room_id" label="Sala" :options="$placeRooms"
+                        <x-forms.select name="product_place_room_id" label="Sala" :options="$placeRooms"
                             wire:model="dataRoomProduct.place_room_id" />
                     </div>
                 </div>
@@ -54,8 +54,7 @@
                     }
                 }
                 if (products.length > 0) {
-                    @this.updatePlaceRooms();
-                    modalChangeRoomProduct.show();
+                    @this.updatePlaceRooms('product');
                 } else {
                     document.getElementById('error-notification-title').innerHTML = "Atenção!";
                     document.getElementById('error-notification-message').innerHTML = "Selecione pelo menos um equipamento!";
@@ -105,6 +104,10 @@
 
                 alertChangeRoomProductError = document.getElementById('alert-change-room-product-error');
                 alertChangeRoomProductBodyError = document.getElementById('alert-change-room-product-body-error');
+            });
+
+            window.livewire.on('openRoomProduct', () => {
+                modalChangeRoomProduct.show();
             });
 
             window.livewire.on('roomChangedProduct', () => {

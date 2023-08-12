@@ -32,7 +32,7 @@
                 <div class="sm:grid grid-cols-2 gap-2 mt-3"> --}}
 
                     <x-forms.currency name="price" label="Preço" />
-                    <x-forms.checkbox name="active" label="Ativo" :options="$labor->getActive()" />
+                    <x-forms.checkbox name="active" label="Ativo" :checked="$labor->getActive()" />
                 </div>
                 <x-forms.buttons.save-cancel :showMode="isset($showMode) ? $showMode : false" :model="$labor" />
             </div>

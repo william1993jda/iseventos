@@ -53,6 +53,8 @@ class Freelancer extends Model
 
     protected $casts = [
         'admission_date' => 'date',
+        'birthday' => 'date',
+        'spouse_birth_date' => 'date',
     ];
 
     public function setIdentificationAttribute($value)
@@ -78,6 +80,11 @@ class Freelancer extends Model
         $this->attributes['price'] = $price;
     }
 
+    public function getPriceAttribute($value)
+    {
+        return number_format($value, 2, ',', '.');
+    }
+
     public function setEmergencyPhoneAttribute($value)
     {
         $this->attributes['emergency_phone'] = preg_replace('/\D/', '', $value);
@@ -96,6 +103,30 @@ class Freelancer extends Model
     public function setFantasyNameAttribute($value)
     {
         $this->attributes['fantasy_name'] = Str::upper($value);
+    }
+
+    public function setAdmissionDateAttribute($value)
+    {
+        if (!empty($value)) {
+            $date = explode('/', $value);
+            $this->attributes['admission_date'] = $date[2] . '-' . $date[1] . '-' . $date[0];
+        }
+    }
+
+    public function setBirthdayAttribute($value)
+    {
+        if (!empty($value)) {
+            $date = explode('/', $value);
+            $this->attributes['birthday'] = $date[2] . '-' . $date[1] . '-' . $date[0];
+        }
+    }
+
+    public function setSpouseBirthDateAttribute($value)
+    {
+        if (!empty($value)) {
+            $date = explode('/', $value);
+            $this->attributes['spouse_birth_date'] = $date[2] . '-' . $date[1] . '-' . $date[0];
+        }
     }
 
     public function user()
