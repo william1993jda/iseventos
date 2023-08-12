@@ -8,6 +8,10 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('orderServices.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
+            @if ($orderService->budget->budget_version != $orderService->budget_version)
+                <button class="btn btn-primary shadow-md mr-2" data-tw-toggle="modal"
+                    data-tw-target="#modal-orderservice-update-version" type="button">Atualizar Versão</button>
+            @endif
             <button class="btn btn-primary shadow-md mr-2" wire:click="editObservation">Observações</button>
             <button class="btn btn-primary shadow-md mr-2" wire:click="editStatus">Status</button>
             <x-forms.buttons.primary route="orderServices.documents.index" :id="$orderService->id" label="Documentos" />
@@ -27,6 +31,19 @@
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center">
                             <span class="font-semibold">Orçamento Nº:</span>&nbsp;#{{ $orderService->budget->id }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center">
+                            <span class="font-semibold">Versão
+                                Nº:</span>&nbsp;#{{ $orderService->os_version }}&nbsp;&nbsp;
+                            @if ($orderService->budget->budget_version == $orderService->budget_version)
+                                <span class="bg-green-300 p-1 rounded text-xs font-medium">
+                                    ATUALIZADA
+                                </span>
+                            @else
+                                <span class="bg-red-300 p-1 rounded text-xs font-medium">
+                                    DESATUALIZADA
+                                </span>
+                            @endif
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Nome do Evento:</span>&nbsp;{{ $orderService->budget->name }}
@@ -351,6 +368,7 @@
     @include('order-services.partials.modal-status')
     @include('order-services.partials.modal-observation')
     @include('order-services.partials.modal-print-provider')
+    @include('order-services.partials.modal-update-version')
 
     @push('custom-scripts')
         <script type="text/javascript">

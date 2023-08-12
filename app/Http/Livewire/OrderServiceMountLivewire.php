@@ -722,4 +722,13 @@ class OrderServiceMountLivewire extends Component
 
         $this->emit('showPrintProviders');
     }
+
+    public function updateVersion()
+    {
+        $this->orderService->budget_version = $this->orderService->budget->budget_version;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
+        $this->emit('versionUpdated');
+    }
 }

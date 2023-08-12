@@ -122,7 +122,34 @@ class BudgetController extends Controller
 
     public function update(Budget $budget, BudgetRequest $request)
     {
-        $budget->update($request->validated());
+        $params = $request->validated();
+
+        if ($budget->budget_days != $params['budget_days']) {
+            $budgetDays = explode('-', $params['budget_days']);
+            $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
+            $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
+
+            if ($startDay == $endDay) {
+                $days = [Carbon::parse($startDay)->format('d/m')];
+            } else {
+                $difDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
+
+                $days = [];
+
+                array_push($days, Carbon::parse($startDay)->format('d/m'));
+
+                for ($i = 0; $i < $difDays; $i++) {
+                    $date = Carbon::parse($startDay)->addDays($i + 1);
+                    array_push($days, $date->format('d/m'));
+                }
+
+                array_push($days, Carbon::parse($endDay)->format('d/m'));
+            }
+
+            BudgetRoomProduct::where('budget_id', $budget->id)->update(['days' => implode(',', $days)]);
+        }
+
+        $budget->update($params);
 
         return redirect()->route('budgets.index');
     }

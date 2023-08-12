@@ -104,6 +104,7 @@ class OrderServiceController extends Controller
             'os_status_id' => 1,
             'budget_id' => $budget->id,
             'os_number' => (int) OrderService::max('os_number') + 1,
+            'budget_version' => $budget->budget_version,
         ]);
 
         $orderServicesToday = OrderService::join('budgets', 'budgets.id', '=', 'order_services.budget_id')

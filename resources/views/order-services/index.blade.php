@@ -80,6 +80,7 @@
                         <th class="text-center whitespace-nowrap">LOCAL</th>
                         <th class="text-center whitespace-nowrap">OS N°</th>
                         <th class="text-center whitespace-nowrap">STATUS</th>
+                        <th class="text-center whitespace-nowrap">VERSÃO</th>
                         <th class="text-center whitespace-nowrap">AÇÕES</th>
                     </tr>
                 </thead>
@@ -94,6 +95,17 @@
                             <td class="text-center">{{ $orderService->budget->place->name }}</td>
                             <td class="text-center">{{ $orderService->os_number }}</td>
                             <td class="text-center">{{ $orderService->osStatus->name }}</td>
+                            <td class="text-center">
+                                @if ($orderService->budget->budget_version == $orderService->budget_version)
+                                    <span class="bg-green-300 p-1 rounded text-xs font-medium">
+                                        ATUALIZADA
+                                    </span>
+                                @else
+                                    <span class="bg-red-300 p-1 rounded text-xs font-medium">
+                                        DESATUALIZADA
+                                    </span>
+                                @endif
+                            </td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
                                     <x-forms.buttons.icon route="orderServices.mount" :id="$orderService->id"

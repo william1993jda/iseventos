@@ -15,6 +15,7 @@ class OrderService extends Model
         'budget_id',
         'os_number',
         'os_version',
+        'budget_version',
         'observation',
     ];
 
@@ -28,7 +29,7 @@ class OrderService extends Model
     {
         return $this->belongsTo(Budget::class);
     }
-    
+
     public function expenses()
     {
         return $this->hasMany(OrderServiceExpense::class);
