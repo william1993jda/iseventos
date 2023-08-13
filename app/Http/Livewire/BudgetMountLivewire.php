@@ -36,6 +36,12 @@ class BudgetMountLivewire extends Component
     public $dataStatus = [];
     public $listProducts = [];
     public $listLabors = [];
+    public $total = 0;
+    public $subtotal = 0;
+    public $totalFee = 0;
+    public $totalFeePercentage = 0;
+    public $totalDiscount = 0;
+    public $totalDiscountPercentage = 0;
     public $canEdit = false;
 
     public function mount()
@@ -68,9 +74,9 @@ class BudgetMountLivewire extends Component
 
         $budgetRoomProducts = BudgetRoomProduct::where('budget_id', $this->budget->id)->get();
         $budgetRoomLabors = BudgetRoomLabor::where('budget_id', $this->budget->id)->get();
-
         $categories = Product::whereIn('id', $budgetRoomProducts->pluck('product_id')->toArray())->groupBy('category_id')->pluck('category_id')->toArray();
 
+        $total = 0;
         $arCategories = [];
 
         foreach ($categories as $categoryId) {
@@ -90,6 +96,8 @@ class BudgetMountLivewire extends Component
                         'bv' => $product->bv,
                         'place_room_id' => $product->place_room_id,
                     ];
+
+                    $total += $obProduct['price'] * $obProduct['quantity'] * count(explode(',', $obProduct['days']));
 
                     array_push($categoryProducts, $obProduct);
                 }
@@ -118,6 +126,8 @@ class BudgetMountLivewire extends Component
                 'bv' => $labor->bv,
                 'place_room_id' => $labor->place_room_id,
             ];
+
+            $total += $obLabor['price'] * $obLabor['quantity'] * $obLabor['days'];
 
             array_push($arLabors, $obLabor);
         }
@@ -149,96 +159,34 @@ class BudgetMountLivewire extends Component
         ];
 
         $this->listLabors = $arLabors;
+        $this->subtotal = $total;
+        $this->totalFee = 0;
+        $this->totalFeePercentage = 0;
+        $this->totalDiscount = 0;
+        $this->totalDiscountPercentage = 0;
+        $this->total = $total;
 
-        // dd($this->listLabors);
-    }
-
-    public function getRooms()
-    {
-        $budgetRoomProducts = BudgetRoomProduct::where('budget_id', $this->budget->id)->pluck('place_room_id')->toArray();
-        $budgetRoomLabors = BudgetRoomLabor::where('budget_id', $this->budget->id)->pluck('place_room_id')->toArray();
-        $placeRoomIds = array_unique(array_merge($budgetRoomProducts, $budgetRoomLabors));
-
-        $arRoom = [];
-
-        foreach ($placeRoomIds as $placeRoomId) {
-            $placeRoom = PlaceRoom::find($placeRoomId);
-
-            // $products = BudgetRoomProduct::where('budget_id', $this->budget->id)->where('place_room_id', $placeRoom->id);
-            $products = BudgetRoomProduct::where('budget_id', $this->budget->id);
-            $productsId = $products->pluck('product_id')->toArray();
-            $productsList = $products->get();
-            // $labors = BudgetRoomLabor::where('budget_id', $this->budget->id)->where('place_room_id', $placeRoom->id);
-            $labors = BudgetRoomLabor::where('budget_id', $this->budget->id);
-            $laborsId = $labors->pluck('labor_id')->toArray();
-            $laborsList = $labors->get();
-            $categoryProductsId = Product::whereIn('id', $productsId)->groupBy('category_id')->pluck('category_id')->toArray();
-            $categoryLaborsId = Labor::whereIn('id', $laborsId)->groupBy('category_id')->pluck('category_id')->toArray();
-            $categoriesId = array_unique(array_merge($categoryProductsId, $categoryLaborsId));
-
-            $arCategories = [];
-
-            foreach ($categoriesId as $categoryId) {
-                $category = Category::find($categoryId);
-                $categoryProducts = [];
-                $categoryLabors = [];
-
-                foreach ($productsList as $product) {
-                    if ($product->product->category_id == $categoryId) {
-                        array_push($categoryProducts, $product->toArray());
-                    }
-                }
-
-                foreach ($laborsList as $labor) {
-                    if ($labor->labor->category_id == $categoryId) {
-                        array_push($categoryLabors, $labor->toArray());
-                    }
-                }
-
-                $obCategory = [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'products' => $categoryProducts,
-                    'labors' => $categoryLabors,
-                ];
-
-                array_push($arCategories, $obCategory);
-            }
-
-            $budgetDays = explode('-', $this->budget->budget_days);
-            $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
-            $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
-
-            if ($startDay == $endDay) {
-                $days = [Carbon::parse($startDay)->format('d/m')];
+        if (!empty($this->budget->fee)) {
+            if ($this->budget->fee_type == 'percent') {
+                $feePercentage = $this->budget->fee;
+                $this->totalFeePercentage = ($feePercentage / 100) * $total;
+                $this->totalFee = $this->totalFeePercentage;
             } else {
-                $difDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
-
-                $days = [];
-
-                array_push($days, Carbon::parse($startDay)->format('d/m'));
-
-                for ($i = 0; $i < $difDays; $i++) {
-                    $date = Carbon::parse($startDay)->addDays($i + 1);
-                    array_push($days, $date->format('d/m'));
-                }
-
-                array_push($days, Carbon::parse($endDay)->format('d/m'));
+                $this->totalFee = $this->budget->fee;
             }
-
-            $arRoom[] = [
-                // 'place_room_name' => $placeRoom->name,
-                // 'place_room_id' => $placeRoom->id,
-                'place_room_name' => 'xxx',
-                'place_room_id' => 1,
-                'days' => $days,
-                'categories' => $arCategories,
-            ];
         }
 
-        $this->rooms = $arRoom;
+        if (!empty($this->budget->discount)) {
+            if ($this->budget->discount_type == 'percent') {
+                $discountPercentage = $this->budget->discount;
+                $this->totalDiscountPercentage = ($discountPercentage / 100) * $total;
+                $this->totalDiscount = $this->totalDiscountPercentage;
+            } else {
+                $this->totalDiscount = $this->budget->discount;
+            }
+        }
 
-        // dd($this->rooms);
+        $this->total = $this->subtotal - $this->totalDiscount + $this->totalFee;
     }
 
     public function render()
@@ -444,6 +392,8 @@ class BudgetMountLivewire extends Component
 
         $this->dataFee = [];
         $this->emit('feeUpdated');
+
+        return $this->mountBudget();
     }
 
     public function saveDiscount()
@@ -480,6 +430,8 @@ class BudgetMountLivewire extends Component
 
         $this->dataDiscount = [];
         $this->emit('discountUpdated');
+
+        return $this->mountBudget();
     }
 
     public function saveStatus()
@@ -547,6 +499,8 @@ class BudgetMountLivewire extends Component
         $this->budget->fee = null;
         $this->budget->saveQuietly();
         $this->budget->refresh();
+
+        return $this->mountBudget();
     }
 
     public function removeDiscount()
@@ -555,6 +509,8 @@ class BudgetMountLivewire extends Component
         $this->budget->discount = null;
         $this->budget->saveQuietly();
         $this->budget->refresh();
+
+        return $this->mountBudget();
     }
 
     public function saveChangeRoomProduct($products)
@@ -689,20 +645,24 @@ class BudgetMountLivewire extends Component
     {
         if (!empty($placeRoomId)) {
             $budgetRoomProduct->place_room_id = $placeRoomId;
-            $budgetRoomProduct->save();
-
-            return $this->mountBudget();
+        } else {
+            $budgetRoomProduct->place_room_id = null;
         }
+
+        $budgetRoomProduct->save();
+        return $this->mountBudget();
     }
 
     public function onChangeLaborRoom(BudgetRoomLabor $budgetRoomLabor, $placeRoomId)
     {
         if (!empty($placeRoomId)) {
             $budgetRoomLabor->place_room_id = $placeRoomId;
-            $budgetRoomLabor->save();
-
-            return $this->mountBudget();
+        } else {
+            $budgetRoomLabor->place_room_id = null;
         }
+
+        $budgetRoomLabor->save();
+        return $this->mountBudget();
     }
 
     public function generateNewVersion()

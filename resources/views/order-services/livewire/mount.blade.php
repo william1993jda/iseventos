@@ -127,25 +127,31 @@
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProduct">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Equipamento
             </button>
-            {{-- <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addLabor">
-                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Mão de obra
-            </button> --}}
+            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addKit">
+                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Kit
+            </button>
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addFreelancer">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Freelancer
             </button>
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProvider">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Fornecedor
             </button>
-            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addKit">
-                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Kit
-            </button>
             <div class="hidden md:block mx-auto text-slate-500"></div>
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="listPrintProviders">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Pedidos Fornecedor
             </button>
         </div>
-        @if (count($rooms) > 0)
-            <div class="intro-x col-span-12">
+
+        <div class="intro-x col-span-12">
+
+            @component('order-services.partials.table-product', [
+                'orderService' => $orderService,
+                'listProducts' => $listProducts,
+                'placeRooms' => $placeRooms,
+            ])
+            @endcomponent
+
+            @if (count($rooms) > 0)
                 @foreach ($rooms as $index => $room)
                     <h3 class="text-lg font-medium mr-auto">
                         {{ $room['place_room_name'] }}
@@ -356,11 +362,24 @@
                         </div>
                     </div>
                 @endforeach
-            </div>
+        </div>
         @endif
+
     </div>
 
-    @include('order-services.partials.modal-product')
+    @component('order-services.partials.modal-product', [
+        'osCategories' => $osCategories,
+        'placeRooms' => $placeRooms,
+    ])
+    @endcomponent
+
+    @component('order-services.partials.modal-kit', [
+        'groups' => $groups,
+        'placeRooms' => $placeRooms,
+    ])
+    @endcomponent
+
+    {{-- @include('order-services.partials.modal-product')
     @include('order-services.partials.modal-labor')
     @include('order-services.partials.modal-freelancer')
     @include('order-services.partials.modal-provider')
@@ -588,5 +607,5 @@
                 }
             });
         </script>
-    @endpush
+    @endpush --}}
 </div>
