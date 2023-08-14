@@ -6,6 +6,10 @@
             {{-- <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomFreelancer()">
                 Trocar sala
             </button> --}}
+            <a href="{{ route('orderServices.print.freelancer', $orderService->id) }}" target="_blank"
+                class="btn btn-primary shadow-md">
+                Imprimir
+            </a>
         </div>
         <div class="intro-y col-span-12 box px-5 pt-5 my-3">
             <table class="table">

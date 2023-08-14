@@ -49,15 +49,15 @@
                             <span class="font-semibold">Nome do Evento:</span>&nbsp;{{ $orderService->budget->name }}
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
-                            <span class="font-semibold">Local do
-                                Evento:</span>&nbsp;{{ $orderService->budget->place->name }}
-                        </div>
-                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
-                            <span class="font-semibold">Endereço do
-                                Local:</span>&nbsp;{{ $orderService->budget->place->getfullAddress() }}
-                        </div>
-                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Status:</span>&nbsp;{{ $orderService->osStatus->name }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                            <span class="font-semibold">Criado
+                                por:</span>&nbsp;{{ $orderService->user_id ? $orderService->user->name : null }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                            <span class="font-semibold">Alterado
+                                por:</span>&nbsp;{{ $orderService->last_user_id ? $orderService->lastUser->name : null }}
                         </div>
                     </div>
                 </div>
@@ -80,6 +80,14 @@
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Data
                                 Desmontagem:</span>&nbsp;{{ $orderService->budget->unmount_date->format('d/m/Y') }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                            <span class="font-semibold">Local do
+                                Evento:</span>&nbsp;{{ $orderService->budget->place->name }}
+                        </div>
+                        <div class="truncate sm:whitespace-normal flex items-center mt-1">
+                            <span class="font-semibold">Endereço do
+                                Local:</span>&nbsp;{{ $orderService->budget->place->getfullAddress() }}
                         </div>
                     </div>
                 </div>
@@ -137,9 +145,6 @@
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Freelancer
             </button>
             <div class="hidden md:block mx-auto text-slate-500"></div>
-            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="listPrintProviders">
-                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Pedidos Fornecedor
-            </button>
         </div>
 
         <div class="intro-x col-span-12">

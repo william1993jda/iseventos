@@ -2,13 +2,9 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\BudgetRoomLabor;
-use App\Models\BudgetRoomProduct;
 use App\Models\Category;
 use App\Models\Freelancer;
 use App\Models\Group;
-use App\Models\GroupProduct;
-use App\Models\Labor;
 use App\Models\OrderServiceRoomFreelancer;
 use App\Models\OrderServiceRoomGroup;
 use App\Models\OrderServiceRoomLabor;
@@ -18,9 +14,7 @@ use App\Models\OsCategory;
 use App\Models\OsProduct;
 use App\Models\OsStatus;
 use App\Models\PlaceRoom;
-use App\Models\Product;
 use App\Models\Provider;
-use App\Models\Status;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -509,6 +503,10 @@ class OrderServiceMountLivewire extends Component
             'quantity' => $this->dataProduct['quantity'],
         ]);
 
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
         $this->dataProduct = [];
         $this->emit('productSaved');
 
@@ -561,6 +559,10 @@ class OrderServiceMountLivewire extends Component
             'days' => implode(',', $days),
             'quantity' => $this->dataGroup['quantity'],
         ]);
+
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
 
         $this->dataGroup = [];
         $this->emit('groupSaved');
@@ -618,6 +620,10 @@ class OrderServiceMountLivewire extends Component
             'days' => $this->dataFreelancer['days'],
             'quantity' => $this->dataFreelancer['quantity'],
         ]);
+
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
 
         $this->dataFreelancer = [];
         $this->emit('freelancerSaved');
@@ -680,6 +686,10 @@ class OrderServiceMountLivewire extends Component
             'quantity' => $this->dataProvider['quantity'],
         ]);
 
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
         $this->dataProvider = [];
         $this->emit('providerSaved');
 
@@ -701,6 +711,7 @@ class OrderServiceMountLivewire extends Component
         }
 
         $this->orderService->os_status_id = $this->dataStatus['status_id'];
+        $this->orderService->last_user_id = auth()->user()->id;
         $this->orderService->saveQuietly();
         $this->orderService->refresh();
 
@@ -717,6 +728,10 @@ class OrderServiceMountLivewire extends Component
     {
         $orderServiceRoomProduct->delete();
 
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
         return $this->mountOrderService();
     }
 
@@ -728,6 +743,10 @@ class OrderServiceMountLivewire extends Component
     public function removeGroup(OrderServiceRoomGroup $orderServiceRoomGroup)
     {
         $orderServiceRoomGroup->delete();
+
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
 
         return $this->mountOrderService();
     }
@@ -741,6 +760,10 @@ class OrderServiceMountLivewire extends Component
     {
         $orderServiceRoomFreelancer->delete();
 
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
         return $this->mountOrderService();
     }
 
@@ -752,6 +775,10 @@ class OrderServiceMountLivewire extends Component
     public function removeProvider(OrderServiceRoomProvider $orderServiceRoomProvider)
     {
         $orderServiceRoomProvider->delete();
+
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
 
         return $this->mountOrderService();
     }
@@ -769,6 +796,10 @@ class OrderServiceMountLivewire extends Component
         $orderServiceRoomProduct->days = implode(',', $days);
         $orderServiceRoomProduct->save();
 
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
         return $this->mountOrderService();
     }
 
@@ -784,6 +815,10 @@ class OrderServiceMountLivewire extends Component
 
         $orderServiceRoomGroup->days = implode(',', $days);
         $orderServiceRoomGroup->save();
+
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
 
         return $this->mountOrderService();
     }
@@ -801,6 +836,10 @@ class OrderServiceMountLivewire extends Component
         $orderServiceRoomProvider->days = implode(',', $days);
         $orderServiceRoomProvider->save();
 
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
         return $this->mountOrderService();
     }
 
@@ -813,6 +852,11 @@ class OrderServiceMountLivewire extends Component
         }
 
         $orderServiceRoomProduct->save();
+
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
         return $this->mountOrderService();
     }
 
@@ -825,6 +869,11 @@ class OrderServiceMountLivewire extends Component
         }
 
         $orderServiceRoomGroup->save();
+
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
         return $this->mountOrderService();
     }
 
@@ -837,6 +886,11 @@ class OrderServiceMountLivewire extends Component
         }
 
         $orderServiceRoomProvider->save();
+
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
         return $this->mountOrderService();
     }
 
@@ -849,6 +903,11 @@ class OrderServiceMountLivewire extends Component
         }
 
         $orderServiceRoomFreelancer->save();
+
+        $this->orderService->last_user_id = auth()->user()->id;
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
+
         return $this->mountOrderService();
     }
 
@@ -857,6 +916,10 @@ class OrderServiceMountLivewire extends Component
         if ($quantity > 0) {
             $orderServiceRoomProduct->quantity = $quantity;
             $orderServiceRoomProduct->save();
+
+            $this->orderService->last_user_id = auth()->user()->id;
+            $this->orderService->saveQuietly();
+            $this->orderService->refresh();
 
             return $this->emit('saved');
         }
@@ -868,6 +931,10 @@ class OrderServiceMountLivewire extends Component
             $orderServiceRoomGroup->quantity = $quantity;
             $orderServiceRoomGroup->save();
 
+            $this->orderService->last_user_id = auth()->user()->id;
+            $this->orderService->saveQuietly();
+            $this->orderService->refresh();
+
             return $this->emit('saved');
         }
     }
@@ -877,6 +944,10 @@ class OrderServiceMountLivewire extends Component
         if ($quantity > 0) {
             $orderServiceRoomProvider->quantity = $quantity;
             $orderServiceRoomProvider->save();
+
+            $this->orderService->last_user_id = auth()->user()->id;
+            $this->orderService->saveQuietly();
+            $this->orderService->refresh();
 
             return $this->emit('saved');
         }
@@ -888,6 +959,10 @@ class OrderServiceMountLivewire extends Component
             $orderServiceRoomFreelancer->quantity = $quantity;
             $orderServiceRoomFreelancer->save();
 
+            $this->orderService->last_user_id = auth()->user()->id;
+            $this->orderService->saveQuietly();
+            $this->orderService->refresh();
+
             return $this->emit('saved');
         }
     }
@@ -898,28 +973,18 @@ class OrderServiceMountLivewire extends Component
             $orderServiceRoomFreelancer->days = $days;
             $orderServiceRoomFreelancer->save();
 
+            $this->orderService->last_user_id = auth()->user()->id;
+            $this->orderService->saveQuietly();
+            $this->orderService->refresh();
+
             return $this->emit('saved');
         }
-    }
-
-    public function listPrintProviders()
-    {
-        $productProviders = OrderServiceRoomProvider::where('order_service_id', $this->orderService->id)->get();
-        $arProviders = [];
-
-        foreach ($productProviders as $productProvider) {
-            if (!in_array($productProvider->osProduct->provider->id, $arProviders))
-                array_push($arProviders, $productProvider->osProduct->provider->id);
-        }
-
-        $this->printProviders = Provider::whereIn('id', $arProviders)->get();
-
-        $this->emit('showPrintProviders');
     }
 
     public function updateVersion()
     {
         $this->orderService->budget_version = $this->orderService->budget->budget_version;
+        $this->orderService->last_user_id = auth()->user()->id;
         $this->orderService->saveQuietly();
         $this->orderService->refresh();
 

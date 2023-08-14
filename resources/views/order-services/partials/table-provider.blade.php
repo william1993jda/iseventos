@@ -9,7 +9,13 @@
         </div>
         <div class="intro-y col-span-12 box px-5 pt-5 my-3">
             @foreach ($listProviders['providers'] as $provider)
-                <h3 class="font-medium text-base mr-auto">{{ $provider['name'] }}</h3>
+                <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+                    <h3 class="font-medium text-base mr-auto">{{ $provider['name'] }}</h3>
+                    <a href="{{ route('orderServices.print.provider', [$orderService->id, $provider['id']]) }}"
+                        target="_blank" class="btn btn-primary shadow-md">
+                        Imprimir
+                    </a>
+                </div>
                 <table class="table mb-3">
                     <thead>
                         <tr>

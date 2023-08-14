@@ -52,33 +52,6 @@
     <tbody>
         <tr>
             <td style="text-align:left; border:none;">
-                <strong>OS</strong>&nbsp;#{{ $os_number }}
-            </td>
-        </tr>
-        <tr>
-            <td style="border:none">
-                &nbsp;
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left; border:none;">
-                <strong>Fornecedor</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="border:none">
-                {{ $fantasy_name }}
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<br />
-
-<table style="border:none;border-collapse:collapse; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="text-align:left; border:none;">
                 <strong>Nome do Evento</strong>
             </td>
             <td style="text-align:center; width: 120px; border:none;">
@@ -158,7 +131,7 @@
     <thead>
         <tr>
             <th style="text-align:left; width: 100%;">
-                EQUIPAMENTOS
+                FREELANCER
             </th>
             <th style="text-align:center; width: 60px;">
                 QUANTIDADE

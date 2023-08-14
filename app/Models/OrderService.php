@@ -11,6 +11,8 @@ class OrderService extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'user_id',
+        'last_user_id',
         'os_status_id',
         'budget_id',
         'os_number',
@@ -19,6 +21,21 @@ class OrderService extends Model
         'observation',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            $model->user_id = auth()->user()->id;
+            $model->last_user_id = auth()->user()->id;
+            $model->saveQuietly();
+        });
+
+        static::updated(function ($model) {
+            $model->last_user_id = auth()->user()->id;
+            $model->saveQuietly();
+        });
+    }
 
     public function osStatus()
     {
@@ -48,5 +65,15 @@ class OrderService extends Model
     public function groups()
     {
         return $this->hasMany(OrderServiceRoomGroup::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function lastUser()
+    {
+        return $this->belongsTo(User::class, 'last_user_id');
     }
 }

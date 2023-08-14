@@ -103,7 +103,8 @@ class OrderServiceController extends Controller
         $orderService = OrderService::create([
             'os_status_id' => 1,
             'budget_id' => $budget->id,
-            'os_number' => (int) OrderService::max('os_number') + 1,
+            'os_number' => (int) OrderService::withTrashed()->max('os_number') + 1,
+            'os_version' => 1,
             'budget_version' => $budget->budget_version,
         ]);
 
@@ -505,8 +506,69 @@ class OrderServiceController extends Controller
         $data['fantasy_name'] = $provider->fantasy_name;
         $data['os_number'] = $orderService->os_number;
         $data['products'] = $arProducts;
+        $data['last_user_name'] = $orderService->last_user_id ? $orderService->lastUser->name : '';
 
         $pdf = PDF::loadView('pdf.orderServiceProvider', $data);
+        return $pdf->stream();
+    }
+
+    public function printFreelancer(OrderService $orderService)
+    {
+        $orderServiceRoomFreelancers = OrderServiceRoomFreelancer::where('order_service_id', $orderService->id)->get();
+
+        $arFreelancers = [];
+
+        foreach ($orderServiceRoomFreelancers as $freelancer) {
+            $obFreelancer = [
+                'id' => $freelancer->id,
+                'name' => $freelancer->freelancer->name,
+                'quantity' => $freelancer->quantity,
+                'days' => $freelancer->days,
+                'place_room_id' => $freelancer->place_room_id,
+            ];
+
+            array_push($arFreelancers, $obFreelancer);
+        }
+
+        $data = $orderService->toArray();
+        $data['name'] = $orderService->budget->name;
+        $data['request_date'] = $orderService->budget->request_date->format('d/m/Y');
+        $data['observation'] = $orderService->observation;
+        $data['customer'] = $orderService->budget->customer->fantasy_name;
+        $data['customer_name'] = '';
+        $data['customer_phone'] = '';
+        $data['customer_email'] = '';
+
+        if (!empty($orderService->budget->customer_contact_id)) {
+            $customerContact = CustomerContact::find($orderService->budget->customer_contact_id);
+            $data['customer_name'] = $customerContact->name;
+            $data['customer_phone'] = $customerContact->phone;
+            $data['customer_email'] = $customerContact->email;
+        }
+
+        $data['agency'] = $orderService->budget->agency ? $orderService->budget->agency->fantasy_name : null;
+        $data['place'] = $orderService->budget->place->name;
+        $data['city'] = $orderService->budget->city;
+
+        $budgetDays = explode('-', $orderService->budget->budget_days);
+
+        $data['start_date'] = trim($budgetDays[0]);
+        $data['end_date'] = trim($budgetDays[1]);
+        $data['mount_date'] = $orderService->budget->mount_date ? $orderService->budget->mount_date->format('d/m/Y') : null;
+        $data['unmount_date'] = $orderService->budget->unmount_date ? $orderService->budget->unmount_date->format('d/m/Y') : null;
+        $data['public'] = $orderService->budget->public;
+        $data['situation'] = $orderService->budget->situation;
+        $data['commercial_conditions'] = $orderService->budget->commercial_conditions;
+
+
+        // $data['fantasy_name'] = $provider->fantasy_name;
+        $data['os_number'] = $orderService->os_number;
+        $data['products'] = $arFreelancers;
+        $data['last_user_name'] = $orderService->last_user_id ? $orderService->lastUser->name : '';
+
+        // dd($data);
+
+        $pdf = PDF::loadView('pdf.orderServiceFreelancer', $data);
         return $pdf->stream();
     }
 }
