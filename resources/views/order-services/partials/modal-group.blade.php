@@ -1,15 +1,15 @@
 <div>
-    <div id="modal-orderservice-kit" class="modal" aria-hidden="true">
+    <div id="modal-orderservice-group" class="modal" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 class="font-medium text-base mr-auto">Adicionar Kit</h2>
                 </div>
                 <div class="modal-body">
-                    <div class="hidden" id="alert-kit-error">
+                    <div class="hidden" id="alert-group-error">
                         <div class="text-base font-medium">Verifique os campos abaixo:</div>
                         <div class="alert alert-danger show flex items-center mb-2" role="alert"
-                            id="alert-kit-body-error">
+                            id="alert-group-body-error">
                         </div>
                     </div>
 
@@ -18,25 +18,25 @@
                             wire:model="dataGroup.group_id" />
                     </div>
                     <div class="sm:grid grid-cols-2 gap-2 mt-3">
-                        <x-forms.select name="kit_place_room_id" label="Sala" :options="$placeRooms"
+                        <x-forms.select name="group_place_room_id" label="Sala" :options="$placeRooms"
                             wire:model="dataGroup.place_room_id" />
-                        <x-forms.number name="kit_quantity" label="Quantidade" wire:model="dataGroup.quantity" />
+                        <x-forms.number name="group_quantity" label="Quantidade" wire:model="dataGroup.quantity" />
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-tw-dismiss="modal"
                         class="btn btn-outline-secondary w-20 mr-1">Fechar</button>
-                    <button type="button" class="btn btn-primary w-20" wire:click="saveKit">Salvar</button>
+                    <button type="button" class="btn btn-primary w-20" wire:click="saveGroup">Salvar</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- BEGIN: Delete Confirmation Modal -->
-    <div id="delete-confirmation-kit-modal" class="modal" tabindex="-1" aria-hidden="true">
+    <div id="delete-confirmation-group-modal" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <input type="hidden" name="kit_id_delete" id="kit_id_delete">
+                <input type="hidden" name="group_id_delete" id="group_id_delete">
                 <div class="modal-body p-0">
                     <div class="p-5 text-center">
                         <i data-lucide="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
@@ -48,7 +48,7 @@
                     <div class="px-5 pb-8 text-center">
                         <button type="button" data-tw-dismiss="modal"
                             class="btn btn-outline-secondary w-24 mr-1">Cancelar</button>
-                        <button type="button" class="btn btn-danger w-24" onclick="removeKit()">Remover</button>
+                        <button type="button" class="btn btn-danger w-24" onclick="removeGroup()">Remover</button>
                     </div>
                 </div>
             </div>
@@ -58,48 +58,48 @@
 
     @push('custom-scripts')
         <script type="text/javascript">
-            var modalOrderServiceKit = null;
-            var deleteConfirmationKitModal = null;
+            var modalOrderServiceGroup = null;
+            var deleteConfirmationGroupModal = null;
             var selectGroupId = null;
-            var selectPlaceRoomIdKit = null;
-            var inputQuantityKit = null;
-            var alertKitError = null;
-            var alertKitBodyError = null;
+            var selectPlaceRoomIdGroup = null;
+            var inputQuantityGroup = null;
+            var alertGroupError = null;
+            var alertGroupBodyError = null;
 
             document.addEventListener("DOMContentLoaded", function(e) {
-                modalOrderServiceKit = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-orderservice-kit"));
-                deleteConfirmationKitModal = tailwind.Modal.getInstance(document.querySelector(
-                    "#delete-confirmation-kit-modal"));
+                modalOrderServiceGroup = tailwind.Modal.getInstance(document.querySelector(
+                    "#modal-orderservice-group"));
+                deleteConfirmationGroupModal = tailwind.Modal.getInstance(document.querySelector(
+                    "#delete-confirmation-group-modal"));
 
                 selectGroupId = document.getElementById('group_id').tomselect;
-                selectPlaceRoomIdKit = document.getElementById('kit_place_room_id').tomselect;
-                inputQuantityKit = document.getElementById('kit_quantity');
-                alertKitError = document.getElementById('alert-kit-error');
-                alertKitBodyError = document.getElementById('alert-kit-body-error');
+                selectPlaceRoomIdGroup = document.getElementById('group_place_room_id').tomselect;
+                inputQuantityGroup = document.getElementById('group_quantity');
+                alertGroupError = document.getElementById('alert-group-error');
+                alertGroupBodyError = document.getElementById('alert-group-body-error');
             });
 
-            function removeKit() {
-                const kitId = document.getElementById('kit_id_delete').value;
-                @this.removeKit(kitId);
-                document.getElementById('kit_id_delete').value = '';
-                deleteConfirmationKitModal.hide();
+            function removeGroup() {
+                const groupId = document.getElementById('group_id_delete').value;
+                @this.removeGroup(groupId);
+                document.getElementById('group_id_delete').value = '';
+                deleteConfirmationGroupModal.hide();
             }
 
-            window.livewire.on('addKit', () => {
+            window.livewire.on('addGroup', () => {
                 selectGroupId.clear(true);
-                selectPlaceRoomIdKit.clear(true);
-                inputQuantityKit.value = '';
-                modalOrderServiceKit.show();
+                selectPlaceRoomIdGroup.clear(true);
+                inputQuantityGroup.value = '';
+                modalOrderServiceGroup.show();
             });
 
-            window.livewire.on('kitSaved', () => {
+            window.livewire.on('groupSaved', () => {
                 selectGroupId.clear(true);
-                selectPlaceRoomIdKit.clear(true);
-                inputQuantityKit.value = '';
+                selectPlaceRoomIdGroup.clear(true);
+                inputQuantityGroup.value = '';
             });
 
-            window.livewire.on('kitError', (data) => {
+            window.livewire.on('groupError', (data) => {
                 if (data) {
                     let listErros =
                         '<ul class="list-disc">';
@@ -110,17 +110,17 @@
 
                     listErros += '</ul>';
 
-                    alertKitBodyError.innerHTML = listErros;
-                    alertKitError.classList.remove('hidden');
+                    alertGroupBodyError.innerHTML = listErros;
+                    alertGroupError.classList.remove('hidden');
                 } else {
-                    alertKitBodyError.innerHTML = '';
-                    alertKitError.classList.add('hidden');
+                    alertGroupBodyError.innerHTML = '';
+                    alertGroupError.classList.add('hidden');
                 }
             });
 
-            window.livewire.on('confirmKitRemove', (id) => {
-                document.getElementById('kit_id_delete').value = id;
-                deleteConfirmationKitModal.show();
+            window.livewire.on('confirmGroupRemove', (id) => {
+                document.getElementById('group_id_delete').value = id;
+                deleteConfirmationGroupModal.show();
             });
         </script>
     @endpush

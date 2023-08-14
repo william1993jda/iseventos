@@ -127,14 +127,14 @@
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProduct">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Equipamento
             </button>
-            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addKit">
+            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addGroup">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Kit
-            </button>
-            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addFreelancer">
-                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Freelancer
             </button>
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addProvider">
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Fornecedor
+            </button>
+            <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="addFreelancer">
+                <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Freelancer
             </button>
             <div class="hidden md:block mx-auto text-slate-500"></div>
             <button type="button" class="btn btn-primary shadow-md mr-2" wire:click="listPrintProviders">
@@ -151,239 +151,61 @@
             ])
             @endcomponent
 
-            @if (count($rooms) > 0)
-                @foreach ($rooms as $index => $room)
-                    <h3 class="text-lg font-medium mr-auto">
-                        {{ $room['place_room_name'] }}
-                    </h3>
-                    <div class="intro-y col-span-12 box px-5 pt-5 my-3">
-                        <div class="overflow-x-auto">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="whitespace-nowrap">EQUIPAMENTO</th>
-                                        @foreach ($room['days'] as $roomDate)
-                                            <th class="whitespace-nowrap w-10">{{ $roomDate }}</th>
-                                        @endforeach
-                                        <th class="whitespace-nowrap w-10">QUANTIDADE</th>
-                                        <th class="whitespace-nowrap w-10">&nbsp;</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($room['categories'] as $category)
-                                        <tr class="bg-red-100">
-                                            <td class="whitespace-nowrap font-medium">{{ $category['name'] }}</td>
-                                            <td class="whitespace-nowrap" colspan="{{ count($room['days']) + 2 }}">
-                                                &nbsp;</td>
-                                        </tr>
-                                        @foreach ($category['products'] as $product)
-                                            @php
-                                                $days = count(explode(',', $product['days']));
-                                            @endphp
-                                            <tr>
-                                                <td class="whitespace-nowrap">{{ $product['os_product']['name'] }}
-                                                </td>
-                                                @foreach ($room['days'] as $roomDate)
-                                                    <td class="whitespace-nowrap">
-                                                        @if (in_array($roomDate, explode(',', $product['days'])))
-                                                            <x-forms.checkbox name="active" :checked="true"
-                                                                wire:click="checkDayRoomProduct({{ $product['id'] }}, '{{ $roomDate }}')" />
-                                                        @else
-                                                            <x-forms.checkbox name="active" :checked="false"
-                                                                wire:click="checkDayRoomProduct({{ $product['id'] }}, '{{ $roomDate }}')" />
-                                                        @endif
-                                                    </td>
-                                                @endforeach
-                                                <td class="whitespace-nowrap">
-                                                    <x-forms.number name="quantity" min="1" :value="$product['quantity']"
-                                                        wire:change="onChangeQuantityProduct({{ $product['id'] }}, $event.target.value)" />
-                                                </td>
-                                                <td class="whitespace-nowrap" wire:ignore>
-                                                    <button
-                                                        class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                        data-action="{{ route('orderServices.room.product.destroy', $product['id']) }}"
-                                                        data-tw-toggle="modal"
-                                                        data-tw-target="#delete-confirmation-modal" type="button">
-                                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        @foreach ($category['providers'] as $provider)
-                                            @php
-                                                $days = count(explode(',', $provider['days']));
-                                            @endphp
-                                            <tr>
-                                                <td class="whitespace-nowrap">
-                                                    <div class="font-medium">
-                                                        {{ $provider['os_product']['provider']['fantasy_name'] }}
-                                                    </div>
-                                                    {{ $provider['os_product']['name'] }}
-                                                </td>
-                                                @foreach ($room['days'] as $roomDate)
-                                                    <td class="whitespace-nowrap">
-                                                        @if (in_array($roomDate, explode(',', $provider['days'])))
-                                                            <x-forms.checkbox name="active" :checked="true"
-                                                                wire:click="checkDayRoomProvider({{ $provider['id'] }}, '{{ $roomDate }}')" />
-                                                        @else
-                                                            <x-forms.checkbox name="active" :checked="false"
-                                                                wire:click="checkDayRoomProvider({{ $provider['id'] }}, '{{ $roomDate }}')" />
-                                                        @endif
-                                                    </td>
-                                                @endforeach
-                                                <td class="whitespace-nowrap">
-                                                    <x-forms.number name="quantity" min="1" :value="$provider['quantity']"
-                                                        wire:change="onChangeQuantityProvider({{ $provider['id'] }}, $event.target.value)" />
-                                                </td>
-                                                <td class="whitespace-nowrap" wire:ignore>
-                                                    <button
-                                                        class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                        data-action="{{ route('orderServices.room.provider.destroy', $provider['id']) }}"
-                                                        data-tw-toggle="modal"
-                                                        data-tw-target="#delete-confirmation-modal" type="button">
-                                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        @foreach ($category['groups'] as $group)
-                                            @php
-                                                $days = count(explode(',', $group['days']));
-                                            @endphp
-                                            <tr>
-                                                <td class="whitespace-nowrap">
-                                                    <div class="font-medium">
-                                                        {{ $group['group']['name'] }}
-                                                    </div>
-                                                    <ul>
-                                                        @foreach ($group['group']['products'] as $product)
-                                                            <li>{{ $product['name'] }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                </td>
-                                                @foreach ($room['days'] as $roomDate)
-                                                    <td class="whitespace-nowrap">
-                                                        @if (in_array($roomDate, explode(',', $group['days'])))
-                                                            <x-forms.checkbox name="active" :checked="true"
-                                                                wire:click="checkDayRoomGroup({{ $group['id'] }}, '{{ $roomDate }}')" />
-                                                        @else
-                                                            <x-forms.checkbox name="active" :checked="false"
-                                                                wire:click="checkDayRoomGroup({{ $group['id'] }}, '{{ $roomDate }}')" />
-                                                        @endif
-                                                    </td>
-                                                @endforeach
-                                                <td class="whitespace-nowrap">
-                                                    <x-forms.number name="quantity" min="1" :value="$group['quantity']"
-                                                        wire:change="onChangeQuantityGroup({{ $group['id'] }}, $event.target.value)" />
-                                                </td>
-                                                <td class="whitespace-nowrap" wire:ignore>
-                                                    <button
-                                                        class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                        data-action="{{ route('orderServices.room.provider.destroy', $group['id']) }}"
-                                                        data-tw-toggle="modal"
-                                                        data-tw-target="#delete-confirmation-modal" type="button">
-                                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        @foreach ($category['freelancers'] as $freelancer)
-                                            @php
-                                                $days = count(explode(',', $freelancer['days']));
-                                            @endphp
-                                            <tr>
-                                                <td class="whitespace-nowrap">
-                                                    <div class="font-medium">
-                                                        {{ $freelancer['freelancer']['name'] }}
-                                                    </div>
-                                                </td>
-                                                <td class="whitespace-nowrap" colspan="{{ count($room['days']) }}">
-                                                    <div class="flex items-center justify-end">
-                                                        <x-forms.number name="days" min="1"
-                                                            :value="$freelancer['days']" class="form-control"
-                                                            wire:change="onChangeFreelancerDays({{ $freelancer['id'] }}, $event.target.value)" />
-                                                        &nbsp;&nbsp;diárias
-                                                    </div>
-                                                </td>
-                                                <td class="whitespace-nowrap">
-                                                    <x-forms.number name="quantity" min="1" :value="$freelancer['quantity']"
-                                                        wire:change="onChangeFreelancerQuantity({{ $freelancer['id'] }}, $event.target.value)" />
-                                                </td>
-                                                <td class="whitespace-nowrap" wire:ignore>
-                                                    <button
-                                                        class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                        data-action="{{ route('orderServices.room.freelancer.destroy', $freelancer['id']) }}"
-                                                        data-tw-toggle="modal"
-                                                        data-tw-target="#delete-confirmation-modal" type="button">
-                                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        {{-- @foreach ($category['labors'] as $labor)
-                                            @php
-                                                $days = $labor['days'];
-                                                $total += $labor['quantity'] * $labor['price'] * $days;
-                                            @endphp
-                                            <tr>
-                                                <td class="whitespace-nowrap">{{ $labor['labor']['name'] }}</td>
-                                                <td class="whitespace-nowrap" colspan="{{ count($room['days']) }}">
-                                                    <div class="flex items-center justify-end">
-                                                        <x-forms.number name="days" min="1"
-                                                            :value="$labor['days']" class="form-control"
-                                                            wire:change="onChangeLaborDays({{ $labor['id'] }}, $event.target.value)" />
-                                                        &nbsp;&nbsp;diárias
-                                                    </div>
-                                                </td>
-                                                <td class="whitespace-nowrap">
-                                                    {{ number_format($labor['price'], 2, ',', '.') }}
-                                                </td>
-                                                <td class="whitespace-nowrap">
-                                                    <x-forms.number name="quantity" min="1" :value="$labor['quantity']"
-                                                        wire:change="onChangeLaborQuantity({{ $labor['id'] }}, $event.target.value)" />
-                                                </td>
-                                                <td class="whitespace-nowrap">
-                                                    {{ number_format($labor['quantity'] * $labor['price'] * $days, 2, ',', '.') }}
-                                                </td>
-                                                <td class="whitespace-nowrap" wire:ignore>
-                                                    <button
-                                                        class="btn btn-sm btn-primary mr-1 mb-2 delete-confirmation-button"
-                                                        data-action="{{ route('budgets.room.labor.destroy', $labor['id']) }}"
-                                                        data-tw-toggle="modal"
-                                                        data-tw-target="#delete-confirmation-modal" type="button">
-                                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach --}}
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                @endforeach
+            @component('order-services.partials.table-group', [
+                'orderService' => $orderService,
+                'listGroups' => $listGroups,
+                'placeRooms' => $placeRooms,
+            ])
+            @endcomponent
+
+            @component('order-services.partials.table-provider', [
+                'orderService' => $orderService,
+                'listProviders' => $listProviders,
+                'placeRooms' => $placeRooms,
+            ])
+            @endcomponent
+
+            @component('order-services.partials.table-freelancer', [
+                'orderService' => $orderService,
+                'listFreelancers' => $listFreelancers,
+                'placeRooms' => $placeRooms,
+            ])
+            @endcomponent
         </div>
-        @endif
 
-    </div>
+        @component('order-services.partials.modal-product', [
+            'osCategories' => $osCategories,
+            'placeRooms' => $placeRooms,
+        ])
+        @endcomponent
 
-    @component('order-services.partials.modal-product', [
-        'osCategories' => $osCategories,
-        'placeRooms' => $placeRooms,
-    ])
-    @endcomponent
+        @component('order-services.partials.modal-group', [
+            'groups' => $groups,
+            'placeRooms' => $placeRooms,
+        ])
+        @endcomponent
 
-    @component('order-services.partials.modal-kit', [
-        'groups' => $groups,
-        'placeRooms' => $placeRooms,
-    ])
-    @endcomponent
+        @component('order-services.partials.modal-freelancer', [
+            'freelancers' => $freelancers,
+            'placeRooms' => $placeRooms,
+        ])
+        @endcomponent
 
-    {{-- @include('order-services.partials.modal-product')
-    @include('order-services.partials.modal-labor')
-    @include('order-services.partials.modal-freelancer')
-    @include('order-services.partials.modal-provider')
-    @include('order-services.partials.modal-kit')
+        @component('order-services.partials.modal-provider', [
+            'providers' => $providers,
+            'placeRooms' => $placeRooms,
+        ])
+        @endcomponent
+
+        @component('order-services.partials.modal-status', [
+            'osStatuses' => $osStatuses,
+        ])
+        @endcomponent
+
+        @component('order-services.partials.modal-observation')
+        @endcomponent
+
+        {{--
     @include('order-services.partials.modal-status')
     @include('order-services.partials.modal-observation')
     @include('order-services.partials.modal-print-provider')
@@ -607,5 +429,6 @@
                 }
             });
         </script>
-    @endpush --}}
-</div>
+    @endpush
+    --}}
+    </div>

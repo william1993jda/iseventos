@@ -3,17 +3,17 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <h2 class="font-medium text-base mr-auto">EQUIPAMENTOS</h2>
             <div class="hidden md:block mx-auto text-slate-500"></div>
-            <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomProduct()">
+            {{-- <button class="btn btn-primary shadow-md mr-2" onclick="changeRoomProduct()">
                 Trocar sala
-            </button>
+            </button> --}}
         </div>
         <div class="intro-y col-span-12 box px-5 pt-5 my-3">
             <table class="table">
                 <thead>
                     <tr>
-                        <th class="whitespace-nowrap">
+                        {{-- <th class="whitespace-nowrap">
                             <input type="checkbox" name="checkbox_product" onclick="checkAllProduct()">
-                        </th>
+                        </th> --}}
                         <th class="whitespace-nowrap">EQUIPAMENTO</th>
                         @foreach ($listProducts['days'] as $day)
                             <th class="whitespace-nowrap w-10">{{ $day }}</th>
@@ -26,18 +26,18 @@
                 <tbody>
                     @foreach ($listProducts['categories'] as $category)
                         <tr class="bg-red-100">
-                            <td class="whitespace-nowrap">&nbsp;</td>
+                            {{-- <td class="whitespace-nowrap">&nbsp;</td> --}}
                             <td class="whitespace-nowrap font-medium">
                                 {{ $category['name'] }}
                             </td>
-                            <td class="whitespace-nowrap" colspan="{{ count($listProducts['days']) + 6 }}">
+                            <td class="whitespace-nowrap" colspan="{{ count($listProducts['days']) + 5 }}">
                                 &nbsp;</td>
                         </tr>
                         @foreach ($category['products'] as $product)
                             <tr>
-                                <td class="whitespace-nowrap w-4">
+                                {{-- <td class="whitespace-nowrap w-4">
                                     <input type="checkbox" class="checkbox_product" value="{{ $product['id'] }}">
-                                </td>
+                                </td> --}}
                                 <td class="whitespace">{{ $product['name'] }}</td>
                                 @foreach ($listProducts['days'] as $day)
                                     <td class="whitespace-nowrap">
@@ -70,7 +70,7 @@
                                 <td class="whitespace-nowrap">
                                     <x-forms.number name="quantity_product_{{ $product['id'] }}" min="1"
                                         :value="$product['quantity']"
-                                        wire:change="onChangeQuantity({{ $product['id'] }}, $event.target.value)" />
+                                        wire:change="onChangeQuantityProduct({{ $product['id'] }}, $event.target.value)" />
                                 </td>
                                 <td class="whitespace-nowrap">
                                     <button class="btn btn-sm btn-primary delete-confirmation-button" type="button"

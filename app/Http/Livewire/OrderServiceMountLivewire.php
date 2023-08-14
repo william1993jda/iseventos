@@ -7,6 +7,7 @@ use App\Models\BudgetRoomProduct;
 use App\Models\Category;
 use App\Models\Freelancer;
 use App\Models\Group;
+use App\Models\GroupProduct;
 use App\Models\Labor;
 use App\Models\OrderServiceRoomFreelancer;
 use App\Models\OrderServiceRoomGroup;
@@ -30,6 +31,7 @@ class OrderServiceMountLivewire extends Component
     public $categories = [];
     public $osStatuses = [];
     public $products = [];
+    public $freelancers = [];
     public $providers = [];
     public $printProviders = [];
     public $groups = [];
@@ -43,6 +45,9 @@ class OrderServiceMountLivewire extends Component
     public $dataGroup = [];
     public $dataStatus = [];
     public $listProducts = [];
+    public $listGroups = [];
+    public $listFreelancers = [];
+    public $listProviders = [];
 
     public function mount($orderService)
     {
@@ -50,14 +55,37 @@ class OrderServiceMountLivewire extends Component
         $this->osStatuses = OsStatus::pluck('name', 'id')->prepend('Selecione', '');
         $this->placeRooms = $orderService->budget->place->rooms->pluck('name', 'id')->prepend('Selecione', '');
         $this->groups = Group::pluck('name', 'id')->prepend('Selecione', '');
+        $this->freelancers = Freelancer::pluck('name', 'id')->prepend('Selecione', '');
+        $this->providers = Provider::pluck('fantasy_name', 'id')->prepend('Selecione', '');
 
         $this->mountOrderService();
     }
 
     public function mountOrderService()
     {
-        $this->dataProduct = [];
+        $budgetDays = explode('-', $this->orderService->budget->budget_days);
+        $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
+        $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
 
+        if ($startDay == $endDay) {
+            $days = [Carbon::parse($startDay)->format('d/m')];
+        } else {
+            $difDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
+
+            $days = [];
+
+            array_push($days, Carbon::parse($startDay)->format('d/m'));
+
+            for ($i = 0; $i < $difDays; $i++) {
+                $date = Carbon::parse($startDay)->addDays($i + 1);
+                array_push($days, $date->format('d/m'));
+            }
+
+            array_push($days, Carbon::parse($endDay)->format('d/m'));
+        }
+
+        // PRODUCTS
+        $this->dataProduct = [];
         $orderServiceRoomProducts = OrderServiceRoomProduct::where('order_service_id', $this->orderService->id)->get();
         $osCategories = OsProduct::whereIn('id', $orderServiceRoomProducts->pluck('os_product_id')->toArray())->groupBy('os_category_id')->pluck('os_category_id')->toArray();
 
@@ -90,34 +118,119 @@ class OrderServiceMountLivewire extends Component
             array_push($arOsCategories, $obCategory);
         }
 
-        $budgetDays = explode('-', $this->orderService->budget->budget_days);
-        $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
-        $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
-
-        if ($startDay == $endDay) {
-            $days = [Carbon::parse($startDay)->format('d/m')];
-        } else {
-            $difDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
-
-            $days = [];
-
-            array_push($days, Carbon::parse($startDay)->format('d/m'));
-
-            for ($i = 0; $i < $difDays; $i++) {
-                $date = Carbon::parse($startDay)->addDays($i + 1);
-                array_push($days, $date->format('d/m'));
-            }
-
-            array_push($days, Carbon::parse($endDay)->format('d/m'));
-        }
-
         $this->listProducts = [
             'days' => $days,
             'categories' => $arOsCategories,
         ];
 
-        // dd($this->listProducts);
 
+        // KITS
+        $this->listGroups = [];
+        $orderServiceRoomGroups = OrderServiceRoomGroup::where('order_service_id', $this->orderService->id)->get();
+        $arGroups = [];
+
+        foreach ($orderServiceRoomGroups as $group) {
+            $obGroup = [
+                'id' => $group->id,
+                'name' => $group->group->name,
+                'quantity' => $group->quantity,
+                'days' => $group->days,
+                'place_room_id' => $group->place_room_id,
+                'products' => $group->group->products->map(function ($product) {
+                    return [
+                        'id' => $product->os_product_id,
+                        'name' => $product->product->name,
+                    ];
+                })->toArray(),
+            ];
+
+            array_push($arGroups, $obGroup);
+        }
+
+        $this->listGroups = [
+            'days' => $days,
+            'groups' => $arGroups,
+        ];
+
+
+        // FREELANCERS
+        $this->listFreelancers = [];
+        $orderServiceRoomFreelancers = OrderServiceRoomFreelancer::where('order_service_id', $this->orderService->id)->get();
+        $arFreelancers = [];
+
+        foreach ($orderServiceRoomFreelancers as $freelancer) {
+            $obFreelancer = [
+                'id' => $freelancer->id,
+                'name' => $freelancer->freelancer->name,
+                'quantity' => $freelancer->quantity,
+                'days' => $freelancer->days,
+                'place_room_id' => $freelancer->place_room_id,
+            ];
+
+            array_push($arFreelancers, $obFreelancer);
+        }
+
+        $this->listFreelancers = [
+            'days' => $days,
+            'freelancers' => $arFreelancers,
+        ];
+
+        // PROVIDERS
+        $this->listProviders = [];
+        $orderServiceRoomProviders = OrderServiceRoomProvider::where('order_service_id', $this->orderService->id)->get();
+        $providerProductsIds = $orderServiceRoomProviders->pluck('os_product_id')->toArray();
+        $providerIds = OsProduct::whereIn('id', $providerProductsIds)
+            ->groupBy('provider_id')
+            ->pluck('provider_id')
+            ->toArray();
+
+        $providerCategoriesIds = OsProduct::whereIn('id', $providerProductsIds)
+            ->groupBy('os_category_id')
+            ->pluck('os_category_id')
+            ->toArray();
+
+        $arProviders = [];
+
+        foreach ($providerIds as $providerId) {
+            $provider = Provider::find($providerId);
+
+            $arProviders[$provider->id] = [
+                'id' => $provider->id,
+                'name' => $provider->fantasy_name,
+                'categories' => [],
+            ];
+
+            foreach ($providerCategoriesIds as $providerCategoriesId) {
+                $providerCategory = OsCategory::find($providerCategoriesId);
+
+                $arProviders[$provider->id]['categories'][$providerCategory->id] = [
+                    'id' => $providerCategory->id,
+                    'name' => $providerCategory->name,
+                    'products' => [],
+                ];
+
+                foreach ($orderServiceRoomProviders as $orderServiceRoomProvider) {
+                    $arProviders[$orderServiceRoomProvider->osProduct->provider_id]['categories'][$orderServiceRoomProvider->osProduct->os_category_id]['products'][$orderServiceRoomProvider->os_product_id] = [
+                        'id' => $orderServiceRoomProvider->id,
+                        'name' => $orderServiceRoomProvider->osProduct->name,
+                        'quantity' => $orderServiceRoomProvider->quantity,
+                        'days' => $orderServiceRoomProvider->days,
+                        'place_room_id' => $orderServiceRoomProvider->place_room_id,
+                    ];
+                }
+
+                if (count($arProviders[$provider->id]['categories'][$providerCategory->id]['products']) == 0) {
+                    unset($arProviders[$provider->id]['categories'][$providerCategory->id]);
+                }
+            }
+        }
+
+        $this->listProviders = [
+            'days' => $days,
+            'providers' => $arProviders,
+        ];
+
+        // dd($this->listProviders);
 
         $orderServiceRoomProducts = OrderServiceRoomProduct::where('order_service_id', $this->orderService->id)->pluck('place_room_id')->toArray();
         $orderServiceRoomProviders = OrderServiceRoomProvider::where('order_service_id', $this->orderService->id)->pluck('place_room_id')->toArray();
@@ -273,32 +386,25 @@ class OrderServiceMountLivewire extends Component
         return $this->emit('addProduct');
     }
 
-    public function addLabor()
+    public function addGroup()
     {
-        $categories = category::pluck('name', 'id')->prepend('Selecione', '');
-
-        $this->emit('addLabor', $categories);
+        $this->dataGroup = [];
+        $this->emit('groupError', null);
+        return $this->emit('addGroup');
     }
 
     public function addFreelancer()
     {
-        $freelancers = Freelancer::pluck('name', 'id')->prepend('Selecione', '');
-
-        $this->emit('addFreelancer', $freelancers);
+        $this->dataFreelancer = [];
+        $this->emit('freelancerError', null);
+        return $this->emit('addFreelancer');
     }
 
     public function addProvider()
     {
-        $providers = Provider::pluck('fantasy_name', 'id')->prepend('Selecione', '');
-
-        $this->emit('addProvider', $providers);
-    }
-
-    public function addKit()
-    {
-        $this->dataProduct = [];
-        $this->emit('kitError', null);
-        return $this->emit('addKit');
+        $this->dataProvider = [];
+        $this->emit('providerError', null);
+        return $this->emit('addProvider');
     }
 
     public function editStatus()
@@ -329,7 +435,6 @@ class OrderServiceMountLivewire extends Component
     public function onSelectProvider(Provider $provider)
     {
         $osCategoryIds = OsProduct::where('provider_id', $provider->id)->pluck('os_category_id')->toArray();
-
         $osCategories = OsCategory::whereIn('id', $osCategoryIds)->pluck('name', 'id')->prepend('Selecione', '');
 
         $this->emit('updateProviderCategoryList', $osCategories);
@@ -344,9 +449,13 @@ class OrderServiceMountLivewire extends Component
 
     public function saveObservation()
     {
-        $this->orderService->update($this->dataOrderService);
+        $this->orderService->observation = $this->dataOrderService['observation'];
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
 
-        return $this->emit('saved');
+        $this->dataOrderService = [];
+
+        $this->emit('observationUpdated');
     }
 
     public function saveProduct()
@@ -406,170 +515,7 @@ class OrderServiceMountLivewire extends Component
         return $this->mountOrderService();
     }
 
-    // public function saveLabor()
-    // {
-    //     // $this->validate([
-    //     //     'dataLabor.category_id' => 'required',
-    //     //     'dataLabor.labor_id' => 'required',
-    //     //     'dataLabor.place_room_id' => 'required',
-    //     //     'dataLabor.quantity' => 'required',
-    //     // ], [], [
-    //     //     'dataLabor.category_id' => 'categoria',
-    //     //     'dataLabor.labor_id' => 'equipamento',
-    //     //     'dataLabor.place_room_id' => 'sala',
-    //     //     'dataLabor.quantity' => 'quantidade',
-    //     // ]);
-
-    //     if (empty($this->dataLabor['category_id'])) {
-    //         return $this->emit('laborError', true);
-    //     }
-
-    //     if (empty($this->dataLabor['labor_id'])) {
-    //         return $this->emit('laborError', true);
-    //     }
-
-    //     if (empty($this->dataLabor['place_room_id'])) {
-    //         return $this->emit('laborError', true);
-    //     }
-
-
-    //     if (empty($this->dataLabor['quantity'])) {
-    //         return $this->emit('laborError', true);
-    //     }
-
-    //     if (empty($this->dataLabor['days'])) {
-    //         return $this->emit('laborError', true);
-    //     }
-
-    //     $this->emit('laborError', false);
-
-    //     OrderServiceRoomLabor::create([
-    //         'order_service_id' => $this->orderService->id,
-    //         'place_room_id' => $this->dataLabor['place_room_id'],
-    //         'labor_id' => $this->dataLabor['labor_id'],
-    //         'days' => $this->dataLabor['days'],
-    //         'quantity' => $this->dataLabor['quantity'],
-    //     ]);
-
-    //     $this->dataLabor = [];
-
-    //     return $this->emit('saved');
-    // }
-
-    public function saveFreelancer()
-    {
-        // $this->validate([
-        //     'dataFreelancer.freelancer_id' => 'required',
-        //     'dataFreelancer.place_room_id' => 'required',
-        //     'dataFreelancer.quantity' => 'required',
-        // ], [], [
-        //     'dataFreelancer.freelancer_id' => 'equipamento',
-        //     'dataFreelancer.place_room_id' => 'sala',
-        //     'dataFreelancer.quantity' => 'quantidade',
-        // ]);
-
-
-        if (empty($this->dataFreelancer['freelancer_id'])) {
-            return $this->emit('freelancerError', true);
-        }
-
-        if (empty($this->dataFreelancer['place_room_id'])) {
-            return $this->emit('freelancerError', true);
-        }
-
-
-        if (empty($this->dataFreelancer['quantity'])) {
-            return $this->emit('freelancerError', true);
-        }
-
-        if (empty($this->dataFreelancer['days'])) {
-            return $this->emit('freelancerError', true);
-        }
-
-        $this->emit('laborError', false);
-
-        OrderServiceRoomFreelancer::create([
-            'order_service_id' => $this->orderService->id,
-            'place_room_id' => $this->dataFreelancer['place_room_id'],
-            'freelancer_id' => $this->dataFreelancer['freelancer_id'],
-            'days' => $this->dataFreelancer['days'],
-            'quantity' => $this->dataFreelancer['quantity'],
-        ]);
-
-        $this->dataFreelancer = [];
-
-        return $this->emit('saved');
-    }
-
-    public function saveProvider()
-    {
-        // $this->validate([
-        //     'dataProvider.provider_id' => 'required',
-        //     'dataProvider.provider_category_id' => 'required',
-        //     'dataProvider.provider_product_id' => 'required',
-        //     'dataProvider.place_room_id' => 'required',
-        //     'dataProvider.quantity' => 'required',
-        // ], [], [
-        //     'dataProvider.provider_id' => 'fornecedor',
-        //     'dataProvider.provider_category_id' => 'categoria',
-        //     'dataProvider.provider_product_id' => 'equipamento',
-        //     'dataProvider.place_room_id' => 'sala',
-        //     'dataProvider.quantity' => 'quantidade',
-        // ]);
-
-        if (empty($this->dataProvider['provider_id'])) {
-            return $this->emit('providerError', true);
-        }
-
-        if (empty($this->dataProvider['provider_category_id'])) {
-            return $this->emit('providerError', true);
-        }
-
-        if (empty($this->dataProvider['provider_product_id'])) {
-            return $this->emit('providerError', true);
-        }
-
-        if (empty($this->dataProvider['place_room_id'])) {
-            return $this->emit('providerError', true);
-        }
-
-        if (empty($this->dataProvider['quantity'])) {
-            return $this->emit('providerError', true);
-        }
-
-        $this->emit('providerError', false);
-
-        $budgetDays = explode('-', $this->orderService->budget->budget_days);
-        $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
-        $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
-
-        $diifDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
-
-        $days = [];
-
-        array_push($days, Carbon::parse($startDay)->format('d/m'));
-
-        for ($i = 0; $i < $diifDays; $i++) {
-            $date = Carbon::parse($startDay)->addDays($i + 1);
-            array_push($days, $date->format('d/m'));
-        }
-
-        array_push($days, Carbon::parse($endDay)->format('d/m'));
-
-        OrderServiceRoomProvider::create([
-            'order_service_id' => $this->orderService->id,
-            'place_room_id' => $this->dataProvider['place_room_id'],
-            'os_product_id' => $this->dataProvider['provider_product_id'],
-            'days' => implode(',', $days),
-            'quantity' => $this->dataProvider['quantity'],
-        ]);
-
-        $this->dataProvider = [];
-
-        return $this->emit('saved');
-    }
-
-    public function saveKit()
+    public function saveGroup()
     {
         $errors = [];
 
@@ -586,9 +532,9 @@ class OrderServiceMountLivewire extends Component
         }
 
         if (count($errors) > 0) {
-            return $this->emit('kitError', $errors);
+            return $this->emit('groupError', $errors);
         } else {
-            $this->emit('kitError', null);
+            $this->emit('groupError', null);
         }
 
         $budgetDays = explode('-', $this->orderService->budget->budget_days);
@@ -617,30 +563,149 @@ class OrderServiceMountLivewire extends Component
         ]);
 
         $this->dataGroup = [];
-        $this->emit('kitSaved');
+        $this->emit('groupSaved');
+
+        return $this->mountOrderService();
+    }
+
+    public function saveFreelancer()
+    {
+        $errors = [];
+
+        if (empty($this->dataFreelancer['freelancer_id'])) {
+            $errors['freelancer_id'] = 'o campo freelancer é obrigatório';
+        }
+
+        if (empty($this->dataFreelancer['place_room_id'])) {
+            $errors['place_room_id'] = 'o campo sala é obrigatório';
+        }
+
+        if (empty($this->dataFreelancer['days'])) {
+            $errors['days'] = 'o campo dias é obrigatório';
+        }
+
+        if (empty($this->dataFreelancer['quantity'])) {
+            $errors['quantity'] = 'o campo quantidade é obrigatório';
+        }
+
+        if (count($errors) > 0) {
+            return $this->emit('freelancerError', $errors);
+        } else {
+            $this->emit('freelancerError', null);
+        }
+
+        $budgetDays = explode('-', $this->orderService->budget->budget_days);
+        $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
+        $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
+
+        $diifDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
+
+        $days = [];
+
+        array_push($days, Carbon::parse($startDay)->format('d/m'));
+
+        for ($i = 0; $i < $diifDays; $i++) {
+            $date = Carbon::parse($startDay)->addDays($i + 1);
+            array_push($days, $date->format('d/m'));
+        }
+
+        array_push($days, Carbon::parse($endDay)->format('d/m'));
+
+        OrderServiceRoomFreelancer::create([
+            'order_service_id' => $this->orderService->id,
+            'place_room_id' => $this->dataFreelancer['place_room_id'],
+            'freelancer_id' => $this->dataFreelancer['freelancer_id'],
+            'days' => $this->dataFreelancer['days'],
+            'quantity' => $this->dataFreelancer['quantity'],
+        ]);
+
+        $this->dataFreelancer = [];
+        $this->emit('freelancerSaved');
+
+        return $this->mountOrderService();
+    }
+
+    public function saveProvider()
+    {
+        $errors = [];
+
+        if (empty($this->dataProvider['provider_id'])) {
+            $errors['provider_id'] = 'o campo fornecedor é obrigatório';
+        }
+
+        if (empty($this->dataProvider['category_id'])) {
+            $errors['category_id'] = 'o campo categoria é obrigatório';
+        }
+
+        if (empty($this->dataProvider['product_id'])) {
+            $errors['product_id'] = 'o campo equipamento é obrigatório';
+        }
+
+        if (empty($this->dataProvider['place_room_id'])) {
+            $errors['place_room_id'] = 'o campo sala é obrigatório';
+        }
+
+        if (empty($this->dataProvider['quantity'])) {
+            $errors['quantity'] = 'o campo quantidade é obrigatório';
+        }
+
+        if (count($errors) > 0) {
+            return $this->emit('providerError', $errors);
+        } else {
+            $this->emit('providerError', null);
+        }
+
+        $budgetDays = explode('-', $this->orderService->budget->budget_days);
+        $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
+        $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
+
+        $diifDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
+
+        $days = [];
+
+        array_push($days, Carbon::parse($startDay)->format('d/m'));
+
+        for ($i = 0; $i < $diifDays; $i++) {
+            $date = Carbon::parse($startDay)->addDays($i + 1);
+            array_push($days, $date->format('d/m'));
+        }
+
+        array_push($days, Carbon::parse($endDay)->format('d/m'));
+
+        OrderServiceRoomProvider::create([
+            'order_service_id' => $this->orderService->id,
+            'place_room_id' => $this->dataProvider['place_room_id'],
+            'os_product_id' => $this->dataProvider['product_id'],
+            'days' => implode(',', $days),
+            'quantity' => $this->dataProvider['quantity'],
+        ]);
+
+        $this->dataProvider = [];
+        $this->emit('providerSaved');
 
         return $this->mountOrderService();
     }
 
     public function saveStatus()
     {
-        // $this->validate([
-        //     'dataStatus.status_id' => 'required',
-        // ], [], [
-        //     'dataStatus.status_id' => 'status',
-        // ]);
+        $errors = [];
 
         if (empty($this->dataStatus['status_id'])) {
-            return $this->emit('statusError', true);
+            $errors['status_id'] = 'o campo status é obrigatório';
         }
 
-        $this->emit('statusError', false);
+        if (count($errors) > 0) {
+            return $this->emit('statusError', $errors);
+        } else {
+            $this->emit('statusError', null);
+        }
 
-        $this->orderService->update([
-            'os_status_id' => $this->dataStatus['status_id']
-        ]);
+        $this->orderService->os_status_id = $this->dataStatus['status_id'];
+        $this->orderService->saveQuietly();
+        $this->orderService->refresh();
 
-        return $this->emit('saved');
+        $this->dataStatus = [];
+        $this->emit('statusUpdated');
     }
 
     public function confirmProductRemove(OrderServiceRoomProduct $orderServiceRoomProduct)
@@ -655,14 +720,38 @@ class OrderServiceMountLivewire extends Component
         return $this->mountOrderService();
     }
 
-    public function confirmKitRemove(OrderServiceRoomGroup $orderServiceRoomGroup)
+    public function confirmGroupRemove(OrderServiceRoomGroup $orderServiceRoomGroup)
     {
-        return $this->emit('confirmKitRemove', $orderServiceRoomGroup->id);
+        return $this->emit('confirmGroupRemove', $orderServiceRoomGroup->id);
     }
 
-    public function removeKit(OrderServiceRoomGroup $orderServiceRoomGroup)
+    public function removeGroup(OrderServiceRoomGroup $orderServiceRoomGroup)
     {
         $orderServiceRoomGroup->delete();
+
+        return $this->mountOrderService();
+    }
+
+    public function confirmFreelancerRemove(OrderServiceRoomFreelancer $orderServiceRoomFreelancer)
+    {
+        return $this->emit('confirmFreelancerRemove', $orderServiceRoomFreelancer->id);
+    }
+
+    public function removeFreelancer(OrderServiceRoomFreelancer $orderServiceRoomFreelancer)
+    {
+        $orderServiceRoomFreelancer->delete();
+
+        return $this->mountOrderService();
+    }
+
+    public function confirmProviderRemove(OrderServiceRoomProvider $orderServiceRoomProvider)
+    {
+        return $this->emit('confirmProviderRemove', $orderServiceRoomProvider->id);
+    }
+
+    public function removeProvider(OrderServiceRoomProvider $orderServiceRoomProvider)
+    {
+        $orderServiceRoomProvider->delete();
 
         return $this->mountOrderService();
     }
@@ -680,23 +769,7 @@ class OrderServiceMountLivewire extends Component
         $orderServiceRoomProduct->days = implode(',', $days);
         $orderServiceRoomProduct->save();
 
-        return $this->emit('saved');
-    }
-
-    public function checkDayRoomProvider(OrderServiceRoomProvider $orderServiceRoomProvider, $roomDate)
-    {
-        $days = explode(',', $orderServiceRoomProvider->days);
-
-        if (in_array($roomDate, $days)) {
-            unset($days[array_search($roomDate, $days)]);
-        } else {
-            $days[] = $roomDate;
-        }
-
-        $orderServiceRoomProvider->days = implode(',', $days);
-        $orderServiceRoomProvider->save();
-
-        return $this->emit('saved');
+        return $this->mountOrderService();
     }
 
     public function checkDayRoomGroup(OrderServiceRoomGroup $orderServiceRoomGroup, $roomDate)
@@ -712,7 +785,71 @@ class OrderServiceMountLivewire extends Component
         $orderServiceRoomGroup->days = implode(',', $days);
         $orderServiceRoomGroup->save();
 
-        return $this->emit('saved');
+        return $this->mountOrderService();
+    }
+
+    public function checkDayRoomProvider(OrderServiceRoomProvider $orderServiceRoomProvider, $roomDate)
+    {
+        $days = explode(',', $orderServiceRoomProvider->days);
+
+        if (in_array($roomDate, $days)) {
+            unset($days[array_search($roomDate, $days)]);
+        } else {
+            $days[] = $roomDate;
+        }
+
+        $orderServiceRoomProvider->days = implode(',', $days);
+        $orderServiceRoomProvider->save();
+
+        return $this->mountOrderService();
+    }
+
+    public function onChangeProductRoom(OrderServiceRoomProduct $orderServiceRoomProduct, $placeRoomId)
+    {
+        if (!empty($placeRoomId)) {
+            $orderServiceRoomProduct->place_room_id = $placeRoomId;
+        } else {
+            $orderServiceRoomProduct->place_room_id = null;
+        }
+
+        $orderServiceRoomProduct->save();
+        return $this->mountOrderService();
+    }
+
+    public function onChangeGroupRoom(OrderServiceRoomGroup $orderServiceRoomGroup, $placeRoomId)
+    {
+        if (!empty($placeRoomId)) {
+            $orderServiceRoomGroup->place_room_id = $placeRoomId;
+        } else {
+            $orderServiceRoomGroup->place_room_id = null;
+        }
+
+        $orderServiceRoomGroup->save();
+        return $this->mountOrderService();
+    }
+
+    public function onChangeProviderRoom(OrderServiceRoomProvider $orderServiceRoomProvider, $placeRoomId)
+    {
+        if (!empty($placeRoomId)) {
+            $orderServiceRoomProvider->place_room_id = $placeRoomId;
+        } else {
+            $orderServiceRoomProvider->place_room_id = null;
+        }
+
+        $orderServiceRoomProvider->save();
+        return $this->mountOrderService();
+    }
+
+    public function onChangeFreelancerRoom(OrderServiceRoomFreelancer $orderServiceRoomFreelancer, $placeRoomId)
+    {
+        if (!empty($placeRoomId)) {
+            $orderServiceRoomFreelancer->place_room_id = $placeRoomId;
+        } else {
+            $orderServiceRoomFreelancer->place_room_id = null;
+        }
+
+        $orderServiceRoomFreelancer->save();
+        return $this->mountOrderService();
     }
 
     public function onChangeQuantityProduct(OrderServiceRoomProduct $orderServiceRoomProduct, $quantity)
@@ -720,16 +857,6 @@ class OrderServiceMountLivewire extends Component
         if ($quantity > 0) {
             $orderServiceRoomProduct->quantity = $quantity;
             $orderServiceRoomProduct->save();
-
-            return $this->emit('saved');
-        }
-    }
-
-    public function onChangeQuantityProvider(OrderServiceRoomProvider $orderServiceRoomProvider, $quantity)
-    {
-        if ($quantity > 0) {
-            $orderServiceRoomProvider->quantity = $quantity;
-            $orderServiceRoomProvider->save();
 
             return $this->emit('saved');
         }
@@ -745,31 +872,17 @@ class OrderServiceMountLivewire extends Component
         }
     }
 
-    public function onChangeLaborQuantity(BudgetRoomLabor $budgetRoomLabor, $quantity)
+    public function onChangeQuantityProvider(OrderServiceRoomProvider $orderServiceRoomProvider, $quantity)
     {
         if ($quantity > 0) {
-            $budgetRoomLabor->quantity = $quantity;
-            $budgetRoomLabor->save();
+            $orderServiceRoomProvider->quantity = $quantity;
+            $orderServiceRoomProvider->save();
 
-            // $this->dataLabor = [];
-            // $this->mountOrderService();
             return $this->emit('saved');
         }
     }
 
-    public function onChangeLaborDays(BudgetRoomLabor $budgetRoomLabor, $days)
-    {
-        if ($days > 0) {
-            $budgetRoomLabor->days = $days;
-            $budgetRoomLabor->save();
-
-            // $this->dataLabor = [];
-            // $this->mountOrderService();
-            return $this->emit('saved');
-        }
-    }
-
-    public function onChangeFreelancerQuantity(OrderServiceRoomFreelancer $orderServiceRoomFreelancer, $quantity)
+    public function onChangeQuantityFreelancer(OrderServiceRoomFreelancer $orderServiceRoomFreelancer, $quantity)
     {
         if ($quantity > 0) {
             $orderServiceRoomFreelancer->quantity = $quantity;
@@ -779,7 +892,7 @@ class OrderServiceMountLivewire extends Component
         }
     }
 
-    public function onChangeFreelancerDays(OrderServiceRoomFreelancer $orderServiceRoomFreelancer, $days)
+    public function onChangeDaysFreelancer(OrderServiceRoomFreelancer $orderServiceRoomFreelancer, $days)
     {
         if ($days > 0) {
             $orderServiceRoomFreelancer->days = $days;
