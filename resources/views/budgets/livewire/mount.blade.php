@@ -14,8 +14,8 @@
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <a href="{{ route('budgets.index') }}" class="btn btn-secondary shadow-md mr-2">Voltar</a>
             <div class="hidden md:block mx-auto text-slate-500"></div>
+            <a href="{{ route('budgets.edit', $budget->id) }}" class="btn btn-primary shadow-md mr-2">Editar</a>
             @if ($canEdit)
-                <a href="{{ route('budgets.edit', $budget->id) }}" class="btn btn-primary shadow-md mr-2">Editar</a>
                 <button class="btn btn-primary shadow-md mr-2" wire:click="editObservation">Observações</button>
                 <button class="btn btn-primary shadow-md mr-2" wire:click="editStatus">Status</button>
             @else
@@ -69,11 +69,11 @@
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Data
-                                Montagem:</span>&nbsp;{{ $budget->mount_date->format('d/m/Y') }}
+                                Montagem:</span>&nbsp;{{ $budget->mount_date ? $budget->mount_date->format('d/m/Y') : null }}
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Data
-                                Desmontagem:</span>&nbsp;{{ $budget->unmount_date->format('d/m/Y') }}
+                                Desmontagem:</span>&nbsp;{{ $budget->unmount_date ? $budget->unmount_date->format('d/m/Y') : null }}
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">

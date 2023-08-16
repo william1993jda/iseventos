@@ -2,7 +2,7 @@
     <div id="modal-orderservice-update-version" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-body p-0">
+                <div class="modal-body p-0" wire:ignore>
                     <div class="p-5 text-center">
                         <i data-lucide="copy-plus" class="w-16 h-16 text-danger mx-auto mt-3"></i>
                         <div class="text-3xl mt-5">Atualizar versão?</div>

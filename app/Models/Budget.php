@@ -63,17 +63,24 @@ class Budget extends Model
 
     public function setRequestDateAttribute($value)
     {
-        $this->attributes['request_date'] = date('Y-m-d', strtotime(str_replace('/', '-', $value)));
+        if (!empty($value)) {
+            $this->attributes['request_date'] = date('Y-m-d', strtotime(str_replace('/', '-', $value)));
+        }
     }
 
     public function setMountDateAttribute($value)
     {
-        $this->attributes['mount_date'] = date('Y-m-d', strtotime(str_replace('/', '-', $value)));
+
+        if (!empty($value)) {
+            $this->attributes['mount_date'] = date('Y-m-d', strtotime(str_replace('/', '-', $value)));
+        }
     }
 
     public function setUnmountDateAttribute($value)
     {
-        $this->attributes['unmount_date'] = date('Y-m-d', strtotime(str_replace('/', '-', $value)));
+        if (!empty($value)) {
+            $this->attributes['unmount_date'] = date('Y-m-d', strtotime(str_replace('/', '-', $value)));
+        }
     }
 
     public function status()

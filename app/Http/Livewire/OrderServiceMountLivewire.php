@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Freelancer;
 use App\Models\Group;
+use App\Models\OrderService;
 use App\Models\OrderServiceRoomFreelancer;
 use App\Models\OrderServiceRoomGroup;
 use App\Models\OrderServiceRoomLabor;
@@ -12,9 +13,12 @@ use App\Models\OrderServiceRoomProduct;
 use App\Models\OrderServiceRoomProvider;
 use App\Models\OsCategory;
 use App\Models\OsProduct;
+use App\Models\OsProductStock;
 use App\Models\OsStatus;
 use App\Models\PlaceRoom;
 use App\Models\Provider;
+use App\Models\Sublease;
+use App\Models\SubleaseItem;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -146,7 +150,6 @@ class OrderServiceMountLivewire extends Component
             'groups' => $arGroups,
         ];
 
-
         // FREELANCERS
         $this->listFreelancers = [];
         $orderServiceRoomFreelancers = OrderServiceRoomFreelancer::where('order_service_id', $this->orderService->id)->get();
@@ -225,147 +228,6 @@ class OrderServiceMountLivewire extends Component
         ];
 
         // dd($this->listProviders);
-
-        $orderServiceRoomProducts = OrderServiceRoomProduct::where('order_service_id', $this->orderService->id)->pluck('place_room_id')->toArray();
-        $orderServiceRoomProviders = OrderServiceRoomProvider::where('order_service_id', $this->orderService->id)->pluck('place_room_id')->toArray();
-        $orderServiceRoomGroups = OrderServiceRoomGroup::where('order_service_id', $this->orderService->id)->pluck('place_room_id')->toArray();
-        $placeRoomIds = array_unique(array_merge($orderServiceRoomProducts, $orderServiceRoomProviders, $orderServiceRoomGroups));
-
-        $arRoom = [];
-
-        foreach ($placeRoomIds as $placeRoomId) {
-            $placeRoom = PlaceRoom::find($placeRoomId);
-
-            $products = OrderServiceRoomProduct::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
-            $productsId = $products->pluck('os_product_id')->toArray();
-            $productsList = $products->get();
-
-            $labors = OrderServiceRoomLabor::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
-            $laborsId = $labors->pluck('labor_id')->toArray();
-            $laborsList = $labors->get();
-
-            $providers = OrderServiceRoomProvider::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
-            $providersId = $providers->pluck('os_product_id')->toArray();
-            $providersList = $providers->get();
-
-            $groups = OrderServiceRoomGroup::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
-            $groupsList = $groups->get();
-
-            $freelancers = OrderServiceRoomFreelancer::where('order_service_id', $this->orderService->id)->where('place_room_id', $placeRoom->id);
-            $freelancersList = $freelancers->get();
-
-            $categoryProductsId = OsProduct::whereIn('id', $productsId)->groupBy('os_category_id')->pluck('os_category_id')->toArray();
-            $categoryProvidersId = OsProduct::whereIn('id', $providersId)->groupBy('os_category_id')->pluck('os_category_id')->toArray();
-            $categoriesId = array_unique(array_merge($categoryProductsId, $categoryProvidersId));
-
-            $arCategories = [];
-
-            foreach ($categoriesId as $categoryId) {
-                $category = OsCategory::find($categoryId);
-                $categoryProducts = [];
-                $categoryProviders = [];
-
-                foreach ($productsList as $product) {
-                    if ($product->osProduct->os_category_id == $categoryId) {
-                        array_push($categoryProducts, $product->toArray());
-                    }
-                }
-
-                foreach ($providersList as $provider) {
-                    if ($provider->osProduct->os_category_id == $categoryId) {
-
-                        $arProvider = $provider->toArray();
-                        $arProvider['os_product'] = $provider->osProduct->toArray();
-                        $arProvider['os_product']['provider'] = $provider->osProduct->provider->toArray();
-
-                        array_push($categoryProviders, $arProvider);
-                    }
-                }
-
-                $obCategory = [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'products' => $categoryProducts,
-                    'providers' => $categoryProviders,
-                    'groups' => [],
-                    'freelancers' => [],
-                ];
-
-                array_push($arCategories, $obCategory);
-            }
-
-            if (count($groupsList) > 0) {
-
-                $arGroups = [];
-
-                foreach ($groupsList as $group) {
-                    $arGroup = $group->toArray();
-                    $arGroup['group'] = $group->group->toArray();
-                    $arGroup['group']['products'] = $group->group->products->map(function ($product) {
-                        return [
-                            'id' => $product->os_product_id,
-                            'name' => $product->product->name,
-                        ];
-                    })->toArray();
-
-                    array_push($arGroups, $arGroup);
-                }
-
-                array_push($arCategories, [
-                    'id' => 0,
-                    'name' => 'KITS',
-                    'products' => [],
-                    'providers' => [],
-                    'groups' => $arGroups,
-                    'freelancers' => [],
-                ]);
-            }
-
-            if (count($freelancersList) > 0) {
-                $freelancers = $freelancersList->map(function ($freelancer) {
-                    $arFreelancer = $freelancer->toArray();
-                    $arFreelancer['freelancer'] = $freelancer->freelancer->toArray();
-                    return $arFreelancer;
-                })->toArray();
-
-                array_push($arCategories, [
-                    'id' => 0,
-                    'name' => 'FREELANCER',
-                    'products' => [],
-                    'providers' => [],
-                    'groups' => [],
-                    'freelancers' => $freelancers,
-                ]);
-            }
-
-            $budgetDays = explode('-', $this->orderService->budget->budget_days);
-            $startDay = implode('-', array_reverse(explode('/', trim($budgetDays[0]))));
-            $endDay = implode('-', array_reverse(explode('/', trim($budgetDays[1]))));
-
-            $diifDays = Carbon::parse($startDay)->diffInDays(Carbon::parse($endDay)) - 1;
-
-            $days = [];
-
-            array_push($days, Carbon::parse($startDay)->format('d/m'));
-
-            for ($i = 0; $i < $diifDays; $i++) {
-                $date = Carbon::parse($startDay)->addDays($i + 1);
-                array_push($days, $date->format('d/m'));
-            }
-
-            array_push($days, Carbon::parse($endDay)->format('d/m'));
-
-            $arRoom[] = [
-                'place_room_name' => $placeRoom->name,
-                'place_room_id' => $placeRoom->id,
-                'days' => $days,
-                'categories' => $arCategories,
-            ];
-        }
-
-        $this->rooms = $arRoom;
-
-        // dd($this->rooms);
     }
 
     public function render()
@@ -417,13 +279,6 @@ class OrderServiceMountLivewire extends Component
         $products = $osCategory->products->pluck('name', 'id');
 
         $this->emit('updateProductList', $products);
-    }
-
-    public function onSelectCategoryLabor(Category $category)
-    {
-        $labors = $category->labors->pluck('name', 'id');
-
-        $this->emit('updateLaborList', $labors);
     }
 
     public function onSelectProvider(Provider $provider)
@@ -506,6 +361,8 @@ class OrderServiceMountLivewire extends Component
         $this->orderService->last_user_id = auth()->user()->id;
         $this->orderService->saveQuietly();
         $this->orderService->refresh();
+
+        $this->checkSublease($this->dataProduct['product_id']);
 
         $this->dataProduct = [];
         $this->emit('productSaved');
@@ -726,11 +583,15 @@ class OrderServiceMountLivewire extends Component
 
     public function removeProduct(OrderServiceRoomProduct $orderServiceRoomProduct)
     {
+        $osProductId = $orderServiceRoomProduct->os_product_id;
+
         $orderServiceRoomProduct->delete();
 
         $this->orderService->last_user_id = auth()->user()->id;
         $this->orderService->saveQuietly();
         $this->orderService->refresh();
+
+        $this->checkSublease($osProductId, true);
 
         return $this->mountOrderService();
     }
@@ -921,7 +782,9 @@ class OrderServiceMountLivewire extends Component
             $this->orderService->saveQuietly();
             $this->orderService->refresh();
 
-            return $this->emit('saved');
+            $this->checkSublease($orderServiceRoomProduct->os_product_id);
+
+            return $this->mountOrderService();
         }
     }
 
@@ -989,5 +852,48 @@ class OrderServiceMountLivewire extends Component
         $this->orderService->refresh();
 
         $this->emit('versionUpdated');
+    }
+
+    public function checkSublease($osProductId, $hideNotification = false)
+    {
+        $statusReproved = OsStatus::where('slug', 'reprovado')->first();
+
+        $osRoomProductQuantity = OrderServiceRoomProduct::with('orderService')
+            ->where('os_product_id', $osProductId)
+            ->get()
+            ->where('orderService.os_status_id', '!=', $statusReproved->id)
+            ->whereBetween('orderService.budget.mount_date', [$this->orderService->budget->mount_date, $this->orderService->budget->unmount_date])
+            ->sum('quantity');
+
+        $osProductStockQuantity = OsProductStock::where('os_product_id', $osProductId)->count();
+
+        $diff = $osProductStockQuantity - $osRoomProductQuantity;
+
+        if ($diff < 0) {
+            $sublease = Sublease::firstOrCreate([
+                'order_service_id' => $this->orderService->id,
+                'status' => 1,
+            ]);
+
+            $subleaseItem = SubleaseItem::where('sublease_id', $sublease->id)
+                ->where('os_product_id', $osProductId)
+                ->first();
+
+            if (!empty($subleaseItem)) {
+                $subleaseItem->quantity = abs($diff);
+                $subleaseItem->save();
+            } else {
+                $subleaseItem = SubleaseItem::create([
+                    'sublease_id' => $sublease->id,
+                    'os_product_id' => $osProductId,
+                    'quantity' => abs($diff),
+                    'status' => 1,
+                ]);
+            }
+
+            if (!$hideNotification) {
+                $this->emit('subleaseError');
+            }
+        }
     }
 }

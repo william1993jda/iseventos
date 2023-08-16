@@ -190,7 +190,8 @@ Route::middleware('auth')->group(function () {
     Route::any('recoveries', [RecoveryController::class, 'index'])->name('recoveries.index');
     Route::post('recoveries/recovery/{id}', [RecoveryController::class, 'recovery'])->name('recoveries.recovery');
 
-    Route::any('subleases', [SubleasedController::class, 'index'])->name('subleases.index');
+    Route::get('subleases', [SubleasedController::class, 'index'])->name('subleases.index');
+    Route::get('subleases/items/{sublease}', [SubleasedController::class, 'items'])->name('subleases.items');
 });
 
 require __DIR__ . '/auth.php';

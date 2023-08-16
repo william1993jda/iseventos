@@ -5,7 +5,7 @@
                 <div class="modal-header">
                     <h2 class="font-medium text-base mr-auto">Adicionar Freelancer</h2>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" wire:ignore>
                     <div class="hidden" id="alert-freelancer-error">
                         <div class="text-base font-medium">Verifique os campos abaixo:</div>
                         <div class="alert alert-danger show flex items-center mb-2" role="alert"

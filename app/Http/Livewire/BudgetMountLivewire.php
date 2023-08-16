@@ -2,12 +2,10 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Budget;
 use App\Models\BudgetRoomLabor;
 use App\Models\BudgetRoomProduct;
 use App\Models\Category;
 use App\Models\Labor;
-use App\Models\PlaceRoom;
 use App\Models\Product;
 use App\Models\Status;
 use Carbon\Carbon;
@@ -252,6 +250,7 @@ class BudgetMountLivewire extends Component
 
     public function saveObservation()
     {
+        $this->budget->last_user_id = auth()->user()->id;
         $this->budget->observation = $this->dataBudget['observation'];
         $this->budget->saveQuietly();
         $this->budget->refresh();
@@ -317,6 +316,10 @@ class BudgetMountLivewire extends Component
             'price' => $this->dataProduct['price'],
         ]);
 
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
+
         $this->dataProduct = [];
         $this->emit('productSaved');
 
@@ -358,6 +361,10 @@ class BudgetMountLivewire extends Component
             'price' => $this->dataLabor['price'],
         ]);
 
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
+
         $this->dataLabor = [];
         $this->emit('laborSaved');
 
@@ -385,6 +392,7 @@ class BudgetMountLivewire extends Component
         $fee = str_replace('.', '', $this->dataFee['fee']);
         $fee = str_replace(',', '.', $fee);
 
+        $this->budget->last_user_id = auth()->user()->id;
         $this->budget->fee_type = $this->dataFee['fee_type'];
         $this->budget->fee = $fee;
         $this->budget->saveQuietly();
@@ -425,6 +433,7 @@ class BudgetMountLivewire extends Component
             $this->budget->discount = $discount;
         }
 
+        $this->budget->last_user_id = auth()->user()->id;
         $this->budget->saveQuietly();
         $this->budget->refresh();
 
@@ -448,6 +457,7 @@ class BudgetMountLivewire extends Component
             $this->emit('statusError', null);
         }
 
+        $this->budget->last_user_id = auth()->user()->id;
         $this->budget->status_id = $this->dataStatus['status_id'];
         $this->budget->saveQuietly();
         $this->budget->refresh();
@@ -483,6 +493,10 @@ class BudgetMountLivewire extends Component
     {
         $budgetRoomProduct->delete();
 
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
+
         return $this->mountBudget();
     }
 
@@ -490,11 +504,16 @@ class BudgetMountLivewire extends Component
     {
         $budgetRoomLabor->delete();
 
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
+
         return $this->mountBudget();
     }
 
     public function removeFee()
     {
+        $this->budget->last_user_id = auth()->user()->id;
         $this->budget->fee_type = null;
         $this->budget->fee = null;
         $this->budget->saveQuietly();
@@ -505,6 +524,7 @@ class BudgetMountLivewire extends Component
 
     public function removeDiscount()
     {
+        $this->budget->last_user_id = auth()->user()->id;
         $this->budget->discount_type = null;
         $this->budget->discount = null;
         $this->budget->saveQuietly();
@@ -531,6 +551,10 @@ class BudgetMountLivewire extends Component
             'place_room_id' => $this->dataRoomProduct['place_room_id'],
         ]);
 
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
+
         $this->emit('roomChangedProduct');
 
         return $this->mountBudget();
@@ -554,6 +578,10 @@ class BudgetMountLivewire extends Component
             'place_room_id' => $this->dataRoomLabor['place_room_id'],
         ]);
 
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
+
         $this->emit('roomChangedLabor');
 
         return $this->mountBudget();
@@ -570,6 +598,10 @@ class BudgetMountLivewire extends Component
         BudgetRoomProduct::whereIn('id', $products)->update([
             'bv' => $bv,
         ]);
+
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
 
         $this->dataBvProduct = [];
         $this->emit('bvAppliedProduct');
@@ -588,6 +620,10 @@ class BudgetMountLivewire extends Component
         BudgetRoomLabor::whereIn('id', $labors)->update([
             'bv' => $bv,
         ]);
+
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
 
         $this->dataBvLabor = [];
         $this->emit('bvAppliedLabor');
@@ -608,6 +644,10 @@ class BudgetMountLivewire extends Component
         $budgetRoomProduct->days = implode(',', $days);
         $budgetRoomProduct->save();
 
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
+
         return $this->mountBudget();
     }
 
@@ -616,6 +656,10 @@ class BudgetMountLivewire extends Component
         if ($quantity > 0) {
             $budgetRoomProduct->quantity = $quantity;
             $budgetRoomProduct->save();
+
+            $this->budget->last_user_id = auth()->user()->id;
+            $this->budget->saveQuietly();
+            $this->budget->refresh();
 
             return $this->mountBudget();
         }
@@ -627,6 +671,10 @@ class BudgetMountLivewire extends Component
             $budgetRoomLabor->quantity = $quantity;
             $budgetRoomLabor->save();
 
+            $this->budget->last_user_id = auth()->user()->id;
+            $this->budget->saveQuietly();
+            $this->budget->refresh();
+
             return $this->mountBudget();
         }
     }
@@ -636,6 +684,10 @@ class BudgetMountLivewire extends Component
         if ($days > 0) {
             $budgetRoomLabor->days = $days;
             $budgetRoomLabor->save();
+
+            $this->budget->last_user_id = auth()->user()->id;
+            $this->budget->saveQuietly();
+            $this->budget->refresh();
 
             return $this->mountBudget();
         }
@@ -650,6 +702,11 @@ class BudgetMountLivewire extends Component
         }
 
         $budgetRoomProduct->save();
+
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
+
         return $this->mountBudget();
     }
 
@@ -662,6 +719,11 @@ class BudgetMountLivewire extends Component
         }
 
         $budgetRoomLabor->save();
+
+        $this->budget->last_user_id = auth()->user()->id;
+        $this->budget->saveQuietly();
+        $this->budget->refresh();
+
         return $this->mountBudget();
     }
 

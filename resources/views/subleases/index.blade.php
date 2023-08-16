@@ -8,21 +8,30 @@
             <table class="table table-report -mt-2">
                 <thead>
                     <tr>
-                        <th class="whitespace-nowrap">PRODUTO</th>
-                        <th class="text-center whitespace-nowrap">LOCAR</th>
-                        <th class="text-center whitespace-nowrap">OS Nº</th>
-                        <th class="text-center whitespace-nowrap">DIAS</th>
+                        <th class="whitespace-nowrap">EVENTO</th>
+                        <th class="text-center whitespace-nowrap">DIAS DO EVENTO</th>
+                        <th class="text-center whitespace-nowrap">LOCAL</th>
+                        <th class="text-center whitespace-nowrap">EQUIPAMENTOS</th>
+                        <th class="text-center whitespace-nowrap">AÇÕES</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($products as $product)
+                    @foreach ($subleases as $subleases)
                         <tr class="intro-x">
                             <td>
-                                <span class="font-medium whitespace-nowrap">{{ $product['name'] }}</span>
+                                <span
+                                    class="font-medium whitespace-nowrap">{{ $subleases->orderService->budget->name }}</span>
                             </td>
-                            <td class="text-center">{{ $product['quantity'] }}</td>
-                            <td class="text-center">{{ $product['os_number'] }}</td>
-                            <td class="text-center">{{ $product['days'] }}</td>
+                            <td class="text-center">{{ $subleases->orderService->budget->budget_days }}</td>
+                            <td class="text-center">{{ $subleases->orderService->budget->place->name }}</td>
+                            <td class="text-center">{{ $subleases->items->count() }}</td>
+                            <td class="table-report__action w-56">
+                                <div class="flex justify-center items-center">
+                                    <x-forms.buttons.icon route="subleases.items" :id="$subleases->id" icon="package"
+                                        label="Equipamentos" />
+
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

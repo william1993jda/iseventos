@@ -5,7 +5,7 @@
                 <div class="modal-header">
                     <h2 class="font-medium text-base mr-auto">Observações</h2>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" wire:ignore>
                     <div class="sm:grid grid-cols-1 gap-2">
                         <x-forms.textarea name="observation" wire:model="dataOrderService.observation" />
                     </div>

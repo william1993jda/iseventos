@@ -15,7 +15,6 @@
             <button class="btn btn-primary shadow-md mr-2" wire:click="editObservation">Observações</button>
             <button class="btn btn-primary shadow-md mr-2" wire:click="editStatus">Status</button>
             <x-forms.buttons.primary route="orderServices.documents.index" :id="$orderService->id" label="Documentos" />
-            <x-forms.buttons.primary route="orderServices.checks.index" :id="$orderService->id" label="Saída / Entrada" />
             <a href="{{ route('orderServices.print', $orderService->id) }}" target="_blank"
                 class="btn btn-primary shadow-md mr-2">Imprimir</a>
         </div>
@@ -75,11 +74,11 @@
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Data
-                                Montagem:</span>&nbsp;{{ $orderService->budget->mount_date->format('d/m/Y') }}
+                                Montagem:</span>&nbsp;{{ $orderService->budget->mount_date ? $orderService->budget->mount_date->format('d/m/Y') : null }}
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Data
-                                Desmontagem:</span>&nbsp;{{ $orderService->budget->unmount_date->format('d/m/Y') }}
+                                Desmontagem:</span>&nbsp;{{ $orderService->budget->unmount_date ? $orderService->budget->unmount_date->format('d/m/Y') : null }}
                         </div>
                         <div class="truncate sm:whitespace-normal flex items-center mt-1">
                             <span class="font-semibold">Local do
@@ -145,6 +144,11 @@
                 <i class="w-4 h-4 text-white mr-2" data-lucide="plus-square"></i>Freelancer
             </button>
             <div class="hidden md:block mx-auto text-slate-500"></div>
+            @if ($orderService->osStatus->slug == 'aprovado')
+                <x-forms.buttons.primary route="orderServices.checks.index" :id="$orderService->id" label="Saída / Entrada" />
+            @else
+                <button type="button" class="btn btn-primary shadow-md mr-2" disabled>Saída / Entrada</button>
+            @endif
         </div>
 
         <div class="intro-x col-span-12">
@@ -210,230 +214,24 @@
         @component('order-services.partials.modal-observation')
         @endcomponent
 
-        {{--
-    @include('order-services.partials.modal-status')
-    @include('order-services.partials.modal-observation')
-    @include('order-services.partials.modal-print-provider')
-    @include('order-services.partials.modal-update-version')
+        @push('custom-scripts')
+            <script type="text/javascript">
+                window.livewire.on('subleaseError', () => {
+                    document.getElementById('error-notification-title').innerHTML = "Atenção!";
+                    document.getElementById('error-notification-message').innerHTML =
+                        "Quantidade de equipamentos não disponível, a diferença foi adicionada a lista de sublocação!";
 
-    @push('custom-scripts')
-        <script type="text/javascript">
-            var modalOrderServiceProduct = null;
-            var modalOrderServiceLabor = null;
-            var modalOrderServiceFreelancer = null;
-            var modalOrderServiceProvider = null;
-            var modalOrderServiceKit = null;
-            var modalOrderServiceStatus = null;
-            var modalOrderServiceObservation = null;
-            var modalOrderServicePrintProvider = null;
-            var selectOsCategoryId = null;
-            var selectCategoryId = null;
-            var selectProductId = null;
-            var selectLaborId = null;
-            var selectFreelancerId = null;
-            var selectProviderId = null;
-            var selectProviderCategoryId = null;
-            var selectProviderProductId = null;
-            var selectGroupId = null;
-            var alertProductError = null;
-            var alertLaborError = null;
-            var alertFreelancerError = null;
-            var alertProviderError = null;
-            var alertKitError = null;
-            var alertStatusError = null;
-
-            document.addEventListener("DOMContentLoaded", function(e) {
-                selectOsCategoryId = document.getElementById('os_category_id').tomselect;
-                selectCategoryId = document.getElementById('category_id').tomselect;
-                selectProductId = document.getElementById('product_id').tomselect;
-                selectLaborId = document.getElementById('labor_id').tomselect;
-                selectFreelancerId = document.getElementById('freelancer_id').tomselect;
-                selectProviderId = document.getElementById('provider_id').tomselect;
-                selectProviderCategoryId = document.getElementById('provider_category_id').tomselect;
-                selectProviderProductId = document.getElementById('provider_product_id').tomselect;
-                selectGroupId = document.getElementById('group_id').tomselect;
-                alertProductError = document.getElementById('alert-product-error');
-                alertLaborError = document.getElementById('alert-labor-error');
-                alertFreelancerError = document.getElementById('alert-freelancer-error');
-                alertProviderError = document.getElementById('alert-provider-error');
-                alertKitError = document.getElementById('alert-kit-error');
-                alertStatusError = document.getElementById('alert-status-error');
-                modalOrderServiceProduct = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-orderservice-product"));
-                modalOrderServiceLabor = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-orderservice-labor"));
-                modalOrderServiceFreelancer = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-orderservice-freelancer"));
-                modalOrderServiceProvider = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-orderservice-provider"));
-                modalOrderServiceKit = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-orderservice-kit"));
-                modalOrderServiceStatus = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-orderservice-status"));
-                modalOrderServiceObservation = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-orderservice-observation"));
-                modalOrderServicePrintProvider = tailwind.Modal.getInstance(document.querySelector(
-                    "#modal-orderservice-print-provider"));
-            });
-
-            window.livewire.on('addProduct', (data) => {
-                selectOsCategoryId.clear();
-                selectOsCategoryId.clearOptions();
-                Object.keys(data).forEach(function(key) {
-                    selectOsCategoryId.addOption({
-                        value: key,
-                        text: data[key]
-                    });
+                    Toastify({
+                        node: $("#error-notification").clone().removeClass("hidden")[0],
+                        duration: 5000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "transparent",
+                        stopOnFocus: true,
+                    }).showToast();
                 });
-
-                modalOrderServiceProduct.show();
-            });
-
-            window.livewire.on('addLabor', (data) => {
-                selectCategoryId.clear();
-                selectCategoryId.clearOptions();
-                Object.keys(data).forEach(function(key) {
-                    selectCategoryId.addOption({
-                        value: key,
-                        text: data[key]
-                    });
-                });
-
-                modalOrderServiceLabor.show();
-            });
-
-            window.livewire.on('addFreelancer', (data) => {
-                selectFreelancerId.clear();
-                selectFreelancerId.clearOptions();
-                Object.keys(data).forEach(function(key) {
-                    selectFreelancerId.addOption({
-                        value: key,
-                        text: data[key]
-                    });
-                });
-
-                modalOrderServiceFreelancer.show();
-            });
-
-            window.livewire.on('addProvider', (data) => {
-                selectProviderId.clear();
-                selectProviderId.clearOptions();
-                Object.keys(data).forEach(function(key) {
-                    selectProviderId.addOption({
-                        value: key,
-                        text: data[key]
-                    });
-                });
-
-                modalOrderServiceProvider.show();
-            });
-
-            window.livewire.on('addKit', (data) => {
-                selectGroupId.clear();
-                selectGroupId.clearOptions();
-                Object.keys(data).forEach(function(key) {
-                    selectGroupId.addOption({
-                        value: key,
-                        text: data[key]
-                    });
-                });
-
-                modalOrderServiceKit.show();
-            });
-
-            window.livewire.on('editStatus', () => {
-                modalOrderServiceStatus.show();
-            });
-
-            window.livewire.on('editObservation', () => {
-                modalOrderServiceObservation.toggle();
-            });
-
-            window.livewire.on('showPrintProviders', () => {
-                modalOrderServicePrintProvider.toggle();
-            });
-
-            window.livewire.on('updateProductList', (data) => {
-                selectProductId.clear();
-                selectProductId.clearOptions();
-                Object.keys(data).forEach(function(key) {
-                    selectProductId.addOption({
-                        value: key,
-                        text: data[key]
-                    });
-                });
-            });
-
-            window.livewire.on('updateLaborList', (data) => {
-                selectLaborId.clear();
-                selectLaborId.clearOptions();
-                Object.keys(data).forEach(function(key) {
-                    selectLaborId.addOption({
-                        value: key,
-                        text: data[key]
-                    });
-                });
-            });
-
-            window.livewire.on('updateProviderCategoryList', (data) => {
-                selectProviderCategoryId.clear();
-                selectProviderCategoryId.clearOptions();
-                Object.keys(data).forEach(function(key) {
-                    selectProviderCategoryId.addOption({
-                        value: key,
-                        text: data[key]
-                    });
-                });
-            });
-
-            window.livewire.on('updateProviderProductList', (data) => {
-                selectProviderProductId.clear();
-                selectProviderProductId.clearOptions();
-                Object.keys(data).forEach(function(key) {
-                    selectProviderProductId.addOption({
-                        value: key,
-                        text: data[key]
-                    });
-                });
-            });
-
-
-            window.livewire.on('saved', () => {
-                window.location.reload();
-            });
-
-            window.livewire.on('productError', (show) => {
-                if (show) {
-                    alertProductError.classList.remove('hidden');
-                } else {
-                    alertProductError.classList.add('hidden');
-                }
-            });
-
-            window.livewire.on('providerError', (show) => {
-                if (show) {
-                    alertProviderError.classList.remove('hidden');
-                } else {
-                    alertProviderError.classList.add('hidden');
-                }
-            });
-
-            window.livewire.on('groupError', (show) => {
-                if (show) {
-                    alertKitError.classList.remove('hidden');
-                } else {
-                    alertKitError.classList.add('hidden');
-                }
-            });
-
-            window.livewire.on('statusError', (show) => {
-                if (show) {
-                    alertStatusError.classList.remove('hidden');
-                } else {
-                    alertStatusError.classList.add('hidden');
-                }
-            });
-        </script>
-    @endpush
-    --}}
+            </script>
+        @endpush
     </div>

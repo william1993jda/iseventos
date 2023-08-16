@@ -52,4 +52,9 @@ class OrderServiceCheckItem extends Model
     {
         return $this->belongsTo(OsProductStock::class);
     }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
 }
