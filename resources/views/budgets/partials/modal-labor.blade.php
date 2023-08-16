@@ -18,7 +18,7 @@
                             wire:model="dataLabor.labor_id" wire:change="onSelectLabor($event.target.value)" />
                     </div>
                     <div class="sm:grid grid-cols-4 gap-2 mt-3">
-                        <x-forms.select name="place_room_id" label="Sala" :options="$placeRooms"
+                        <x-forms.select name="labor_place_room_id" label="Sala" :options="$placeRooms"
                             wire:model="dataLabor.place_room_id" />
                         <x-forms.text name="labor_price" label="Preço" wire:model="dataLabor.price" />
                         <x-forms.number name="days" label="Diárias" wire:model="dataLabor.days" />
@@ -76,7 +76,7 @@
                 deleteConfirmationLaborModal = tailwind.Modal.getInstance(document.querySelector(
                     "#delete-confirmation-labor-modal"));
                 selectLaborId = document.getElementById('labor_id').tomselect;
-                selectLaborPlaceRoomId = document.getElementById('place_room_id').tomselect;
+                selectLaborPlaceRoomId = document.getElementById('labor_place_room_id').tomselect;
                 inputLaborPrice = document.getElementById('labor_price');
                 inputLaborDays = document.getElementById('days');
                 inputLaborQuantity = document.getElementById('labor_quantity');
