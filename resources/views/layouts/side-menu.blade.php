@@ -89,6 +89,43 @@
         @endcan
         <li>
             <a href="javascript:;.html" class="side-menu side-menu">
+                <div class="side-menu__icon"> <i data-lucide="file-bar-chart"></i> </div>
+                <div class="side-menu__title">
+                    Relatórios
+                    <div class="side-menu__sub-icon transform"> <i data-lucide="chevron-down"></i></div>
+                </div>
+            </a>
+            <ul class="side-menu__sub">
+                {{-- @can('places.index') --}}
+                <li>
+                    <a href="{{ route('reports.events') }}" class="side-menu">
+                        <div class="side-menu__icon"> <i data-lucide="clipboard-check"></i> </div>
+                        <div class="side-menu__title"> Eventos </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('reports.products') }}" class="side-menu">
+                        <div class="side-menu__icon"> <i data-lucide="box"></i> </div>
+                        <div class="side-menu__title"> Equipamentos </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('reports.providers') }}" class="side-menu">
+                        <div class="side-menu__icon"> <i data-lucide="truck"></i> </div>
+                        <div class="side-menu__title"> Fornecedores </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('reports.freelancers') }}" class="side-menu">
+                        <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
+                        <div class="side-menu__title"> Freelancers </div>
+                    </a>
+                </li>
+                {{-- @endcan --}}
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;.html" class="side-menu side-menu">
                 <div class="side-menu__icon"> <i data-lucide="layout-list"></i> </div>
                 <div class="side-menu__title">
                     Cadastros

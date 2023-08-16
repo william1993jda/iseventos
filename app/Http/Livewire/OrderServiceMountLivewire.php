@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Freelancer;
 use App\Models\Group;
+use App\Models\GroupProduct;
 use App\Models\OrderService;
 use App\Models\OrderServiceRoomFreelancer;
 use App\Models\OrderServiceRoomGroup;
@@ -20,6 +21,7 @@ use App\Models\Provider;
 use App\Models\Sublease;
 use App\Models\SubleaseItem;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class OrderServiceMountLivewire extends Component
@@ -358,11 +360,11 @@ class OrderServiceMountLivewire extends Component
             'quantity' => $this->dataProduct['quantity'],
         ]);
 
+        $this->checkSublease($this->dataProduct['product_id']);
+
         $this->orderService->last_user_id = auth()->user()->id;
         $this->orderService->saveQuietly();
         $this->orderService->refresh();
-
-        $this->checkSublease($this->dataProduct['product_id']);
 
         $this->dataProduct = [];
         $this->emit('productSaved');
@@ -417,6 +419,10 @@ class OrderServiceMountLivewire extends Component
             'quantity' => $this->dataGroup['quantity'],
         ]);
 
+        GroupProduct::where('group_id', $this->dataGroup['group_id'])->get()->map(function ($groupProduct) {
+            $this->checkSublease($groupProduct->os_product_id);
+        });
+
         $this->orderService->last_user_id = auth()->user()->id;
         $this->orderService->saveQuietly();
         $this->orderService->refresh();
@@ -470,12 +476,15 @@ class OrderServiceMountLivewire extends Component
 
         array_push($days, Carbon::parse($endDay)->format('d/m'));
 
+        $freelancer = Freelancer::find($this->dataFreelancer['freelancer_id']);
+
         OrderServiceRoomFreelancer::create([
             'order_service_id' => $this->orderService->id,
             'place_room_id' => $this->dataFreelancer['place_room_id'],
             'freelancer_id' => $this->dataFreelancer['freelancer_id'],
             'days' => $this->dataFreelancer['days'],
             'quantity' => $this->dataFreelancer['quantity'],
+            'price' => $freelancer->price,
         ]);
 
         $this->orderService->last_user_id = auth()->user()->id;
@@ -543,6 +552,8 @@ class OrderServiceMountLivewire extends Component
             'quantity' => $this->dataProvider['quantity'],
         ]);
 
+        $this->checkSubleaseProvider($this->dataProvider['product_id']);
+
         $this->orderService->last_user_id = auth()->user()->id;
         $this->orderService->saveQuietly();
         $this->orderService->refresh();
@@ -587,11 +598,11 @@ class OrderServiceMountLivewire extends Component
 
         $orderServiceRoomProduct->delete();
 
+        $this->checkSublease($osProductId, true);
+
         $this->orderService->last_user_id = auth()->user()->id;
         $this->orderService->saveQuietly();
         $this->orderService->refresh();
-
-        $this->checkSublease($osProductId, true);
 
         return $this->mountOrderService();
     }
@@ -603,7 +614,10 @@ class OrderServiceMountLivewire extends Component
 
     public function removeGroup(OrderServiceRoomGroup $orderServiceRoomGroup)
     {
+        $groupId = $orderServiceRoomGroup->group_id;
         $orderServiceRoomGroup->delete();
+
+        $this->checkSubleaseGroup($groupId);
 
         $this->orderService->last_user_id = auth()->user()->id;
         $this->orderService->saveQuietly();
@@ -635,7 +649,11 @@ class OrderServiceMountLivewire extends Component
 
     public function removeProvider(OrderServiceRoomProvider $orderServiceRoomProvider)
     {
+        $osProductId = $orderServiceRoomProvider->os_product_id;
+
         $orderServiceRoomProvider->delete();
+
+        $this->checkSubleaseProvider($osProductId, true);
 
         $this->orderService->last_user_id = auth()->user()->id;
         $this->orderService->saveQuietly();
@@ -778,11 +796,11 @@ class OrderServiceMountLivewire extends Component
             $orderServiceRoomProduct->quantity = $quantity;
             $orderServiceRoomProduct->save();
 
+            $this->checkSublease($orderServiceRoomProduct->os_product_id);
+
             $this->orderService->last_user_id = auth()->user()->id;
             $this->orderService->saveQuietly();
             $this->orderService->refresh();
-
-            $this->checkSublease($orderServiceRoomProduct->os_product_id);
 
             return $this->mountOrderService();
         }
@@ -794,11 +812,13 @@ class OrderServiceMountLivewire extends Component
             $orderServiceRoomGroup->quantity = $quantity;
             $orderServiceRoomGroup->save();
 
+            $this->checkSubleaseGroup($orderServiceRoomGroup->group_id);
+
             $this->orderService->last_user_id = auth()->user()->id;
             $this->orderService->saveQuietly();
             $this->orderService->refresh();
 
-            return $this->emit('saved');
+            return $this->mountOrderService();
         }
     }
 
@@ -807,6 +827,8 @@ class OrderServiceMountLivewire extends Component
         if ($quantity > 0) {
             $orderServiceRoomProvider->quantity = $quantity;
             $orderServiceRoomProvider->save();
+
+            $this->checkSubleaseProvider($orderServiceRoomProvider->os_product_id);
 
             $this->orderService->last_user_id = auth()->user()->id;
             $this->orderService->saveQuietly();
@@ -893,6 +915,157 @@ class OrderServiceMountLivewire extends Component
 
             if (!$hideNotification) {
                 $this->emit('subleaseError');
+            }
+        } else {
+            $sublease = Sublease::firstOrCreate([
+                'order_service_id' => $this->orderService->id,
+                'status' => 1,
+            ]);
+
+            $subleaseItem = SubleaseItem::where('sublease_id', $sublease->id)
+                ->where('os_product_id', $osProductId)
+                ->whereNull('group_id')
+                ->whereNull('provider_id')
+                ->first();
+
+            if (!empty($subleaseItem)) {
+                $subleaseItem->delete();
+
+                if ($sublease->items->count() == 0) {
+                    $sublease->delete();
+                }
+            }
+        }
+    }
+
+    public function checkSubleaseGroup($groupId, $hideNotification = false)
+    {
+        $statusReproved = OsStatus::where('slug', 'reprovado')->first();
+
+        $osRoomGroupQuantity = OrderServiceRoomGroup::with('orderService')
+            ->where('group_id', $groupId)
+            ->get()
+            ->where('orderService.os_status_id', '!=', $statusReproved->id)
+            ->whereBetween('orderService.budget.mount_date', [$this->orderService->budget->mount_date, $this->orderService->budget->unmount_date])
+            ->sum('quantity');
+
+        $groupProducts = GroupProduct::where('group_id', $groupId)->pluck('os_product_id');
+
+        foreach ($groupProducts as $osProductId) {
+            $osProductStockQuantity = OsProductStock::where('os_product_id', $osProductId)->count();
+
+            $diff = $osProductStockQuantity - $osRoomGroupQuantity;
+
+            if ($diff < 0) {
+                $sublease = Sublease::firstOrCreate([
+                    'order_service_id' => $this->orderService->id,
+                    'status' => 1,
+                ]);
+
+                $subleaseItem = SubleaseItem::where('sublease_id', $sublease->id)
+                    ->where('os_product_id', $osProductId)
+                    ->first();
+
+                if (!empty($subleaseItem)) {
+                    $subleaseItem->quantity = abs($diff);
+                    $subleaseItem->save();
+                } else {
+                    $subleaseItem = SubleaseItem::create([
+                        'sublease_id' => $sublease->id,
+                        'os_product_id' => $osProductId,
+                        'group_id' => $groupId,
+                        'quantity' => abs($diff),
+                        'status' => 1,
+                    ]);
+                }
+
+                if (!$hideNotification) {
+                    $this->emit('subleaseError');
+                }
+            } else {
+                $sublease = Sublease::firstOrCreate([
+                    'order_service_id' => $this->orderService->id,
+                    'status' => 1,
+                ]);
+
+                $subleaseItem = SubleaseItem::where('sublease_id', $sublease->id)
+                    ->where('os_product_id', $osProductId)
+                    ->where('group_id', $groupId)
+                    ->whereNull('provider_id')
+                    ->first();
+
+                if (!empty($subleaseItem)) {
+                    $subleaseItem->delete();
+
+                    if ($sublease->items->count() == 0) {
+                        $sublease->delete();
+                    }
+                }
+            }
+        }
+    }
+
+    public function checkSubleaseProvider($osProductId, $hideNotification = false)
+    {
+        $osProduct = OsProduct::find($osProductId);
+
+        $statusReproved = OsStatus::where('slug', 'reprovado')->first();
+
+        $osRoomGroupQuantity = OrderServiceRoomProvider::with('orderService')
+            ->where('os_product_id', $osProduct->id)
+            ->get()
+            ->where('orderService.os_status_id', '!=', $statusReproved->id)
+            ->whereBetween('orderService.budget.mount_date', [$this->orderService->budget->mount_date, $this->orderService->budget->unmount_date])
+            ->sum('quantity');
+
+        $osProductStockQuantity = OsProductStock::where('os_product_id', $osProduct->id)->count();
+
+        $diff = $osProductStockQuantity - $osRoomGroupQuantity;
+
+        if ($diff < 0) {
+            $sublease = Sublease::firstOrCreate([
+                'order_service_id' => $this->orderService->id,
+                'status' => 1,
+            ]);
+
+            $subleaseItem = SubleaseItem::where('sublease_id', $sublease->id)
+                ->where('os_product_id', $osProduct->id)
+                ->first();
+
+            if (!empty($subleaseItem)) {
+                $subleaseItem->quantity = abs($diff);
+                $subleaseItem->save();
+            } else {
+                $subleaseItem = SubleaseItem::create([
+                    'sublease_id' => $sublease->id,
+                    'os_product_id' => $osProduct->id,
+                    'provider_id' => $osProduct->provider_id,
+                    'quantity' => abs($diff),
+                    'status' => 1,
+                ]);
+            }
+
+            if (!$hideNotification) {
+                $this->emit('subleaseError');
+            }
+        } else {
+            $sublease = Sublease::firstOrCreate([
+                'order_service_id' => $this->orderService->id,
+                'status' => 1,
+            ]);
+
+            $subleaseItem = SubleaseItem::where('sublease_id', $sublease->id)
+                ->where('os_product_id', $osProduct->id)
+                ->where('provider_id', $osProduct->provider_id)
+                ->whereNull('group_id')
+                ->first();
+
+            if (!empty($subleaseItem)) {
+                $subleaseItem->delete();
+
+                if ($sublease->items->count() == 0) {
+                    $sublease->delete();
+                }
             }
         }
     }

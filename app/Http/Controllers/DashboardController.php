@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\OrderService;
 use App\Models\Provider;
 use App\Models\Status;
+use App\Models\SubleaseItem;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -17,7 +18,7 @@ class DashboardController extends Controller
     {
         $budgets = Budget::count();
         $orderServices = OrderService::count();
-        $customers = Customer::count();
+        $subleases = SubleaseItem::count();
         $providers = Provider::count();
 
         $today = date('Y-m-d');
@@ -39,6 +40,6 @@ class DashboardController extends Controller
             })
             ->toArray();
 
-        return view('dashboard.index', compact('budgets', 'orderServices', 'customers', 'providers', 'today', 'events'));
+        return view('dashboard.index', compact('budgets', 'orderServices', 'subleases', 'providers', 'today', 'events'));
     }
 }

@@ -28,11 +28,11 @@
             <div class="report-box zoom-in mb-8">
                 <div class="box p-5">
                     <div class="flex">
-                        <i data-lucide="building" class="report-box__icon text-primary"></i>
+                        <i data-lucide="package-search" class="report-box__icon text-primary"></i>
                         <div class="ml-auto"></div>
                     </div>
-                    <div class="text-3xl font-medium leading-8 mt-6">{{ $customers }}</div>
-                    <div class="text-base text-slate-500 mt-1">Clientes</div>
+                    <div class="text-3xl font-medium leading-8 mt-6">{{ $subleases }}</div>
+                    <div class="text-base text-slate-500 mt-1">Equipamentos Sublocados</div>
                 </div>
             </div>
             <div class="report-box zoom-in mb-8">

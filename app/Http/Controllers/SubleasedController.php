@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Budget;
+use App\Models\Group;
 use App\Models\OrderService;
 use App\Models\OsProduct;
 use App\Models\OsStatus;
+use App\Models\Provider;
 use App\Models\Sublease;
+use App\Models\SubleaseItem;
 use Illuminate\Http\Request;
 
 class SubleasedController extends Controller
@@ -26,7 +29,47 @@ class SubleasedController extends Controller
 
     public function items(Sublease $sublease)
     {
-        return view('subleases.items', compact('sublease'));
+        $products = $sublease->items->whereNull('group_id')->whereNull('provider_id');
+
+        $groups = [];
+        $groupIds = $sublease->items->whereNotNull('group_id')->whereNull('provider_id')->pluck('group_id')->unique()->toArray();
+
+        foreach ($groupIds as $groupId) {
+            $obGroup = Group::find($groupId);
+            $obGroup->items = $sublease->items->where('group_id', $groupId)->whereNull('provider_id');
+
+            $groups[] = $obGroup;
+        }
+
+        $providers = [];
+        $providerIds = $sublease->items->whereNotNull('provider_id')->whereNull('group_id')->pluck('provider_id')->unique()->toArray();
+
+        foreach ($providerIds as $providerId) {
+            $obProvider = Provider::find($providerId);
+            $obProvider->items = $sublease->items->where('provider_id', $providerId)->whereNull('group_id');
+
+            $providers[] = $obProvider;
+        }
+
+        // dd($groups);
+
+        return view('subleases.items', compact('sublease', 'products', 'groups', 'providers'));
+    }
+
+    public function checkItem(SubleaseItem $subleaseItem)
+    {
+        $subleaseItem->status = 2;
+        $subleaseItem->save();
+
+        return redirect()->route('subleases.items', $subleaseItem->sublease_id);
+    }
+
+    public function uncheckItem(SubleaseItem $subleaseItem)
+    {
+        $subleaseItem->status = 1;
+        $subleaseItem->save();
+
+        return redirect()->route('subleases.items', $subleaseItem->sublease_id);
     }
 
     // public function index(Request $request)

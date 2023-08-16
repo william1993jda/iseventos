@@ -50,6 +50,7 @@ use App\Http\Controllers\ProviderContactController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ProviderOsProductController;
 use App\Http\Controllers\RecoveryController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StoryboardController;
@@ -192,6 +193,15 @@ Route::middleware('auth')->group(function () {
 
     Route::get('subleases', [SubleasedController::class, 'index'])->name('subleases.index');
     Route::get('subleases/items/{sublease}', [SubleasedController::class, 'items'])->name('subleases.items');
+    Route::get('subleases/items/check/{subleaseItem}', [SubleasedController::class, 'checkItem'])->name('subleases.items.check');
+    Route::get('subleases/items/uncheck/{subleaseItem}', [SubleasedController::class, 'uncheckItem'])->name('subleases.items.uncheck');
+
+    Route::get('reports/events', [ReportController::class, 'events'])->name('reports.events');
+    Route::get('reports/products', [ReportController::class, 'products'])->name('reports.products');
+    Route::get('reports/providers', [ReportController::class, 'providers'])->name('reports.providers');
+    Route::get('reports/providers/detail/{provider}', [ReportController::class, 'providerDetail'])->name('reports.providers.detail');
+    Route::get('reports/freelancers', [ReportController::class, 'freelancers'])->name('reports.freelancers');
+    Route::get('reports/freelancers/detail/{freelancer}', [ReportController::class, 'freelancerDetail'])->name('reports.freelancers.detail');
 });
 
 require __DIR__ . '/auth.php';
